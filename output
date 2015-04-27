@@ -1,0 +1,153 @@
+<twitter.api.Twitter object at 0x0000000002BCF860>
+[{u'created_at': u'2015-04-27T07:35:58Z', u'trends': [{u'url': u'http://twitter.com/search?q=%23%D8%A7%D9%84%D8%B1%D8%AC%D9%84_%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A_%D8%A7%D9%84%D8%A7%D8%AC%D9%85%D9%84_%D8%A8%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85', u'query': u'%23%D8%A7%D9%84%D8%B1%D8%AC%D9%84_%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A_%D8%A7%D9%84%D8%A7%D8%AC%D9%85%D9%84_%D8%A8%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85', u'name': u'#\u0627\u0644\u0631\u062c\u0644_\u0627\u0644\u0633\u0639\u0648\u062f\u064a_\u0627\u0644\u0627\u062c\u0645\u0644_\u0628\u0627\u0644\u0639\u0627\u0644\u0645', u'promoted_content': None}, {u'url': u'http://twitter.com/search?q=%23teenkingcode525', u'query': u'%23teenkingcode525', u'name': u'#teenkingcode525', u'promoted_content': None}, {u'url': u'http://twitter.com/search?q=%23%D8%A7%D8%AB%D9%86%D8%A7%D9%86_%D9%84%D8%A7%D9%8A%D8%AC%D8%AA%D9%85%D8%B9%D8%A7%D9%86_%D8%A7%D8%A8%D8%AF%D8%A7', u'query': u'%23%D8%A7%D8%AB%D9%86%D8%A7%D9%86_%D9%84%D8%A7%D9%8A%D8%AC%D8%AA%D9%85%D8%B9%D8%A7%D9%86_%D8%A7%D8%A8%D8%AF%D8%A7', u'name': u'#\u0627\u062b\u0646\u0627\u0646_\u0644\u0627\u064a\u062c\u062a\u0645\u0639\u0627\u0646_\u0627\u0628\u062f\u0627', u'promoted_content': None}, {u'url': u'http://twitter.com/search?q=%23RIPChoco', u'query': u'%23RIPChoco', u'name': u'#RIPChoco', u'promoted_content': None}, {u'url': u'http://twitter.com/search?q=%23FelizLunes', u'query': u'%23FelizLunes', u'name': u'#FelizLunes', u'promoted_content': None}, {u'url': u'http://twitter.com/search?q=%EB%B6%80%EC%97%AC%ED%99%94', u'query': u'%EB%B6%80%EC%97%AC%ED%99%94', u'name': u'\ubd80\uc5ec\ud654', u'promoted_content': None}, {u'url': u'http://twitter.com/search?q=%ED%98%B8%ED%83%80%EB%A3%A8', u'query': u'%ED%98%B8%ED%83%80%EB%A3%A8', u'name': u'\ud638\ud0c0\ub8e8', u'promoted_content': None}, {u'url': u'http://twitter.com/search?q=%EC%9D%B4%ED%95%B4%ED%95%98%EC%98%A4', u'query': u'%EC%9D%B4%ED%95%B4%ED%95%98%EC%98%A4', u'name': u'\uc774\ud574\ud558\uc624', u'promoted_content': None}, {u'url': u'http://twitter.com/search?q=%22WE%27RE+ALREADY+A+MAN+DOWN%22', u'query': u'%22WE%27RE+ALREADY+A+MAN+DOWN%22', u'name': u"WE'RE ALREADY A MAN DOWN", u'promoted_content': None}, {u'url': u'http://twitter.com/search?q=%22Wembley+Stadium%22', u'query': u'%22Wembley+Stadium%22', u'name': u'Wembley Stadium', u'promoted_content': None}], u'as_of': u'2015-04-27T07:39:20Z', u'locations': [{u'woeid': 1, u'name': u'Worldwide'}]}]
+
+[{u'created_at': u'2015-04-27T07:30:54Z', u'trends': [{u'url': u'http://twitter.com/search?q=%23MadMen', u'query': u'%23MadMen', u'name': u'#MadMen', u'promoted_content': None}, {u'url': u'http://twitter.com/search?q=%23Infinity', u'query': u'%23Infinity', u'name': u'#Infinity', u'promoted_content': None}, {u'url': u'http://twitter.com/search?q=%23GameofThrones', u'query': u'%23GameofThrones', u'name': u'#GameofThrones', u'promoted_content': None}, {u'url': u'http://twitter.com/search?q=%23HeroesOfTheDorm', u'query': u'%23HeroesOfTheDorm', u'name': u'#HeroesOfTheDorm', u'promoted_content': None}, {u'url': u'http://twitter.com/search?q=%23UnpopularSuperheroes', u'query': u'%23UnpopularSuperheroes', u'name': u'#UnpopularSuperheroes', u'promoted_content': None}, {u'url': u'http://twitter.com/search?q=%22Rio+Vista%22', u'query': u'%22Rio+Vista%22', u'name': u'Rio Vista', u'promoted_content': None}, {u'url': u'http://twitter.com/search?q=%22JJ+Barea%22', u'query': u'%22JJ+Barea%22', u'name': u'JJ Barea', u'promoted_content': None}, {u'url': u'http://twitter.com/search?q=%22Monta+Ellis%22', u'query': u'%22Monta+Ellis%22', u'name': u'Monta Ellis', u'promoted_content': None}, {u'url': u'http://twitter.com/search?q=%22New+Jack+City%22', u'query': u'%22New+Jack+City%22', u'name': u'New Jack City', u'promoted_content': None}, {u'url': u'http://twitter.com/search?q=TGLC', u'query': u'TGLC', u'name': u'TGLC', u'promoted_content': None}], u'as_of': u'2015-04-27T07:39:29Z', u'locations': [{u'woeid': 23424977, u'name': u'United States'}]}]
+[
+ {
+  "created_at": "2015-04-27T07:35:58Z", 
+  "trends": [
+   {
+    "url": "http://twitter.com/search?q=%23%D8%A7%D9%84%D8%B1%D8%AC%D9%84_%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A_%D8%A7%D9%84%D8%A7%D8%AC%D9%85%D9%84_%D8%A8%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85", 
+    "query": "%23%D8%A7%D9%84%D8%B1%D8%AC%D9%84_%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A_%D8%A7%D9%84%D8%A7%D8%AC%D9%85%D9%84_%D8%A8%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85", 
+    "name": "#\u0627\u0644\u0631\u062c\u0644_\u0627\u0644\u0633\u0639\u0648\u062f\u064a_\u0627\u0644\u0627\u062c\u0645\u0644_\u0628\u0627\u0644\u0639\u0627\u0644\u0645", 
+    "promoted_content": null
+   }, 
+   {
+    "url": "http://twitter.com/search?q=%23teenkingcode525", 
+    "query": "%23teenkingcode525", 
+    "name": "#teenkingcode525", 
+    "promoted_content": null
+   }, 
+   {
+    "url": "http://twitter.com/search?q=%23%D8%A7%D8%AB%D9%86%D8%A7%D9%86_%D9%84%D8%A7%D9%8A%D8%AC%D8%AA%D9%85%D8%B9%D8%A7%D9%86_%D8%A7%D8%A8%D8%AF%D8%A7", 
+    "query": "%23%D8%A7%D8%AB%D9%86%D8%A7%D9%86_%D9%84%D8%A7%D9%8A%D8%AC%D8%AA%D9%85%D8%B9%D8%A7%D9%86_%D8%A7%D8%A8%D8%AF%D8%A7", 
+    "name": "#\u0627\u062b\u0646\u0627\u0646_\u0644\u0627\u064a\u062c\u062a\u0645\u0639\u0627\u0646_\u0627\u0628\u062f\u0627", 
+    "promoted_content": null
+   }, 
+   {
+    "url": "http://twitter.com/search?q=%23RIPChoco", 
+    "query": "%23RIPChoco", 
+    "name": "#RIPChoco", 
+    "promoted_content": null
+   }, 
+   {
+    "url": "http://twitter.com/search?q=%23FelizLunes", 
+    "query": "%23FelizLunes", 
+    "name": "#FelizLunes", 
+    "promoted_content": null
+   }, 
+   {
+    "url": "http://twitter.com/search?q=%EB%B6%80%EC%97%AC%ED%99%94", 
+    "query": "%EB%B6%80%EC%97%AC%ED%99%94", 
+    "name": "\ubd80\uc5ec\ud654", 
+    "promoted_content": null
+   }, 
+   {
+    "url": "http://twitter.com/search?q=%ED%98%B8%ED%83%80%EB%A3%A8", 
+    "query": "%ED%98%B8%ED%83%80%EB%A3%A8", 
+    "name": "\ud638\ud0c0\ub8e8", 
+    "promoted_content": null
+   }, 
+   {
+    "url": "http://twitter.com/search?q=%EC%9D%B4%ED%95%B4%ED%95%98%EC%98%A4", 
+    "query": "%EC%9D%B4%ED%95%B4%ED%95%98%EC%98%A4", 
+    "name": "\uc774\ud574\ud558\uc624", 
+    "promoted_content": null
+   }, 
+   {
+    "url": "http://twitter.com/search?q=%22WE%27RE+ALREADY+A+MAN+DOWN%22", 
+    "query": "%22WE%27RE+ALREADY+A+MAN+DOWN%22", 
+    "name": "WE'RE ALREADY A MAN DOWN", 
+    "promoted_content": null
+   }, 
+   {
+    "url": "http://twitter.com/search?q=%22Wembley+Stadium%22", 
+    "query": "%22Wembley+Stadium%22", 
+    "name": "Wembley Stadium", 
+    "promoted_content": null
+   }
+  ], 
+  "as_of": "2015-04-27T07:39:20Z", 
+  "locations": [
+   {
+    "woeid": 1, 
+    "name": "Worldwide"
+   }
+  ]
+ }
+]
+
+[
+ {
+  "created_at": "2015-04-27T07:30:54Z", 
+  "trends": [
+   {
+    "url": "http://twitter.com/search?q=%23MadMen", 
+    "query": "%23MadMen", 
+    "name": "#MadMen", 
+    "promoted_content": null
+   }, 
+   {
+    "url": "http://twitter.com/search?q=%23Infinity", 
+    "query": "%23Infinity", 
+    "name": "#Infinity", 
+    "promoted_content": null
+   }, 
+   {
+    "url": "http://twitter.com/search?q=%23GameofThrones", 
+    "query": "%23GameofThrones", 
+    "name": "#GameofThrones", 
+    "promoted_content": null
+   }, 
+   {
+    "url": "http://twitter.com/search?q=%23HeroesOfTheDorm", 
+    "query": "%23HeroesOfTheDorm", 
+    "name": "#HeroesOfTheDorm", 
+    "promoted_content": null
+   }, 
+   {
+    "url": "http://twitter.com/search?q=%23UnpopularSuperheroes", 
+    "query": "%23UnpopularSuperheroes", 
+    "name": "#UnpopularSuperheroes", 
+    "promoted_content": null
+   }, 
+   {
+    "url": "http://twitter.com/search?q=%22Rio+Vista%22", 
+    "query": "%22Rio+Vista%22", 
+    "name": "Rio Vista", 
+    "promoted_content": null
+   }, 
+   {
+    "url": "http://twitter.com/search?q=%22JJ+Barea%22", 
+    "query": "%22JJ+Barea%22", 
+    "name": "JJ Barea", 
+    "promoted_content": null
+   }, 
+   {
+    "url": "http://twitter.com/search?q=%22Monta+Ellis%22", 
+    "query": "%22Monta+Ellis%22", 
+    "name": "Monta Ellis", 
+    "promoted_content": null
+   }, 
+   {
+    "url": "http://twitter.com/search?q=%22New+Jack+City%22", 
+    "query": "%22New+Jack+City%22", 
+    "name": "New Jack City", 
+    "promoted_content": null
+   }, 
+   {
+    "url": "http://twitter.com/search?q=TGLC", 
+    "query": "TGLC", 
+    "name": "TGLC", 
+    "promoted_content": null
+   }
+  ], 
+  "as_of": "2015-04-27T07:39:29Z", 
+  "locations": [
+   {
+    "woeid": 23424977, 
+    "name": "United States"
+   }
+  ]
+ }
+]
