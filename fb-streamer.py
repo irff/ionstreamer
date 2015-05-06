@@ -1,4 +1,4 @@
-# Copy and paste in the value you just got from the inline frame into this variable and execute this cell.
+# Copy and paste in the value you just got from the inline frame into this variable and execute this cell.W
 # Keep in mind that you could have just gone to https://developers.facebook.com/tools/access_token/
 # and retrieved the "User Token" value from the Access Token Tool
 
@@ -510,14 +510,4 @@ viz_file = 'files/resources/ch02-facebook/viz/force.html'
 
 display(IFrame(viz_file, '100%', '600px'))
 
-
-
-
-
-
-
-
-
-
-
-
+###
