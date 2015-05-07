@@ -33,17 +33,19 @@ main_db = sqlite3.connect('tmp.db')
 # main_db.execute('insert or ignore into result (keyword, result) values("alfan", "alfan is on twitter")')
 # main_db.commit()
 # print main_db.execute('select * from result').fetchall()
-# q = "DROP TABLE IF EXISTS `result`; CREATE TABLE `result` (`id` INTEGER NOT NULL, `keyword` varchar(256) NOT NULL, `result` text NOT NULL, PRIMARY KEY (`id`) ); DROP TABLE IF EXISTS `streaming`; CREATE TABLE `streaming` (`keyword` varchar(256) NOT NULL, PRIMARY KEY (`keyword`) );"
+
+# q = "DROP TABLE IF EXISTS `result`; CREATE TABLE `result` (`id` INTEGER NOT NULL, `keyword` varchar(256) NOT NULL, `result` text NOT NULL, `created_at` date, PRIMARY KEY (`id`) ); DROP TABLE IF EXISTS `streaming`; CREATE TABLE `streaming` (`keyword` varchar(256) NOT NULL, PRIMARY KEY (`keyword`) );"
 # for qq in q.split(";"):
 #   main_db.execute(qq)
 # main_db.commit()
+
 # exit()
 
 def enq_table(table, data, db=main_db):
   if table == 'streaming':
     db.execute('insert or ignore into streaming values(?)', (data,))
   else:
-    db.executemany('insert or ignore into result (keyword, result) values(?, ?)', data)
+    db.executemany('insert or ignore into result (keyword, result, created_at) values(?, ?, ?)', data)
   db.commit()
   
 def get_table(table, keyword='', db=main_db):
@@ -60,28 +62,36 @@ def remove_table(table, keyword='', db=main_db):
   db.commit()
 
 
+import os.path
+from datetime import datetime
 def search_twit(keyword):
   time.sleep(1)
   print "streaming %s is running.." % keyword
   this_db = sqlite3.connect('tmp.db')
-  prev_res = []
-  while True:
-    if len(get_table('streaming', keyword, db=this_db)) < 1: break
+  prev_res = datetime.min
+  while (not os.path.exists('stop_all_thread')) and len(get_table('streaming', keyword, db=this_db)) > 0:
     res = twitter_api.search.tweets(q=keyword, count=2)['statuses']
-    res = map(lambda x: x['text'], res)
-    res = filter(lambda x: x not in prev_res, res)
-    prev_res = prev_res+res
-    enq_table('result', map(lambda x: (keyword, x), res), db=this_db)
+    res = map(lambda x: [x['text'], datetime.strptime(x['created_at'][:20]+x['created_at'][26:], "%a %b %m %H:%M:%S %Y")], res)
+    print "LAST:", res[-1][1], res[-1][0][:30]
+    prev_res = res[-1][1]
+    res = filter(lambda (text, created_at): created_at > prev_res, res)
+    
+    for x in res:
+      print x[1].strftime("%m-%b-%Y %H:%M:%S"), x[0][:40]
+      
+    enq_table('result', map(lambda (x, y): (keyword, x, y.strftime("%Y-%m-%d %H:%M:%S")), res), db=this_db)
     time.sleep(3)
+  print "streaming %s stops!" % keyword
 
 
 @app.route('/')
 def hello_world():
-  res = twitter_api.search.tweets(q='alfan', count=100)['statuses']
-  ret = ''
+  res = twitter_api.search.tweets(q='alfan', count=5)['statuses']
+  res = map(lambda x: [x['text'], datetime.strptime(x['created_at'][:20]+x['created_at'][26:], "%a %b %m %H:%M:%S %Y")], res)
+  # res = map(lambda x: [x['text'], x['created_at']], res)
   for x in res:
-    ret += json.dumps(x['text'])+'\n'
-  return ret
+    print x[1].strftime("%m-%b-%Y %H:%M:%S"), x[0][:40]
+  return str(len(res))
 
 @app.route('/stream/<keyword>')
 def stream(keyword):
