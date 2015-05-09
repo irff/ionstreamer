@@ -7,25 +7,13 @@ import sqlite3
 import json
 
 import twitter
-
-# XXX: Go to http://dev.twitter.com/apps/new to create an app and get values
-# for these credentials, which you'll need to provide in place of these
-# empty string values that are defined as placeholders.
-# See https://dev.twitter.com/docs/auth/oauth for more information 
-# on Twitter's OAuth implementation.
-
 CONSUMER_KEY = 'QggSVBP9t2RR4yzIvJpLHxHrL'
 CONSUMER_SECRET ='ncRsiSeemxz02pEUMSRhVuEtKlWxFOyCPvCNwwWKL1cZQLY2TN'
 OAUTH_TOKEN = '165650047-sNAi13v3VdDk8nhqMLmcdgTVzkR2Ton749BIntQ7'
 OAUTH_TOKEN_SECRET = 'OM5JGhgswebcx8WYxn8yGrwPQdexb5VS00UIoguD117VU'
-
 auth = twitter.oauth.OAuth(OAUTH_TOKEN, OAUTH_TOKEN_SECRET,
                            CONSUMER_KEY, CONSUMER_SECRET)
-
 twitter_api = twitter.Twitter(auth=auth)
-
-# Nothing to see by displaying twitter_api except that it's now a
-# defined variable
 
 
 # database
@@ -34,18 +22,25 @@ main_db = sqlite3.connect('tmp.db')
 # main_db.commit()
 # print main_db.execute('select * from result').fetchall()
 
-# q = "DROP TABLE IF EXISTS `result`; CREATE TABLE `result` (`id` INTEGER NOT NULL, `keyword` varchar(256) NOT NULL, `result` text NOT NULL, `created_at` date, PRIMARY KEY (`id`) ); DROP TABLE IF EXISTS `streaming`; CREATE TABLE `streaming` (`keyword` varchar(256) NOT NULL, PRIMARY KEY (`keyword`) );"
+# q = "DROP TABLE IF EXISTS `result`; CREATE TABLE `result` (`keyword` varchar(256) NOT NULL, `result` varchar(256) NOT NULL, PRIMARY KEY (`keyword`, `result`) ); DROP TABLE IF EXISTS `streaming`; CREATE TABLE `streaming` (`keyword` varchar(256) NOT NULL, PRIMARY KEY (`keyword`) );"
 # for qq in q.split(";"):
 #   main_db.execute(qq)
 # main_db.commit()
 
 # exit()
 
+
+
+
+
+
+
+
 def enq_table(table, data, db=main_db):
   if table == 'streaming':
     db.execute('insert or ignore into streaming values(?)', (data,))
   else:
-    db.executemany('insert or ignore into result (keyword, result, created_at) values(?, ?, ?)', data)
+    db.executemany('insert or ignore into result values(?, ?)', data)
   db.commit()
   
 def get_table(table, keyword='', db=main_db):
@@ -62,6 +57,13 @@ def remove_table(table, keyword='', db=main_db):
   db.commit()
 
 
+
+
+
+
+
+
+
 import os.path
 from datetime import datetime
 def search_twit(keyword):
@@ -69,35 +71,58 @@ def search_twit(keyword):
   print "streaming %s is running.." % keyword
   this_db = sqlite3.connect('tmp.db')
   prev_res = datetime.min
+
   while (not os.path.exists('stop_all_thread')) and len(get_table('streaming', keyword, db=this_db)) > 0:
-    res = twitter_api.search.tweets(q=keyword, count=2)['statuses']
-    res = map(lambda x: [x['text'], datetime.strptime(x['created_at'][:20]+x['created_at'][26:], "%a %b %m %H:%M:%S %Y")], res)
-    print "LAST:", res[-1][1], res[-1][0][:30]
-    prev_res = res[-1][1]
+    res = twitter_api.search.tweets(q=keyword, count=100)['statuses']
+    res = map(lambda x: [x['text'], datetime.strptime(x['created_at'][4:20]+x['created_at'][26:], "%b %d %H:%M:%S %Y")], res)
+    res.reverse()
+    top_result = res[-1][1]
+    # print "=============="
+    # print "just result:"
+    # for x in res:
+    #   print x[1], x[0][:30]
+
     res = filter(lambda (text, created_at): created_at > prev_res, res)
-    
-    for x in res:
-      print x[1].strftime("%m-%b-%Y %H:%M:%S"), x[0][:40]
-      
-    enq_table('result', map(lambda (x, y): (keyword, x, y.strftime("%Y-%m-%d %H:%M:%S")), res), db=this_db)
-    time.sleep(3)
+    print "%d data about %s added" % (len(res), keyword)
+    # print "prev_res:", prev_res
+    # print "result after filtering:"
+    # for x in res:
+    #   print x[1], x[0][:30]
+    # print ""
+    # for x in res:
+    #   print x[1].strftime("%m-%b-%Y %H:%M:%S"), x[0][:40]
+    ## y.strftime("%Y-%m-%d %H:%M:%S")
+    res = map(lambda (text, created_at): (text, created_at.strftime("%Y-%m-%d %H:%M:%S")), res)
+    enq_table('result', map(lambda x: (keyword, json.dumps(x)), res), db=this_db)
+    prev_res = top_result
+    time.sleep(10)
+  this_db.close()
   print "streaming %s stops!" % keyword
 
 
+
+
+
+
+
+
 @app.route('/')
-def hello_world():
-  res = twitter_api.search.tweets(q='alfan', count=5)['statuses']
+def ganteng():
+  res = twitter_api.search.tweets(q='alfan', count=100)['statuses']
   res = map(lambda x: [x['text'], datetime.strptime(x['created_at'][:20]+x['created_at'][26:], "%a %b %m %H:%M:%S %Y")], res)
   # res = map(lambda x: [x['text'], x['created_at']], res)
   for x in res:
     print x[1].strftime("%m-%b-%Y %H:%M:%S"), x[0][:40]
-  return str(len(res))
+  return sum(map( lambda x:x+"\n", res))
 
 @app.route('/stream/<keyword>')
 def stream(keyword):
-  enq_table('streaming', keyword)
-  threading.Thread(target=search_twit, name="th_"+keyword, args=[keyword]).start()
-  return "streaming %s enqueued!" % keyword
+  if len(get_table('streaming', keyword)) == 0:
+    enq_table('streaming', keyword)
+    threading.Thread(target=search_twit, name="th_"+keyword, args=[keyword]).start()
+    return "streaming %s enqueued!" % keyword
+  else:
+    return "%s had been enqueued before.." % keyword
 
 @app.route('/unstream/<keyword>')
 def unstream(keyword=''):
@@ -109,8 +134,9 @@ def streamings():
   return json.dumps(get_table('streaming'))
 
 @app.route('/getresult/<keyword>')
-def getresult(keyword):
-  return json.dumps(get_table('result', keyword))
+def getresult(keyword=''):
+  res = get_table('result', keyword)
+  return '\n'.join(map(lambda (keyword, result): keyword+": "+result, res))
 
 @app.route('/removeresult/<keyword>')
 def removeresult(keyword=''):
@@ -119,12 +145,20 @@ def removeresult(keyword=''):
 
 @app.route('/results')
 def results():
-  return json.dumps(get_table('result'))
+  return getresult()
+
 
 # RUN ALL
 for q in get_table('streaming'):
+  unstream(list(q)[0])
   stream(list(q)[0])
 # print unstream()
 
 if __name__ == '__main__':
-  app.run()
+  try:
+    if os.path.exists('stop_all_thread'): os.remove('stop_all_thread')
+    app.run()
+  except Exception, e:
+    pass
+  finally:
+    open('stop_all_thread', 'w').close()
