@@ -1,8 +1,9 @@
-# ENGINE_STRING = 'mysql://@n@localhost/ionstreamer'
+ENGINE_STRING = 'mysql://root@localhost'
 
-# SECRET_KEY = 'adFEaef3rqwfWrASDFa325afASfas'
+SECRET_KEY = 'badaklanggar'
 
-# PORT = 8888
+HOST = '0.0.0.0'
+PORT = 7876
 
 # API_ENDPOINT = "http://128.199.120.29:8200/api/v1"
 

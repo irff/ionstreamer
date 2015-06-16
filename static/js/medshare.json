@@ -1,0 +1,165 @@
+{"result":[
+      {
+       "date": "2015-01-01",
+       "media": {
+           "kompas": 1000,
+           "inilah": 0,
+           "cnn": 688,
+           "detik":1190
+       }
+      }, 
+      {
+       "date": "2015-01-02",
+       "media": {
+           "kompas": 120,
+           "inilah": 0,
+           "cnn": 668,
+           "detik":890
+       }
+      },
+      {
+       "date": "2015-01-03",
+       "media": {
+           "kompas": 3078,
+           "inilah": 0,
+           "cnn": 3948,
+           "detik":90
+       }
+      },
+      {
+       "date": "2015-01-04",
+       "media": {
+           "kompas": 1330,
+           "inilah": 1449,
+           "cnn": 1678,
+           "detik":0
+       }
+      },
+      {
+       "date": "2015-01-05",
+       "media": {
+           "kompas": 3230,
+           "inilah": 2129,
+           "cnn": 4298,
+           "detik":1890
+       }
+      },
+      {
+       "date": "2015-01-06",
+       "media": {
+           "kompas": 1330,
+           "inilah": 2219,
+           "cnn": 4398,
+           "detik":2890
+       }
+      },
+      {
+       "date": "2015-01-07",
+       "media": {
+           "kompas": 4330,
+           "inilah": 5219,
+           "cnn": 6398,
+           "detik":1890
+       }
+      },
+      {
+       "date": "2015-01-08",
+       "media": {
+           "kompas": 2330,
+           "inilah": 3519,
+           "cnn": 3698,
+           "detik":8390
+       }
+      },
+      {
+       "date": "2015-01-09",
+       "media": {
+           "kompas": 4330,
+           "inilah": 5519,
+           "cnn": 7698,
+           "detik":890
+       }
+      },
+      {
+       "date": "2015-01-10",
+       "media": {
+           "kompas": 1000,
+           "inilah": 810,
+           "cnn": 688,
+           "detik":1890
+       }
+      }, 
+      {
+       "date": "2015-01-11",
+       "media": {
+           "kompas": 4120,
+           "inilah": 6480,
+           "cnn": 8668,
+           "detik":2890
+       }
+      },
+      {
+       "date": "2015-01-12",
+       "media": {
+           "kompas": 3078,
+           "inilah": 2149,
+           "cnn": 3948,
+           "detik":4890
+       }
+      },
+      {
+       "date": "2015-01-13",
+       "media": {
+           "kompas": 1330,
+           "inilah": 1449,
+           "cnn": 1678,
+           "detik":8590
+       }
+      },
+      {
+       "date": "2015-01-14",
+       "media": {
+           "kompas": 3380,
+           "inilah": 2299,
+           "cnn": 1498,
+           "detik":890
+       }
+      },
+      {
+       "date": "2015-01-15",
+       "media": {
+           "kompas": 7330,
+           "inilah": 4219,
+           "cnn": 1498,
+           "detik":1190
+       }
+      },
+      {
+       "date": "2015-01-16",
+       "media": {
+           "kompas": 6330,
+           "inilah": 4519,
+           "cnn": 1698,
+           "detik":6890
+       }
+      },
+      {
+       "date": "2015-01-17",
+       "media": {
+           "kompas": 3330,
+           "inilah": 3519,
+           "cnn": 3918,
+           "detik":1890
+       }
+      },
+      {
+       "date": "2015-01-18",
+       "media": {
+           "kompas": 4330,
+           "inilah": 5159,
+           "cnn": 7498,
+           "detik":10
+       }
+      }
+    ]
+}

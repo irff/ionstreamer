@@ -1,0 +1,40 @@
+body {
+  background-color: #f1f1f3 !important;
+}
+
+.content {
+  background: white!important;
+  padding-top: 10px;
+}
+
+#result {
+  background-color: white!important;
+}
+
+.bar {
+  fill: #FF9800;
+}
+
+.bar:hover {
+  cursor: pointer;
+  fill: #E64A19;
+}
+
+.tick {
+	color: blue;
+}
+
+.axis {
+  font: 12px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}

@@ -1,0 +1,117 @@
+#overlay {
+  position:fixed; 
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  opacity:0.5;
+  filter:alpha(opacity=50);
+}
+
+#modal {
+  position:absolute;
+  background: white;
+  width: 600px;
+  padding:8px;
+}
+
+#content {
+  background:#fff;
+  padding:20px;
+}
+
+#content .a-t {
+  font-size: 25px;
+  color:#212121;
+}
+
+#content .a-a {
+  font-size: 14px;
+  color: #212121;
+  margin-top:5px;
+}
+
+#content > p {
+  font-size: 14px;
+  color : #424242;
+  font-size: 14px;
+  color: #424242;
+  background-color: #eee;
+  padding: 16px;
+  line-height: 20px;
+  border-radius: 2px;
+  margin-top: 5px;
+}
+
+#close {
+  position:absolute;
+  background:url(../img/close.png) 0 0 no-repeat;
+  width:24px;
+  height:27px;
+  display:block;
+  text-indent:-9999px;
+  top:-7px;
+  right:-7px;
+}
+
+
+#related-news {
+  width: 52%;
+  margin:0 auto;
+}
+
+#related-news #total-articles{
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 25px;  
+}
+
+#related-news #pagination{
+  margin: 0 auto;
+  text-align: center
+}
+
+#related-news #pagination {
+  
+}
+
+#related-news > ul {
+  font-size: 13px;
+  text-align: center;
+}
+
+#related-news > ul li {
+  cursor: default;
+  text-align: left;
+  display: block;
+  padding: 20px;
+  background-color: #fffffe;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border-top: 3px solid #f1f1f3 !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,.1);
+}
+
+#related-news > ul li .title{
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+#related-news > ul li div{
+  display: block;
+  line-height: 20px!important;
+}
+
+#related-news > ul li .url > a{
+  color: #2979FF!important;
+}
+
+#related-news > ul li .url > a:hover{
+  text-decoration: underline;
+}
+
+#related-news > ul li:hover {
+  
+}

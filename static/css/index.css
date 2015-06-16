@@ -1,0 +1,42 @@
+#result {
+	padding-top:0px!important;
+}
+
+#result #medshare {
+	width: 100%;
+}
+
+#result #word {
+	clear: both;
+	width: 100%;
+	border-top:15px solid #f1f1f1;
+}
+
+#result #medsum {
+	height: 300px;
+}
+
+#result #keyop {
+	height: 300px;
+}
+
+
+#result .double {
+	width: 100%;
+	text-align: center;
+}
+
+#result .double > div {
+	width: 49.5%;
+	height:300px;
+	float:left;
+}
+
+#footer {
+  text-align: center;
+  background: #f1f1f1;
+  border-top: 15px solid #f1f1f1;
+  margin-top: 10px;
+  bottom: 0;
+  width: 100%;
+}

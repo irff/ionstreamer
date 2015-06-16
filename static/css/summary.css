@@ -1,0 +1,12 @@
+body {
+  background-color: #f1f1f3 !important;
+}
+
+.content {
+  background: white!important;
+  padding-top: 10px;
+}
+
+#result {
+  background-color: white!important;
+}

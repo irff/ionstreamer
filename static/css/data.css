@@ -1,0 +1,40 @@
+#logo {
+
+}
+
+#result {
+  font-size: 12px ;
+  min-height: 300px;
+  position: relative;
+  text-align: center;
+}
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  -webkit-transform: translate(-50%,-50%);
+  -moz-transform: translate(-50%,-50%);
+  -o-transform: translate(-50%,-50%);
+}
+
+#right {
+	float: right;
+	height: 100%;
+}
+
+#left {
+	float: left;
+	height: 100%;
+}
+
+h1{
+   margin-top: 20px;
+   font-size: 20px;
+   text-align: center;
+}
+
+p{
+	text-align: center;
+}
