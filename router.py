@@ -16,18 +16,21 @@ def home():
 @app.route("/streamings")
 def all_keyword():
   keywords = db.getAll(config.KEYWORD)
+  db.commit()
   if keywords == None: keywords = []
 
   def getinfo(row):
     if row.status == 0: status = 'status: paused'
     if row.status == 1: status = 'status: active streaming'
-    data = db.getAll(config.RESULT, ['text'], ("keyword = %s", [row.keyword]), [], [0,1000111])
+    data = db.getAll(config.RESULT, ['text'], ("keyword = %s", [row.keyword]))
+    db.commit()
     if data == None: data = []
     if len(data) < 3: return {'name': row.keyword, 'counts': 'no results yet', 'status': status, 'tw1': '', 'tw2': '', 'tw3': ''}
-    return {'name': row.keyword, 'counts': '%d results'%len(data), 'status': status, 'tw1': data[-3].text, 'tw2': data[-2].text, 'tw3': data[-1].text}
+    return {'name': row.keyword, 'counts': '%d results'%len(data), 'status': status, 'tw1': data[-1].text, 'tw2': data[-2].text, 'tw3': data[-3].text}
   
   return json.dumps(map(getinfo, keywords))
 
+# curl -XPOST localhost:7876/stream -d 'keyword=syawal&status=1'
 @app.route("/stream", methods=['POST'])
 def index_keyword():
   ret = db.insertOrUpdate(config.KEYWORD, {"keyword": request.form['keyword'], "status": request.form['status']}, {})

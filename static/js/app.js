@@ -18,8 +18,7 @@ function addone(id, data) {
 }
 
 function refresh() {
-  console.log('refresh...');
-  $.get('/streamings', function (response) {
+  $.get('/streamings?'+Math.random(), function (response) {
     panel.empty();
     for (var i = response.length-1; i >= 0; --i) {
       addone('id-'+i, response[i]);
@@ -43,7 +42,6 @@ function addkeyword() {
 function stream(node, status) {
   $.post('/stream', {keyword: node.parentNode.parentNode.children[0].innerHTML, status: status}, function(response){
     // console.log(response);
-    // setTimeout(refresh,500);
     refresh();
   }, "json");
 }
@@ -51,7 +49,6 @@ function stream(node, status) {
 function unstream(node) {
   $.post('/unstream', {keyword: node.parentNode.parentNode.children[0].innerHTML}, function(response){
     // console.log(response);
-    // setTimeout(refresh,500);
     refresh();
   }, "json");
 }

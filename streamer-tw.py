@@ -18,7 +18,6 @@ import config, time, datetime
 data = {}
 
 def gather(keyword):
-  start = time.time()
   try: res = twitter_api.search.tweets(q=keyword, count=100)['statuses']
   except Exception, e: res = []
 
@@ -31,23 +30,26 @@ def gather(keyword):
     'retweet_count': x['retweet_count']
     }, res)
 
-  ret = 0
+  success = 0
+  
   for r in res:
     try:
       db.insert(config.RESULT, r)
-      ret += 1
+      success += 1
     except Exception, e:
       pass
+  
   db.commit()
 
 
-  print '+%d data about %s' % (ret, keyword)
-  return time.time()-start
+  print '+%d data about %s' % (success, keyword)
+  return 1
 
 
 
 while True:
   keywords = db.getAll(config.KEYWORD)
+  db.commit()
   if keywords == None: keywords = []
   for k in keywords:
     if k.status == 1:
