@@ -1,246 +1,85 @@
 {% extends "base.html" %}
 {% block title %}Twitter Streamings{% endblock %}
 {% block content %}
-      <div class="row">
-        <div class="large-12 columns">
-     
-         
+
+<nav class="top-bar" data-topbar>
+  <span class="name text-center">
+    <h1 class="title"><i class="fa fa-twitter fa-lg"></i> Tweet Streamer</h1>
+  </span>
+</nav>
+
+<hr>
+
+<div class="row">
+  <div class="large-6 small-12 columns">
+    <div class="panel callout" id="message">Enter new keyword to stream.</div>
+    <form class="row collapse" onsubmit="return addkeyword();">
+      <div class="small-10 columns">
+        <input id="keyword" type="text" placeholder="new keyword" required>
+      </div>
+      <div class="small-2 columns">
+        <button id="plus_button" class="button secondary postfix"><i id="content_button" class="fa fa-lg fa-plus"></i></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="small-block-grid-1 medium-block-grid-3 large-block-grid-3" id="panel">
+  <!-- BAGIAN INI BAKAL DIISI SAMA SAMPLE DIV -->
+  </div>
+</div>
+   
+
+<footer class="row">
+  <hr>
+  <div class="columns text-center">
+    <p>Copyright <i class="fa fa-copyright"></i> <a href="http://langgar.co">langgar.co</a>.</p>
+  </div>
+</footer>
+
+
+<!-- SAMPLE DIV -->
+<li hidden id="sample" class="" data-equalizer-watch>
+  <ul class="pricing-table">
+    <li class="title">Jokowi</li>
+    <li class="price">7876 Results</li>
+    <li class="description">status: active streaming</li>
+    <li class="bullet-item">tweet 1</li>
+    <li class="bullet-item">tweet 2</li>
+    <li class="bullet-item">tweet 3</li>
+    <li class="cta-button">
+      <span onclick="stream(this,1);"><a class="button radius success tiny"><i class="fa fa-play"></i></a></span>
+      <span onclick="stream(this,0);"><a class="button radius secondary tiny"><i class="fa fa-pause"></i></a></span>
+      <span onclick="unstream(this);"><a class="button radius alert tiny"><i class="fa fa-trash"></i></a></span>
+    </li>
+  </ul>
+</li>
+
+{% endblock %}
+
+
+
+<!-- SAMPAH -->
+
+  <!-- <div class="large-12 small-12 columns">
+    <div class="row" id="panel" data-equalizer></div>
+
+    <div class="row">
+      <div class="large-12 columns">
+        <div class="panel">
           <div class="row">
-            <div class="large-12 columns">
-     
-              <nav class="top-bar" data-topbar>
-                <ul class="title-area">
-                   
-                  <li class="name">
-                    <h1>
-                      <a href="#">
-                        Top Bar Title
-                      </a>
-                    </h1>
-                  </li>
-                  <li class="toggle-topbar menu-icon"><a href="#"><span>menu</span></a></li>
-                </ul>
-             
-                <section class="top-bar-section">
-                   
-                  <ul class="right">
-                    <li class="divider"></li>
-                    <li class="has-dropdown">
-                      <a href="#">Main Item 1</a>
-                      <ul class="dropdown">
-                        <li><label>Section Name</label></li>
-                        <li class="has-dropdown">
-                          <a href="#" class="">Has Dropdown, Level 1</a>
-                          <ul class="dropdown">
-                            <li><a href="#">Dropdown Options</a></li>
-                            <li><a href="#">Dropdown Options</a></li>
-                            <li><a href="#">Level 2</a></li>
-                            <li><a href="#">Subdropdown Option</a></li>
-                            <li><a href="#">Subdropdown Option</a></li>
-                            <li><a href="#">Subdropdown Option</a></li>
-                          </ul>
-                        </li>
-                        <li><a href="#">Dropdown Option</a></li>
-                        <li><a href="#">Dropdown Option</a></li>
-                        <li class="divider"></li>
-                        <li><label>Section Name</label></li>
-                        <li><a href="#">Dropdown Option</a></li>
-                        <li><a href="#">Dropdown Option</a></li>
-                        <li><a href="#">Dropdown Option</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">See all →</a></li>
-                      </ul>
-                    </li>
-                    <li class="divider"></li>
-                    <li><a href="#">Main Item 2</a></li>
-                    <li class="divider"></li>
-                    <li class="has-dropdown">
-                      <a href="#">Main Item 3</a>
-                      <ul class="dropdown">
-                        <li><a href="#">Dropdown Option</a></li>
-                        <li><a href="#">Dropdown Option</a></li>
-                        <li><a href="#">Dropdown Option</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">See all →</a></li>
-                      </ul>
-                    </li>
-                  </ul>
-                </section>
-              </nav>
-               
+            <div class="large-2 small-6 columns" data-equalizer-watch>
+              <img src="http://placehold.it/300x300&text=Site Owner">
+            </div>
+            <div class="large-10 small-6 columns" data-equalizer-watch>
+              <strong>This Site Is Managed By<hr/></strong>
+              Risus ligula, aliquam nec fermentum vitae, sollicitudin eget urna. Donec dignissim nibh fermentum odio ornare sagittis
             </div>
           </div>
-     
-         
-     
-          <div class="row">
-     
-       
-     
-            <div class="large-4 small-12 columns">
-     
-              <img src="http://placehold.it/500x500&text=Logo">
-     
-              <div class="hide-for-small panel">
-                <h3>Header</h3>
-                <h5 class="subheader">Risus ligula, aliquam nec fermentum vitae, sollicitudin eget urna. Donec dignissim nibh fermentum odio ornare sagittis.
-                </h5>
-              </div>
-     
-              <a href="#">
-              <div class="panel callout radius">
-                <h6>99  items in your cart</h6>
-              </div>
-              </a>
-     
-            </div>
-     
-         
-     
-     
-         
-     
-            <div class="large-8 columns">
-              <div class="row" data-equalizer>
-      
-                <div class="large-6 small-6 columns" data-equalizer-watch>
-                  <ul class="pricing-table">
-                    <li class="title">Jokowi</li>
-                    <li class="price">7876 Results</li>
-                    <li class="description">An awesome description</li>
-                    <li class="bullet-item">1 Database</li>
-                    <li class="bullet-item">5GB Storage</li>
-                    <li class="bullet-item">20 Users</li>
-                    <li class="cta-button">
-                      <div class="panel clearfix">
-                        <a class="button radius success tiny"><i class="fa fa-play"></i></a>
-                        <a class="button radius info tiny"><i class="fa fa-pause"></i></a>
-                        <a class="button radius alert tiny"><i class="fa fa-trash"></i></a>
-                        <a class="button radius alert tiny"><i class="fa fa-check"></i></a>
-                        <a class="button radius secondary tiny"><i class="fa fa-times"></i></a>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-
-                <div class="large-6 small-6 columns" data-equalizer-watch>
-                  <ul class="pricing-table">
-                    <li class="title">Jokowi</li>
-                    <li class="price">7876 Results</li>
-                    <li class="description">An awesome description</li>
-                    <li class="bullet-item">1 Database</li>
-                    <li class="bullet-item">5GB Storage</li>
-                    <li class="bullet-item">20 Users</li>
-                    <li class="cta-button">
-                      <div class="panel clearfix">
-                        <a class="button radius success tiny"><i class="fa fa-play"></i></a>
-                        <a class="button radius info tiny"><i class="fa fa-pause"></i></a>
-                        <a class="button radius alert tiny"><i class="fa fa-trash"></i></a>
-                        <a class="button radius alert tiny"><i class="fa fa-check"></i></a>
-                        <a class="button radius secondary tiny"><i class="fa fa-times"></i></a>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-
-                <div class="large-6 small-6 columns" data-equalizer-watch>
-                  <ul class="pricing-table">
-                    <li class="title">Jokowi</li>
-                    <li class="price">7876 Results</li>
-                    <li class="description">An awesome description</li>
-                    <li class="bullet-item">1 Database</li>
-                    <li class="bullet-item">5GB Storage</li>
-                    <li class="bullet-item">20 Users</li>
-                    <li class="cta-button">
-                      <div class="panel clearfix">
-                        <a class="button radius success tiny"><i class="fa fa-play"></i></a>
-                        <a class="button radius info tiny"><i class="fa fa-pause"></i></a>
-                        <a class="button radius alert tiny"><i class="fa fa-trash"></i></a>
-                        <a class="button radius alert tiny"><i class="fa fa-check"></i></a>
-                        <a class="button radius secondary tiny"><i class="fa fa-times"></i></a>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-
-                <div class="large-6 small-6 columns" data-equalizer-watch>
-                  <ul class="pricing-table">
-                    <li class="title">Jokowi</li>
-                    <li class="price">7876 Results</li>
-                    <li class="description">An awesome description</li>
-                    <li class="bullet-item">1 Database</li>
-                    <li class="bullet-item">5GB Storage</li>
-                    <li class="bullet-item">20 Users</li>
-                    <li class="cta-button">
-                      <div class="panel clearfix">
-                        <a class="button radius success tiny"><i class="fa fa-play"></i></a>
-                        <a class="button radius info tiny"><i class="fa fa-pause"></i></a>
-                        <a class="button radius alert tiny"><i class="fa fa-trash"></i></a>
-                        <a class="button radius alert tiny"><i class="fa fa-check"></i></a>
-                        <a class="button radius secondary tiny"><i class="fa fa-times"></i></a>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-
-              </div>
-     
-         
-     
-     
-         
-              <div class="row">
-                <div class="large-12 columns">
-                  <div class="panel">
-                    <div class="row">
-     
-                      <div class="large-2 small-6 columns" data-equalizer-watch>
-                        <img src="http://placehold.it/300x300&text=Site Owner">
-                      </div>
-     
-                      <div class="large-10 small-6 columns" data-equalizer-watch>
-                        <strong>This Site Is Managed By<hr/></strong>
-     
-                        Risus ligula, aliquam nec fermentum vitae, sollicitudin eget urna. Donec dignissim nibh fermentum odio ornare sagittis
-                      </div>
-     
-                    </div>
-                  </div>
-                </div>
-     
-         
-     
-              </div>
-            </div>
-          </div>
-     
-     
-         
-     
-          <footer class="row">
-            <div class="large-12 columns"><hr/>
-              <div class="row">
-     
-                <div class="large-6 columns">
-                  <p>© Copyright no one at all. Go to town.</p>
-                </div>
-     
-                <div class="large-6 columns">
-                  <ul class="inline-list right">
-                    <li><a href="#">Link 1</a></li>
-                    <li><a href="#">Link 2</a></li>
-                    <li><a href="#">Link 3</a></li>
-                    <li><a href="#">Link 4</a></li>
-                  </ul>
-                </div>
-     
-              </div>
-            </div>
-          </footer>
-     
-         
-     
         </div>
       </div>
-    
-{% endblock %}
+    </div>
+
+  </div> -->

@@ -11,19 +11,17 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/fa/css/font-awesome.min.css') }}">
 
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/animate.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
 
   <script src="{{ url_for('static', filename='js/vendor/modernizr.js') }}"></script>
 </head>
 <body>
-  <!-- <div class="content"> -->
-    {% block content %}{% endblock %}
-  <!-- </div> -->
-
+  {% block content %}{% endblock %}
   <script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
   <script src="{{ url_for('static', filename='js/vendor/fastclick.js') }}"></script>
   <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/foundation/foundation.equalizer.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
   <script>
     $(document).foundation();
   </script>
