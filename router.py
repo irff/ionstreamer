@@ -33,7 +33,7 @@ def all_keyword():
 # curl -XPOST localhost:7876/stream -d 'keyword=syawal&status=1'
 @app.route("/stream", methods=['POST'])
 def index_keyword():
-  ret = db.insertOrUpdate(config.KEYWORD, {"keyword": request.form['keyword'], "status": request.form['status']}, {})
+  ret = db.insertOrUpdate(config.KEYWORD, request.form, {})
   db.commit()
   return json.dumps(ret)
 

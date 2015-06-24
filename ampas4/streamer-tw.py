@@ -10,7 +10,7 @@ twitter_api = twitter.Twitter(auth=auth)
 
 
 from simplemysql import SimpleMysql
-db = SimpleMysql(host="localhost", db="ionstreamer", user="root", passwd="", keep_alive=True)
+db = SimpleMysql(host="localhost", db="ionstreamer", user="root", passwd="", keep_alive=True, use_unicode=True, charset='utf8')
 
 
 import config, time, datetime

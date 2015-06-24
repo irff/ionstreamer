@@ -1,5 +1,9 @@
 HOST = '0.0.0.0'
 PORT = 7876
-INDEX = 'ionstreamer'
-KEYWORD = 'keywords'
-RESULT = 'results'
+DATABASE = 'ionstreamer'
+KEYWORD = 'keyword'
+RESULT = 'tweet'
+CONSUMER_KEY = 'QggSVBP9t2RR4yzIvJpLHxHrL'
+CONSUMER_SECRET ='ncRsiSeemxz02pEUMSRhVuEtKlWxFOyCPvCNwwWKL1cZQLY2TN'
+OAUTH_TOKEN = '165650047-sNAi13v3VdDk8nhqMLmcdgTVzkR2Ton749BIntQ7'
+OAUTH_TOKEN_SECRET = 'OM5JGhgswebcx8WYxn8yGrwPQdexb5VS00UIoguD117VU'

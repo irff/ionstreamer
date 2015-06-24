@@ -18,7 +18,7 @@ function addone(id, data) {
 }
 
 function refresh() {
-  $.get('/streamings?'+Math.random(), function (response) {
+  $.get('/streamings', function (response) {
     panel.empty();
     for (var i = response.length-1; i >= 0; --i) {
       addone('id-'+i, response[i]);
@@ -29,7 +29,7 @@ function refresh() {
 function addkeyword() {
   $('#plus_button').prop({disabled:true});
   $('#content_button').attr('class', 'fa fa-lg fa-spinner fa-spin');
-  $.post('/stream', {keyword: $('#keyword').val(), status: 1}, function(response){
+  $.post('/stream', {keyword: $('#keyword').val(), status: 1, datestamp: (new Date()).toISOString().slice(0,10)}, function(response){
     $('#plus_button').prop({disabled:false});
     $('#content_button').attr('class', 'fa fa-lg fa-plus');
     $('#message').text($('#keyword').val()+' has been added to streaming queue successfully');
