@@ -7,13 +7,11 @@ from simplemysql import SimpleMysql
 db = SimpleMysql(host="localhost", db="ionstreamer", user="root", passwd="", keep_alive=True, charset='utf8', use_unicode=True)
 
 
-
 attributes = ['keyword', 'text', 'created_at', 'username', 'name', 'retweet_count']
-# tmp = {}
 before_days = datetime.timedelta(30) # 30 days
 
 def format_created_at(s):
-  t = dateutil.parser.parse(s) - datetime.timedelta(hours = 1)
+  t = dateutil.parser.parse(s) - datetime.timedelta(hours = 7)
   return t.strftime("%Y-%m-%d %H-%M-%S")
 
 def gather(row):
@@ -58,7 +56,8 @@ def gather(row):
   ##################################################################################################################################
   # tso.add_keyword(['since:'+(row.datestamp-before_days).__str__()])
   # success = 0
-  
+  # tmp = {}
+  #
   # def my_callback_closure(current_ts_instance): # accepts ONE argument: an instance of TwitterSearch
   #   db.commit()
   #   print '+%d data about %s' % (success, row.keyword)

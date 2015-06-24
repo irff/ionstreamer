@@ -21,9 +21,11 @@ def all_keyword():
 
   # sort row based on active/inactive
   def comp(x,y):
-    if x.status == 'processing': x.status = 'active'
-    if y.status == 'processing': y.status = 'active'
-    return cmp(x.status, y.status)
+    xs = x.status
+    ys = y.status
+    if xs == 'processing': xs = 'active'
+    if ys == 'processing': ys = 'active'
+    return cmp((xs, x.keyword), (ys, y.keyword))
   keywords.sort(comp)
 
   def getinfo(row):
