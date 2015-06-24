@@ -1,2 +1,5 @@
-convert created_at to "normal" datetime
-sort result by created_at
+[DONE] convert created_at to "normal" datetime
+[DONE] sort result by created_at
+find who retweet this (or favorite)
+swith to big data db
+[DONE] reverse tweets result, take max_id from the last tweets
