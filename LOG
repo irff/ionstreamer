@@ -1,0 +1,33 @@
+find who retweet this (or favorite)
+implement dbelasticsearch
+
+
+Done:
+Learn flask
+Learn elasticsearch
+
+Learn mysql python
+Learn twittersearch
+
+Create web service to stream
+Create tweet streamer dashboard
+Stabilizing data
+- ensure not duplicate
+- grab data from the past
+- choose important info to save
+
+
+Feature:
+Grab tweets based on username and keyword
+ - active streaming
+ - past streaming
+
+
+To do next:
+Migrate to ES
+Save all result from tweet
+Find who retweet this
+Design the dashboard for analitycs
+Create api for analitycs
+Synchronize dashboard and api
+Need tools?

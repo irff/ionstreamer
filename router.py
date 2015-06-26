@@ -2,11 +2,10 @@ from flask import Flask, render_template, redirect, request
 app = Flask(__name__)
 
 
-from simplemysql import SimpleMysql
-db = SimpleMysql(host="localhost", db="ionstreamer", user="root", passwd="", keep_alive=True)
+from config import *
+from database.dbmysql import *
 
-
-import config, json
+import json
 
 
 @app.route("/")
@@ -15,9 +14,7 @@ def home():
 
 @app.route("/streamings")
 def all_keyword():
-  keywords = db.getAll(config.KEYWORD)
-  db.commit()
-  if keywords == None: keywords = []
+  keywords = fetch(KEYWORD)
 
   # sort row based on active/inactive
   def comp(x,y):
@@ -29,30 +26,28 @@ def all_keyword():
   keywords.sort(comp)
 
   def getinfo(row):
-    data = db.getAll(config.RESULT, ['text'], ("keyword = %s", [row.keyword]), ['created_at', 'asc'])
-    db.commit()
-    if data == None: data = []
+    counts = count(RESULT, where = {'keyword': row.keyword})
+    data = fetch(RESULT, where = {'keyword': row.keyword}, order = ['created_at', 'DESC'], limit = (0, 3))
+
     if len(data) < 3: return {'name': row.keyword, 'counts': 'no results yet', 'status': row.status, 'tw1': '', 'tw2': '', 'tw3': ''}
-    return {'name': row.keyword, 'counts': '%d results'%len(data), 'status': row.status, 'tw1': data[-1].text, 'tw2': data[-2].text, 'tw3': data[-3].text}
+    return {'name': row.keyword, 'counts': '%d results'%counts, 'status': row.status, 'tw1': data[0].text, 'tw2': data[1].text, 'tw3': data[2].text}
   
   return json.dumps(map(getinfo, keywords))
 
 # curl -XPOST localhost:7876/stream -d 'keyword=syawal&status=1'
 @app.route("/stream", methods=['POST'])
 def index_keyword():
-  # make sure it is now processing
-  row = db.getOne(config.KEYWORD, ['status'], ("keyword = %s", [request.form['keyword']]))
-  if row != None and row.status == 'processing': return request.form['keyword'] + 'is processing!'
-  ret = db.insertOrUpdate(config.KEYWORD, request.form, {})
-  db.commit()
-  return json.dumps(ret)
+  counts = count(KEYWORD, where = {'keyword': request.form['keyword'], 'status': 'processing'})
+  
+  if counts > 0:
+    return request.form['keyword'] + "is processing!"
+
+  return json.dumps(update(KEYWORD, request.form))
 
 @app.route("/unstream", methods=['POST'])
 def delete_keyword():
-  ret = db.delete(config.KEYWORD, ("keyword = %s", [request.form['keyword']]))
-  db.commit()
-  return json.dumps(ret)
+  return json.dumps(delete(KEYWORD, where = {'keyword': request.form['keyword']}))
 
 
 if __name__ == "__main__":
-    app.run(host=config.HOST, port=config.PORT, debug=True)
+    app.run(host=HOST, port=PORT, debug=True)
