@@ -1,57 +1,58 @@
 {% extends "base.html" %}
-{% block title %}Twitter Streamings{% endblock %}
+{% block title %}Langgar Tweet Streamer{% endblock %}
 {% block content %}
 
-<nav class="top-bar" data-topbar>
-  <span class="name text-center">
-    <h1 class="title"><i class="fa fa-twitter fa-lg"></i> Tweet Streamer</h1>
-  </span>
-</nav>
+<div ng-controller="summaryController">
 
-<hr>
+  <nav class="top-bar" data-topbar>
+    <span class="name text-center">
+      <h1 class="title"><i class="fa fa-twitter fa-lg"></i> Tweet Streamer</h1>
+    </span>
+  </nav>
 
-<div class="row">
-  <div class="large-6 small-12 columns">
-    <div class="panel callout" id="message">Enter new keyword to stream.</div>
-    <form class="row collapse" onsubmit="return addkeyword();">
-      <div class="small-1 columns"><span class="prefix">@</span></div>
-      <div class="small-4 columns"><input id="username" type="text" placeholder="jokowi" autofocus></div>
-      <div class="small-5 columns"><input id="keyword" type="text" placeholder="bbm naik"></div>
-      <div class="small-2 columns">
-        <button id="plus_button" class="button postfix"><i id="content_button" class="fa fa-lg fa-plus"></i></button>
-      </div>
-    </form>
-  </div>
-</div>
-
-
-<div class="row">
-  <div class="small-block-grid-1 medium-block-grid-3 large-block-grid-3" id="panel">
-  <!-- BAGIAN INI BAKAL DIISI SAMA SAMPLE DIV -->
-  </div>
-</div>
-   
-
-<footer class="row">
   <hr>
-  <div class="columns text-center">
-    <p>Copyright <i class="fa fa-copyright"></i> <a href="http://langgar.co">langgar.co</a>.</p>
+
+  <div class="row">
+    <div class="large-6 small-12 columns">
+      <div class="panel callout" id="message">Enter new keyword to stream.</div>
+      <form class="row collapse" ng-submit="submit()">
+        <div class="small-10 columns"><input ng-model="keyword" type="text" placeholder="joko widodo" required autofocus></div>
+        <div class="small-2 columns"><button ng-disabled="is_sending_kw" class="button postfix"><i class="fa fa-lg" ng-class="{'fa-spinner fa-spin':is_sending_kw,'fa-plus':!is_sending_kw}"></i></button></div>
+      </form>
+    </div>
   </div>
-</footer>
 
+  <div class="row">
+    <div class="small-block-grid-1 medium-block-grid-3 large-block-grid-3">
+      
+      <li ng-class="{'animated jello': info.status=='processing'}" ng-repeat="info in summary">
+        <ul class="pricing-table">
+          {% raw %}
+          <li class="title" ng-style="info.status=='inactive' && {background:'grey'}">{{info.keyword}}</li>
+          <li class="price">{{info.count}}</li>
+          <li class="description">{{info.status}}</li>
+          <li class="bullet-item" ng-repeat="tweet in info.tweets">{{tweet}}</li>
+          <li class="cta-button">
+            <a ng-click="stream(info.keyword, 'active')" ng-show="info.status=='inactive'" class="button radius secondary tiny"><i class="fa fa-play"></i></a>
+            <a ng-click="stream(info.keyword, 'inactive')" ng-show="info.status=='active'"class="button radius secondary tiny"><i class="fa fa-pause"></i></a>
+            <a ng-click="stream(info.keyword, 'removed')" ng-show="info.status!='processing'" class="button radius secondary tiny"><i class="fa fa-trash"></i></a>
+          </li>
+          {% endraw %}
+        </ul>
+      </li>
 
-<!-- SAMPLE DIV -->
-<li hidden id="sample" class="" data-equalizer-watch>
-  <ul class="pricing-table">
-    <li class="title"></li>
-    <li class="price"></li>
-    <li class="description"></li>
-    <li class="bullet-item"></li>
-    <li class="bullet-item"></li>
-    <li class="bullet-item"></li>
-    <li class="cta-button"></li>
-  </ul>
-</li>
+    </div>
+  </div>
+     
+
+  <footer class="row">
+    <hr>
+    <div class="columns text-center">
+      <p>Copyright <i class="fa fa-copyright"></i> <a href="http://langgar.co">langgar.co</a>.</p>
+    </div>
+  </footer>
+
+</div>
 
 {% endblock %}
 

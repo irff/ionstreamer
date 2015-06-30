@@ -7,7 +7,7 @@ def _transform_where(where):
   return (' and '.join([x+"=%s" for x in k]), v)
 
 
-def fetch(table, where = None, order = None, limit = None):
+def dbget(table, where = None, order = None, limit = None):
   """ where berupa dict {attributes: values} """
   ret = db.getAll(table = table, where = _transform_where(where), order = order, limit = limit)
 
@@ -17,7 +17,7 @@ def fetch(table, where = None, order = None, limit = None):
 
   return ret
 
-def count(table, where):
+def dbcount(table, where):
   """ where berupa dict {attributes: values} """
   (where_str, values) = _transform_where(where)
 
@@ -27,14 +27,14 @@ def count(table, where):
 
   return ret
 
-def update(table, data):
+def dbset(table, data):
   ret = db.insertOrUpdate(table = table, data = data, keys = [])
 
   db.commit()
 
   return ret
 
-def delete(table, where = None):
+def dbdelete(table, where = None):
   """ where berupa dict {attributes: values} """
   ret = db.delete(table = table, where = _transform_where(where))
 

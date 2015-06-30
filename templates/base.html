@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
-<html class="no-js" lang="en" >
+<html ng-app="tweetstreamer">
 <head>
   <meta charset="utf-8">
   <!-- If you delete this meta tag World War Z will become a reality -->
@@ -21,7 +20,10 @@
   <script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
   <script src="{{ url_for('static', filename='js/vendor/fastclick.js') }}"></script>
   <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
+
+  <script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
   <script>
     $(document).foundation();
   </script>
