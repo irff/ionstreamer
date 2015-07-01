@@ -12,8 +12,8 @@ def format_created_at(s):
   return t.strftime("%Y-%m-%d %H-%M-%S")
 
 def gather(row):
-  dbset(KEYWORD, {'keyword': row.keyword, 'status': 'processing'})
   try:
+    dbset(KEYWORD, {'keyword': row.keyword, 'status': 'processing'})
     tso = TwitterSearchOrder()
 
     for k in row.keyword.split():
@@ -22,28 +22,23 @@ def gather(row):
       else:
         tso.add_keyword([k])
 
-    # print tso.create_search_url()
-
     if row.max_id > 0: tso.set_since_id(row.max_id)
+    # print tso.create_search_url()
 
     token = gettoken()
     try:
-      ts = TwitterSearch(token.CONSUMER_KEY, token.CONSUMER_SECRET, token.OAUTH_TOKEN, token.OAUTH_TOKEN_SECRET, verify=False)
+      ts = TwitterSearch(token.CONSUMER_KEY, token.CONSUMER_SECRET, token.OAUTH_TOKEN, token.OAUTH_TOKEN_SECRET, verify = False)
 
       result = ts.search_tweets(tso)
       tweets = result['content']['statuses']
       tweets.reverse()
-      # tweets = [{'keyword': row.keyword, 'text': x['text'],
-      #   'created_at': format_created_at(x['created_at']),
-      #   'username': x['user']['screen_name'], 'name': x['user']['name'],
-      #   'retweet_count': x['retweet_count']} for x in result['content']['statuses']]
     except Exception as e:
       print "%s: %s" % (token.name, str(e))
       tweets = []
 
     if len(tweets) > 0:
       dbset(KEYWORD, {'keyword': row.keyword, 'max_id': tweets[-1]['id']})
-    
+
     for t in tweets:
       t['created_at'] = format_created_at(t['created_at'])
       dbes.dbset(row.keyword, t)
@@ -64,5 +59,6 @@ while True:
 
     if k.keyword in keywords_now:
       gather(k)
-      if len(keywords_now) < 2:
-        time.sleep(5)
+
+  if len(keywords) < 2:
+    time.sleep(5)

@@ -39,18 +39,13 @@ def summary():
   keywords.sort(comp)
 
   def getinfo(row):
-    # count = dbcount(RESULT, {'keyword': row.keyword})
-    ########################################################################################################
-    # data = dbget(RESULT, where = {'keyword': row.keyword}, order = ['created_at', 'DESC'], limit = (0, 3)) # GANTI KE ES
     count = dbes.dbcount(row.keyword)
-    # data = dbes.dbget(row.keyword, limit = 3, sort_by = "created_at:desc")
     data = dbes.dbget(row.keyword)
     data.sort(lambda x,y: cmp(y['created_at'],x['created_at']))
-    ########################################################################################################
 
     if len(data) == 0: return {'keyword': row.keyword, 'count': 'no results yet', 'status': row.status, 'tweets': []}
-    return {'keyword': row.keyword, 'count': '%d results'%count, 'status': row.status, 'tweets': ["@%s[%s]: %s"%(d['user']['screen_name'],d['created_at'],d['text']) for d in data[:3]]}
-  
+    return {'keyword': row.keyword, 'count': '%d results'%count, 'status': row.status, 'tweets': ["@%s: %s"%(d['user']['screen_name'],d['text']) for d in data[:3]]}
+
   return json.dumps( map(getinfo, keywords) )
 
 

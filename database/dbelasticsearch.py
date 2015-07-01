@@ -1,7 +1,6 @@
 from base64 import b64encode
 
 from elasticsearch import Elasticsearch
-from elasticsearch_dsl import Search
 es = Elasticsearch()
 
 INDEX = "ionstreamer"

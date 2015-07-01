@@ -12,47 +12,53 @@ def format_created_at(s):
   return t.strftime("%Y-%m-%d %H-%M-%S")
 
 def gather(row):
-  print "gathering " + row.keyword
-  since_id = row.since_id
   try:
-    token = gettoken()
-
-    ts = TwitterSearch(token.CONSUMER_KEY, token.CONSUMER_SECRET, token.OAUTH_TOKEN, token.OAUTH_TOKEN_SECRET)
 
     tso = TwitterSearchOrder()
-    
+
     for k in row.keyword.split():
       if k[0] == '@':
         tso.add_keyword(['from:'+k[1:], 'to:'+k[1:]], or_operator = True)
       else:
         tso.add_keyword([k])
 
-    def my_callback_closure(current_ts_instance): # accepts ONE argument: an instance of TwitterSearch
-      queries, tweets_seen = current_ts_instance.get_statistics()
-      if queries > 0 and (queries % 5) == 0: # trigger delay every 5th query
-          time.sleep(60) # sleep for 60 seconds
+    if row.since_id > 0: tso.set_max_id(row.since_id-1)
+    # print tso.create_search_url()
 
-    for tweet in ts.search_tweets_iterable(tso, callback=my_callback_closure):
-      # print( '@%s tweeted: %s' % ( tweet['user']['screen_name'], tweet['text'] ) )
-      tweet['created_at'] = format_created_at(tweet['created_at'])
-      dbes.dbset(row.keyword, tweet)
-      if since_id == 0 or tweet['id'] < since_id:
-        since_id = tweet['id']
-        dbset(KEYWORD, {'keyword': row.keyword, 'since_id': since_id})
+    token = gettoken()
+    try:
+      ts = TwitterSearch(token.CONSUMER_KEY, token.CONSUMER_SECRET, token.OAUTH_TOKEN, token.OAUTH_TOKEN_SECRET, verify = False)
+
+      result = ts.search_tweets(tso)
+      tweets = result['content']['statuses']
+      tweets.reverse()
+    except Exception as e:
+      print "%s: %s" % (token.name, str(e))
+      tweets = []
+
+    if len(tweets) > 0:
+      dbset(KEYWORD, {'keyword': row.keyword, 'since_id': tweets[0]['id']})
+    else:
+      dbset(KEYWORD, {'keyword': row.keyword, 'since_id': -1})
+
+    for t in tweets:
+      t['created_at'] = format_created_at(t['created_at'])
+      dbes.dbset(row.keyword, t)
+
+    print "%s: +%d" % (row.keyword, len(tweets))
 
   except Exception as e:
     print e
 
 
 while True:
-  keywords = dbget(KEYWORD, where = {'status': 'active'})
+  keywords = [x for x in dbget(KEYWORD) if x.since_id > -1 and x.status != 'inactive']
 
   for k in keywords:
-    keywords_now = dbget(KEYWORD, where = {'status': 'active'})
-
-    keywords_now = {x.keyword for x in keywords_now}
+    keywords_now = {x.keyword for x in dbget(KEYWORD) if x.since_id > -1 and x.status != 'inactive'}
 
     if k.keyword in keywords_now:
       gather(k)
 
-  time.sleep(30)
+  if len(keywords_now) < 2:
+    time.sleep(5)

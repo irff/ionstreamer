@@ -24,7 +24,7 @@
 
   <div class="row">
     <div class="small-block-grid-1 medium-block-grid-3 large-block-grid-3">
-      
+
       <li ng-class="{'animated jello': info.status=='processing'}" ng-repeat="info in summary">
         <ul class="pricing-table">
           {% raw %}
@@ -33,9 +33,9 @@
           <li class="description">{{info.status}}</li>
           <li class="bullet-item" ng-repeat="tweet in info.tweets">{{tweet}}</li>
           <li class="cta-button">
-            <a ng-click="stream(info.keyword, 'active')" ng-show="info.status=='inactive'" class="button radius secondary tiny"><i class="fa fa-play"></i></a>
-            <a ng-click="stream(info.keyword, 'inactive')" ng-show="info.status=='active'"class="button radius secondary tiny"><i class="fa fa-pause"></i></a>
-            <a ng-click="stream(info.keyword, 'removed')" ng-show="info.status!='processing'" class="button radius secondary tiny"><i class="fa fa-trash"></i></a>
+            <button ng-disabled="info.is_streaming" ng-click="stream(info, 'active')" ng-show="info.status=='inactive'" class="button radius secondary tiny"><i class="fa fa-play"></i></button>
+            <button ng-disabled="info.is_streaming" ng-click="stream(info, 'inactive')" ng-show="info.status=='active'"class="button radius secondary tiny"><i class="fa fa-pause"></i></button>
+            <button ng-disabled="info.is_streaming" ng-click="stream(info, 'removed')" ng-show="info.status!='processing'" class="button radius secondary tiny"><i class="fa fa-trash"></i></button>
           </li>
           {% endraw %}
         </ul>
@@ -43,7 +43,7 @@
 
     </div>
   </div>
-     
+
 
   <footer class="row">
     <hr>

@@ -1,5 +1,4 @@
 from simplemysql import SimpleMysql
-db = SimpleMysql(host="localhost", db="ionstreamer", user="root", passwd="", keep_alive=True)
 
 def _transform_where(where):
   if where == None: return None
@@ -9,9 +8,12 @@ def _transform_where(where):
 
 def dbget(table, where = None, order = None, limit = None):
   """ where berupa dict {attributes: values} """
+  db = SimpleMysql(host="localhost", db="ionstreamer", user="root", passwd="", keep_alive=False)
+
   ret = db.getAll(table = table, where = _transform_where(where), order = order, limit = limit)
 
   db.commit()
+  db.end()
 
   if ret == None: ret = []
 
@@ -19,25 +21,34 @@ def dbget(table, where = None, order = None, limit = None):
 
 def dbcount(table, where):
   """ where berupa dict {attributes: values} """
+  db = SimpleMysql(host="localhost", db="ionstreamer", user="root", passwd="", keep_alive=False)
+
   (where_str, values) = _transform_where(where)
 
   ret = db.query("SELECT COUNT(*) FROM %s WHERE %s" % (table, where_str), values).fetchone()[0]
 
   db.commit()
+  db.end()
 
   return ret
 
 def dbset(table, data):
+  db = SimpleMysql(host="localhost", db="ionstreamer", user="root", passwd="", keep_alive=False)
+
   ret = db.insertOrUpdate(table = table, data = data, keys = [])
 
   db.commit()
+  db.end()
 
   return ret
 
 def dbdelete(table, where = None):
   """ where berupa dict {attributes: values} """
+  db = SimpleMysql(host="localhost", db="ionstreamer", user="root", passwd="", keep_alive=False)
+
   ret = db.delete(table = table, where = _transform_where(where))
 
   db.commit()
+  db.end()
 
   return ret

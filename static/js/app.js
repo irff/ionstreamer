@@ -1,5 +1,5 @@
 (function(){
-  var app = angular.module("tweetstreamer", []);  
+  var app = angular.module("tweetstreamer", []);
 
   app.controller('summaryController', function($scope, $http, $interval){
 
@@ -7,8 +7,10 @@
       $http.get('/api/summary').success(function(r){ $scope.summary = r; });
     }
 
-    $scope.stream = function(keyword, status){
-      $http.post('/api/stream', {keyword: keyword, status: status}).success(refresh);
+    $scope.stream = function(info, status){
+      info.is_streaming = true;
+      $http.post('/api/stream', {keyword: info.keyword, status: status})
+      .success(refresh);
     }
 
     $scope.summary = [];
