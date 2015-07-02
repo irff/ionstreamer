@@ -1,19 +1,21 @@
-from config import *
-from tokenmanager import *
-from database.dbmysql import *
-import time, datetime, dateutil.parser
-import database.dbelasticsearch as dbes
+from os.path import abspath
+import sys
+sys.path.append(abspath(''))
+
+import database.dbtoken as dbt
+import database.dbkeyword as dbk
+import database.dberesult as dbr
+
+from time import sleep
+from datetime import timedelta
+from dateutil.parser import parse
 
 from TwitterSearch import TwitterSearchOrder, TwitterSearch
 
 
-def format_created_at(s):
-  t = dateutil.parser.parse(s) + datetime.timedelta(hours = 7)
-  return t.strftime("%Y-%m-%d %H-%M-%S")
-
 def gather(row):
   try:
-    dbset(KEYWORD, {'keyword': row.keyword, 'status': 'processing'})
+    
     tso = TwitterSearchOrder()
 
     for k in row.keyword.split():
@@ -22,7 +24,7 @@ def gather(row):
       else:
         tso.add_keyword([k])
 
-    if row.max_id > 0: tso.set_since_id(row.max_id)
+    if row.since_id > 0: tso.set_max_id(row.since_id-1)
     # print tso.create_search_url()
 
     token = gettoken()
@@ -37,7 +39,9 @@ def gather(row):
       tweets = []
 
     if len(tweets) > 0:
-      dbset(KEYWORD, {'keyword': row.keyword, 'max_id': tweets[-1]['id']})
+      dbset(KEYWORD, {'keyword': row.keyword, 'since_id': tweets[0]['id']})
+    else:
+      dbset(KEYWORD, {'keyword': row.keyword, 'since_id': -1})
 
     for t in tweets:
       t['created_at'] = format_created_at(t['created_at'])
@@ -45,17 +49,15 @@ def gather(row):
 
     print "%s: +%d" % (row.keyword, len(tweets))
 
-  finally:
-    dbset(KEYWORD, {'keyword': row.keyword, 'status': row.status})
+  except Exception as e:
+    print e
 
 
 while True:
-  keywords = dbget(KEYWORD, where = {'status': 'active'})
+  keywords = [x for x in dbget(KEYWORD) if x.since_id > -1 and x.status != 'inactive']
 
   for k in keywords:
-    keywords_now = dbget(KEYWORD, where = {'status': 'active'})
-
-    keywords_now = {x.keyword for x in keywords_now}
+    keywords_now = {x.keyword for x in dbget(KEYWORD) if x.since_id > -1 and x.status != 'inactive'}
 
     if k.keyword in keywords_now:
       gather(k)

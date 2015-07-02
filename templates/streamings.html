@@ -28,9 +28,11 @@
       <li ng-class="{'animated jello': info.status=='processing'}" ng-repeat="info in summary">
         <ul class="pricing-table">
           {% raw %}
-          <li class="title" ng-style="info.status=='inactive' && {background:'grey'}">{{info.keyword}}</li>
+          <a href="/analyze/{{ info.keyword | encodeURIComponent }}">
+            <li class="title keyword" ng-style="info.status=='inactive' && {background:'grey'}">{{info.keyword}}</li>
+          </a>
           <li class="price">{{info.count}}</li>
-          <li class="description">{{info.status}}</li>
+          <li class="description">from {{info.from}} <br> to {{info.to}} <br> status: {{info.status}}</li>
           <li class="bullet-item" ng-repeat="tweet in info.tweets">{{tweet}}</li>
           <li class="cta-button">
             <button ng-disabled="info.is_streaming" ng-click="stream(info, 'active')" ng-show="info.status=='inactive'" class="button radius secondary tiny"><i class="fa fa-play"></i></button>

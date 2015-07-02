@@ -1,17 +1,24 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, request
 app = Flask(__name__)
 
 
 from config import *
-from database.dbmysql import *
-import database.dbelasticsearch as dbes
+import database.dbkeyword as dbk
+import database.dbresult as dbr
 
 import json
+import analytics.tweet as tweeta
 
 
 @app.route("/")
 def home():
     return render_template('streamings.html')
+
+@app.route("/analyze/<keyword>")
+def analyze(keyword):
+  return render_template('analyze.html', data = apianalyze(keyword), keyword = keyword)
+
+
 
 # API
 @app.route("/api/stream", methods=['POST'])
@@ -20,14 +27,14 @@ def apistream():
   status = request.json['status']
 
   # jangan diapa-apakan kalau di db lagi processing
-  if dbcount(KEYWORD, {'keyword': keyword, 'status': 'processing'}):
+  if sum([1 for x in dbk.get() if x.keyword == keyword and x.status != 'processing']):
     return "%s is processing" % keyword
 
-  return json.dumps( dbset(KEYWORD, request.json) )
+  return json.dumps( dbk.set(request.json) )
 
 @app.route("/api/summary", methods=['GET'])
 def summary():
-  keywords = [x for x in dbget(KEYWORD) if x.status != 'removed']
+  keywords = [x for x in dbk.get() if x.status != 'removed']
 
   # sort row based on active/inactive
   def comp(x,y):
@@ -38,15 +45,11 @@ def summary():
     return cmp((xs, x.keyword), (ys, y.keyword))
   keywords.sort(comp)
 
-  def getinfo(row):
-    count = dbes.dbcount(row.keyword)
-    data = dbes.dbget(row.keyword)
-    data.sort(lambda x,y: cmp(y['created_at'],x['created_at']))
+  return json.dumps( map(tweeta.getinfo, keywords) )
 
-    if len(data) == 0: return {'keyword': row.keyword, 'count': 'no results yet', 'status': row.status, 'tweets': []}
-    return {'keyword': row.keyword, 'count': '%d results'%count, 'status': row.status, 'tweets': ["@%s: %s"%(d['user']['screen_name'],d['text']) for d in data[:3]]}
-
-  return json.dumps( map(getinfo, keywords) )
+@app.route("/api/analyze/<keyword>", methods=['GET','POST'])
+def apianalyze(keyword):
+  return json.dumps( tweeta.get_tweet_freq(keyword) )
 
 
 if __name__ == "__main__":

@@ -5,3 +5,8 @@ body {
 .title {
   color: white;
 }
+
+.keyword:hover {
+  color: lightblue;
+  font-weight: bolder;
+}
