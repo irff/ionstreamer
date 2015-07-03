@@ -12,6 +12,8 @@ Stabilizing data
 - ensure not duplicate
 - grab data from the past
 - choose important info to save
+Migrate to ES
+Save all result from tweet
 
 
 ====================================================================================
@@ -21,19 +23,18 @@ FEATURE:
 Grab tweets based on username and keyword
  - active streaming
  - past streaming
+Analytics with charts:
+- Growth of Tweets
+- Top Mentions People
+- Top Posting about
 
 
 ====================================================================================
 
 TO DO:
 
-make modular: twitter oauth keys manager, database manager, thread(?) manager (can be sqeuential or parallel ???)
-find who retweet this (or favorite)
-Migrate to ES
-Save all result from tweet
+Creating cache!
 Find who retweet this
 Design the dashboard for analitycs
-Create api for analitycs
-Synchronize dashboard and api
-Need tools?
-Learn angular.js
+Implements all API for analitycs
+Implements sentiment analytics

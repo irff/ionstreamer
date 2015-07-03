@@ -10,20 +10,20 @@ def get(keyword, size, timeout = 60):
     res = es.search(index=INDEX, doc_type=b64encode(keyword), size = size, timeout = timeout)
     return [x['_source'] for x in res['hits']['hits']]
   except Exception as e:
-    print "error: " + e
+    print e
     return []
 
 def get_fields(keyword, size, fields, timeout = 60):
   try:
     res = es.search(index=INDEX, doc_type=b64encode(keyword), size = size, fields = fields, timeout = timeout)
-    return [x['fields'] for x in res['hits']['hits']]
+    return [x['fields'] for x in res['hits']['hits'] if 'fields' in x]
   except Exception as e:
     print e
     return []
 
 def count(keyword):
   try:
-    return es.search(index=INDEX, doc_type=b64encode(keyword), fields="", size=0)['hits']['total']
+    return es.count(index=INDEX, doc_type=b64encode(keyword))['count']
   except Exception as e:
     print e
     return 0

@@ -2,9 +2,12 @@ from os.path import abspath
 import sys
 sys.path.append(abspath(''))
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 from dateutil.parser import parse
 import database.dbresult as dbr
+import time
+from collections import defaultdict
+
 
 def getinfo(row):
   count = dbr.count(row.keyword)
@@ -23,13 +26,51 @@ def getinfo(row):
   }
 
 def get_tweet_freq(keyword):
-  data = dbr.get_fields(keyword, fields="created_at", size = 1000111000)
-  data = map(lambda x: (parse(x['created_at'][0]) + timedelta(hours = 7)).strftime("%Y-%m-%d %H:00:00"), data)
-  data.sort()
-  ret = []
+  st = time.time()
+  data = dbr.get_fields(keyword, fields="created_at", size = 1000111000, timeout = 60)
+  print time.time()-st
+  
+  st = time.time()
+  # data = map(lambda x: (parse(x['created_at'][0]) + timedelta(hours = 7)).strftime("%Y-%m-%d %H:00:00"), data)
+  #YYYY-mm-ddTHH
+  seven = timedelta(hours = 7)
+  data = map(lambda x:
+              (datetime.strptime(x['created_at'][0][:10]+' '+x['created_at'][0][11:13], "%Y-%m-%d %H") + seven).strftime("%Y-%m-%d %H:00:00"),
+              data)
+  print time.time()-st
+
+  st = time.time()
+  ret = defaultdict(int)
   for d in data:
-    if ret == [] or ret[-1][0] != d:
-      ret.append([d,1])
-    else:
-      ret[-1][1] += 1
-  return ret
+    ret[d] += 1
+  print time.time()-st
+  
+  items = ret.items()
+  items.sort()
+
+  from random import randint
+  return map(lambda (x,y): (x,y,randint(0,y/2),randint(0,y/2)), items)
+
+def get_top_mention(keyword):
+  username = "entities.user_mentions.screen_name"
+  mentions = dbr.get_fields(keyword, fields=username, size = 1000111000, timeout = 60)
+  freq = defaultdict(int)
+  for m in mentions:
+    for x in m['entities.user_mentions.screen_name']:
+      freq[x] += 1
+  
+  items = freq.items()
+  items.sort(lambda x,y: cmp(y[1], x[1]))
+  return map(lambda (x,y): ('@'+x, y), items[:5])
+
+def get_top_posting(keyword):
+  username = "user.screen_name"
+  usernames = dbr.get_fields(keyword, fields=username, size = 1000111000, timeout = 60)
+  freq = defaultdict(int)
+  for u in usernames:
+    for x in u['user.screen_name']:
+      freq[x] += 1
+  
+  items = freq.items()
+  items.sort(lambda x,y: cmp(y[1], x[1]))
+  return map(lambda (x,y): ('@'+x, y), items[:5])

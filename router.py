@@ -6,7 +6,7 @@ from config import *
 import database.dbkeyword as dbk
 import database.dbresult as dbr
 
-import json
+import json, urllib
 import analytics.tweet as tweeta
 
 
@@ -16,7 +16,7 @@ def home():
 
 @app.route("/analyze/<keyword>")
 def analyze(keyword):
-  return render_template('analyze.html', data = apianalyze(keyword), keyword = keyword)
+  return render_template('analyze.html', keyword = keyword, encoded_keyword = urllib.quote(keyword, safe='~()*!.\''))
 
 
 
@@ -47,9 +47,17 @@ def summary():
 
   return json.dumps( map(tweeta.getinfo, keywords) )
 
-@app.route("/api/analyze/<keyword>", methods=['GET','POST'])
+@app.route("/api/analyze/freq/<keyword>", methods=['GET'])
 def apianalyze(keyword):
   return json.dumps( tweeta.get_tweet_freq(keyword) )
+
+@app.route("/api/analyze/topmention/<keyword>", methods=['GET'])
+def topmention(keyword):
+  return json.dumps( tweeta.get_top_mention(keyword) )
+
+@app.route("/api/analyze/topposting/<keyword>", methods=['GET'])
+def topposting(keyword):
+  return json.dumps( tweeta.get_top_posting(keyword) )
 
 
 if __name__ == "__main__":

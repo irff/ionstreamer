@@ -4,41 +4,63 @@
 
 <!--Load the AJAX API-->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script src="{{ url_for('static', filename='js/chart.js') }}"></script>
 <script type="text/javascript">
-google.load('visualization', '1.1', {packages: ['corechart', 'line']});
-google.setOnLoadCallback(drawCurveTypes);
+google.load('visualization', '1.0', {packages: ['corechart']});
+google.setOnLoadCallback(drawCurves);
 
-function drawCurveTypes() {
-      var data = new google.visualization.DataTable();
-      data.addColumn('datetime', 'Date');
-      data.addColumn('number', 'All Tweets');
+function drawFreq() {
+  var data = new google.visualization.DataTable();
+  data.addColumn('datetime', 'Time');
+  data.addColumn('number', 'All Tweets');
+  data.addColumn('number', 'Positive Tweets');
+  data.addColumn('number', 'Negative Tweets');
 
-      {% autoescape false %}
-      table = {{ data }};
-      data.addRows( table.map(function(x){
-        x[0] = new Date(x[0]);
-        return x;
-      }) );
-      {% endautoescape %}
+  var chart = new google.visualization.LineChart(document.getElementById('freq'));
+  var chart2 = new google.visualization.PieChart(document.getElementById('sentiment'));
+  $.get('/api/analyze/freq/{{encoded_keyword}}', function(r){
+    tabel = r.map(function(x){x[0] = new Date(x[0]); return x;});
+    data.addRows(tabel);
+    chart.draw(data, options_freq);
 
-      var options = {
-        hAxis: {
-          title: 'Date',
-        },
-        vAxis: {
-          title: 'Number of Tweets',
-        },
-        series: {
-          // 0: {curveType: 'function'},
-        },
-        legend: {
-          position: 'bottom'
-        },
-      };
+    var positive = r.reduce(function(acc, curr){return acc + curr[2];}, 0);
+    var negative = r.reduce(function(acc, curr){return acc + curr[3];}, 0);
+    data = google.visualization.arrayToDataTable([
+      ['Sentiment', 'Number of Occurence'],
+      ['Positive Tweets', positive],
+      ['Negative Tweets', negative],
+    ]);
+    chart2.draw(data, options_sentiment);
+  }, 'JSON');
+}
 
-      var chart = new google.visualization.LineChart(document.getElementById('linechart'));
-      chart.draw(data, options);
-    }
+function drawTopMention() {
+  var data = new google.visualization.DataTable();
+  data.addColumn('string', 'Username');
+  data.addColumn('number', 'Number of Mentions');
+  var chart = new google.visualization.BarChart(document.getElementById('topmention'));
+  $.get('/api/analyze/topmention/{{encoded_keyword}}', function(r){
+    data.addRows(r);
+    chart.draw(data, options_topmention);
+  }, 'JSON');
+}
+
+function drawTopPosting() {
+  var data = new google.visualization.DataTable();
+  data.addColumn('string', 'Username');
+  data.addColumn('number', 'Number of Posts');
+  var chart = new google.visualization.BarChart(document.getElementById('topposting'));
+  $.get('/api/analyze/topposting/{{encoded_keyword}}', function(r){
+    data.addRows(r);
+    chart.draw(data, options_topposting);
+  }, 'JSON');
+}
+
+function drawCurves() {
+  drawFreq();
+  drawTopMention();
+  drawTopPosting();
+}
 </script>
 
 
@@ -52,8 +74,22 @@ function drawCurveTypes() {
 
   <hr>
 
-  <div id="linechart" class="row">
-    <div class="small-12 large-12 columns"></div>
+  <div class="row">
+    <div class="small-12 large-9 columns">
+      <div id="freq" class="text-center"><h1><i class="fa fa-lg fa-line-chart fa-spin"></i></h1></div>
+    </div>
+    <div class="small-12 large-3 columns">
+      <div id="sentiment" class="text-center"><h1><i class="fa fa-lg fa-pie-chart fa-spin"></i></h1></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="small-12 large-6 columns">
+      <div id="topmention" class="text-center"><h1><i class="fa fa-lg fa-bar-chart fa-spin"></i></h1></div>
+    </div>
+    <div class="small-12 large-6 columns">
+      <div id="topposting" class="text-center"><h1><i class="fa fa-lg fa-bar-chart fa-spin"></i></h1></div>
+    </div>
   </div>
 
   <hr>
