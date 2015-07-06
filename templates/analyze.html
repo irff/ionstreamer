@@ -64,7 +64,7 @@ function drawCurves() {
 </script>
 
 
-<div>
+<div ng-controller="analyzeController">
 
   <nav class="top-bar" data-topbar>
     <span class="name text-center">
@@ -91,6 +91,59 @@ function drawCurves() {
       <div id="topposting" class="text-center"><h1><i class="fa fa-lg fa-bar-chart fa-spin"></i></h1></div>
     </div>
   </div>
+
+  <div hidden id="keyword">{{encoded_keyword}}</div>
+  {% raw %}
+  <!-- <hr> -->
+
+  <div class="row">
+    <div class="columns small-12 large-6 topretweet">
+      <div class="alert-box radius" ng-show="showtopretweet">Top Retweet</div>
+      <!-- TOP TWEET -->
+      <div class="row" ng-repeat="tweet in tweets">    
+        <div class="columns small-2 th">
+          <img ng-src="{{ tweet.retweeted_status.user.profile_image_url }}">
+        </div>
+        <div class="columns small-10">
+          <div class="user">
+            <span class="name">{{ tweet.retweeted_status.user.name }}</span>
+            <a target="_blank" ng-href="http://twitter.com/{{ tweet.retweeted_status.user.screen_name }}" class="username">@{{ tweet.retweeted_status.user.screen_name }}</a>
+            -
+            <a target="_blank" ng-href="http://twitter.com/{{ tweet.retweeted_status.user.screen_name }}/status/{{ tweet.retweeted_status.id_str }}" class="count label secondary radius">{{ tweet.retweeted_status.retweet_count }} retweets</a>
+          </div>
+          <div class="text">
+            <p>{{ tweet.text }}</p>
+          </div>
+        </div>
+      </div>
+      <!-- END OF TOP TWEET -->
+    </div>
+
+    <div class="columns small-12 large-6 topretweet">
+      <div class="alert-box radius" ng-show="showtweets">Tweets</div>
+      <!-- TOP TWEET -->
+      <div class="row" ng-repeat="tweet in tweets">    
+        <div class="columns small-2 th">
+          <img ng-src="{{ tweet.retweeted_status.user.profile_image_url }}">
+        </div>
+        <div class="columns small-10">
+          <div class="user">
+            <span class="name">{{ tweet.retweeted_status.user.name }}</span>
+            <a target="_blank" ng-href="http://twitter.com/{{ tweet.retweeted_status.user.screen_name }}" class="username">@{{ tweet.retweeted_status.user.screen_name }}</a>
+            -
+            <span class="count label secondary radius">{{ tweet.retweeted_status.retweet_count }} retweets</span>
+          </div>
+          <div class="text">
+            <p>{{ tweet.text }}</p>
+          </div>
+        </div>
+      </div>
+      <!-- END OF TOP TWEET -->
+    </div>
+  </div>
+
+
+  {% endraw %}
 
   <hr>
 

@@ -15,7 +15,7 @@
 
     $scope.summary = [];
     $http.get('/api/summary').success(function(r){ $scope.summary = r; });
-    $interval(refresh, 3000);
+    $interval(refresh, 4000);
 
     $scope.submit = function(){
       $scope.keyword = $scope.keyword.trim().toLowerCase();
@@ -23,13 +23,23 @@
       $scope.is_sending_kw = true;
       $http.post(
         '/api/stream' ,
-        {keyword: $scope.keyword, status: 'active', datestamp: (new Date()).toISOString().slice(0,10)}
+        {keyword: $scope.keyword, status: 'active'}
       ).success(function(){
         $scope.is_sending_kw = false;
         refresh();
       });
       $scope.keyword = '';
     };
+  });
+
+
+  app.controller('analyzeController', function($scope, $http, $interval){
+    $http.get('/api/analyze/topretweet/'+ $('#keyword').html())
+    .success(function(data){
+      $scope.tweets = data;
+      $scope.showtopretweet = true;
+      $scope.showtweets = true;
+    });
   });
 
 

@@ -10,3 +10,24 @@ body {
   color: lightblue;
   font-weight: bolder;
 }
+
+.user {
+  font-size: 11pt;
+}
+
+.user >
+  .name {
+    font-weight: bolder;
+  }
+
+  .username {
+    font-style: italic;
+  }
+
+  .count {
+    
+  }
+
+.text {
+  font-size: 10pt;
+}

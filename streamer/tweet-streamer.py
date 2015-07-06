@@ -35,7 +35,7 @@ def get_tso_down(row):
 
 def gather(row):
   try:
-    dbk.set( {'keyword': row.keyword, 'status': 'processing'} )
+    dbk.set( {'keyword': row.keyword, 'processing': 1} )
 
     # searching up
     tsoup = get_tso_up(row)
@@ -79,13 +79,14 @@ def gather(row):
       except Exception as e:
         print "%s: %s" % (token.name, str(e))
         tweets = []
-
+  except Exception as e:
+    print e
   finally:
-    dbk.set( {'keyword': row.keyword, 'status': row.status} )
+    dbk.set( {'keyword': row.keyword, 'processing': 0} )
 
 
 while True:
-  for k in [x for x in dbk.get() if x.status != 'inactive']:
-    if k.keyword in {x.keyword for x in dbk.get() if x.status != 'inactive'}:
+  for k in [x for x in dbk.get() if x.status == 'active' and x.processing == 0]:
+    if k.keyword in {x.keyword for x in dbk.get() if x.status == 'active' and x.processing == 0}:
       gather(k)
   sleep(5)

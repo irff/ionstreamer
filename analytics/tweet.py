@@ -10,67 +10,48 @@ from collections import defaultdict
 
 
 def getinfo(row):
-  count = dbr.count(row.keyword)
-  data = dbr.get(row.keyword, size = 100)
-  # data = dbr.get_fields(row.keyword, fields = "created_at", size = 1000111000)
-  data.sort(lambda x,y: cmp(y['created_at'],x['created_at']))
+  try:
+    r = dbr.get_search_instance(row.keyword).params(size = 3, sort='id:desc').execute()
 
-  if len(data) == 0: return {'keyword': row.keyword, 'count': 'no results yet', 'status': row.status, 'tweets': []}
-  return {
-    'keyword': row.keyword,
-    'count': '%d results'%count,
-    'status': row.status,
-    'from': parse(data[-1]['created_at']).ctime(),
-    'to': parse(data[0]['created_at']).ctime(),
-    'tweets': ["@%s: %s"%(d['user']['screen_name'],d['text']) for d in data[:3]]
-  }
+    return {
+      'keyword': row.keyword,
+      'count': '%d results'%r.hits.total,
+      'status': row.status,
+      'processing': row.processing,
+      'tweets': ["@%s: %s"%(d.user.screen_name, d.text) for d in r.hits]
+    }
+  except Exception as e:
+    print str(e)[:123]
+    return {'keyword': row.keyword, 'count': 'no results yet', 'status': row.status, 'processing': row.processing, 'tweets': []}
 
 def get_tweet_freq(keyword):
-  st = time.time()
-  data = dbr.get_fields(keyword, fields="created_at", size = 1000111000, timeout = 60)
-  print time.time()-st
-  
-  st = time.time()
-  # data = map(lambda x: (parse(x['created_at'][0]) + timedelta(hours = 7)).strftime("%Y-%m-%d %H:00:00"), data)
-  #YYYY-mm-ddTHH
-  seven = timedelta(hours = 7)
-  data = map(lambda x:
-              (datetime.strptime(x['created_at'][0][:10]+' '+x['created_at'][0][11:13], "%Y-%m-%d %H") + seven).strftime("%Y-%m-%d %H:00:00"),
-              data)
-  print time.time()-st
-
-  st = time.time()
-  ret = defaultdict(int)
-  for d in data:
-    ret[d] += 1
-  print time.time()-st
-  
-  items = ret.items()
-  items.sort()
+  s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
+  s.aggs.bucket('freq', 'date_histogram', field='created_at', interval='hour')
+  buckets = s.execute().aggregations.freq.buckets
 
   from random import randint
-  return map(lambda (x,y): (x,y,randint(0,y/2),randint(0,y/2)), items)
+  return map(lambda b: (b.key,b.doc_count,randint(0,b.doc_count/2),randint(0,b.doc_count/2)), buckets)
 
 def get_top_mention(keyword):
-  username = "entities.user_mentions.screen_name"
-  mentions = dbr.get_fields(keyword, fields=username, size = 1000111000, timeout = 60)
-  freq = defaultdict(int)
-  for m in mentions:
-    for x in m['entities.user_mentions.screen_name']:
-      freq[x] += 1
-  
-  items = freq.items()
-  items.sort(lambda x,y: cmp(y[1], x[1]))
-  return map(lambda (x,y): ('@'+x, y), items[:5])
+  s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
+  s.aggs.bucket('freq', 'terms', field='entities.user_mentions.screen_name', size = 5)
+  buckets = s.execute().aggregations.freq.buckets
+  return map(lambda b: ('@'+b.key, b.doc_count), buckets)
 
 def get_top_posting(keyword):
-  username = "user.screen_name"
-  usernames = dbr.get_fields(keyword, fields=username, size = 1000111000, timeout = 60)
-  freq = defaultdict(int)
-  for u in usernames:
-    for x in u['user.screen_name']:
-      freq[x] += 1
-  
-  items = freq.items()
-  items.sort(lambda x,y: cmp(y[1], x[1]))
-  return map(lambda (x,y): ('@'+x, y), items[:5])
+  s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
+  s.aggs.bucket('freq', 'terms', field='user.screen_name', size = 5)
+  buckets = s.execute().aggregations.freq.buckets
+  return map(lambda b: ('@'+b.key, b.doc_count), buckets)
+
+
+def get_top_retweet(keyword):
+  st = time.time()
+  s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
+  s.aggs.bucket('freq', 'terms', field='retweeted_status.id_str', size = 1000111000, collect_mode = "breadth_first")
+  buckets = s.execute().aggregations.freq.buckets
+  print len(buckets)
+  counted = map(lambda b: dbr.get_search_instance(keyword).query('multi_match', query = b.key, fields = ['id_str','retweeted_status.id_str']).execute().hits[0].to_dict(), buckets)
+  counted.sort(lambda x, y: cmp(y['retweet_count'], x['retweet_count']))
+  print time.time() - st
+  return counted[:5]

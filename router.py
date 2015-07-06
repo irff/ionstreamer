@@ -25,26 +25,14 @@ def analyze(keyword):
 def apistream():
   keyword = request.json['keyword']
   status = request.json['status']
-
-  # jangan diapa-apakan kalau di db lagi processing
-  if sum([1 for x in dbk.get() if x.keyword == keyword and x.status != 'processing']):
+  if any([x.keyword == keyword and x.processing for x in dbk.get()]):
     return "%s is processing" % keyword
-
   return json.dumps( dbk.set(request.json) )
 
 @app.route("/api/summary", methods=['GET'])
 def summary():
   keywords = [x for x in dbk.get() if x.status != 'removed']
-
-  # sort row based on active/inactive
-  def comp(x,y):
-    xs = x.status
-    ys = y.status
-    if xs == 'processing': xs = 'active'
-    if ys == 'processing': ys = 'active'
-    return cmp((xs, x.keyword), (ys, y.keyword))
-  keywords.sort(comp)
-
+  keywords.sort(lambda x, y: cmp(x.status, y.status))
   return json.dumps( map(tweeta.getinfo, keywords) )
 
 @app.route("/api/analyze/freq/<keyword>", methods=['GET'])
@@ -58,6 +46,10 @@ def topmention(keyword):
 @app.route("/api/analyze/topposting/<keyword>", methods=['GET'])
 def topposting(keyword):
   return json.dumps( tweeta.get_top_posting(keyword) )
+
+@app.route("/api/analyze/topretweet/<keyword>", methods=['GET'])
+def topretweet(keyword):
+  return json.dumps( tweeta.get_top_retweet(keyword) )
 
 
 if __name__ == "__main__":
