@@ -98,7 +98,7 @@ function drawCurves() {
 
   <div class="row">
     <div class="columns small-12 large-6 topretweet">
-      <div class="alert-box radius" ng-show="showtopretweet">Top Retweet</div>
+      <div class="alert-box info radius" ng-show="showtopretweet">Top Retweet</div>
       <!-- TOP TWEET -->
       <div class="row" ng-repeat="tweet in tweets">    
         <div class="columns small-2 th">
@@ -120,9 +120,9 @@ function drawCurves() {
     </div>
 
     <div class="columns small-12 large-6 topretweet">
-      <div class="alert-box radius" ng-show="showtweets">Tweets</div>
+      <div class="alert-box info radius" ng-show="showtweets">Tweets</div>
       <!-- TOP TWEET -->
-      <div class="row" ng-repeat="tweet in tweets">    
+      <div class="row" ng-repeat="tweet in tweets">
         <div class="columns small-2 th">
           <img ng-src="{{ tweet.retweeted_status.user.profile_image_url }}">
         </div>
@@ -134,7 +134,7 @@ function drawCurves() {
             <span class="count label secondary radius">{{ tweet.retweeted_status.retweet_count }} retweets</span>
           </div>
           <div class="text">
-            <p>{{ tweet.text }}</p>
+            <p>{{ tweet.text | html }}</p>
           </div>
         </div>
       </div>
