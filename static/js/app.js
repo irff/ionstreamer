@@ -1,10 +1,12 @@
 (function(){
-  var app = angular.module("tweetstreamer", []);
+  var app = angular.module("tweetstreamer", ['ngSanitize'/*, 'ngAnimate'*/]);
 
   app.controller('summaryController', function($scope, $http, $interval){
 
     function refresh() {
-      $http.get('/api/summary').success(function(r){ $scope.summary = r; });
+      $http.get('/api/summary').success(function(r) {
+        $scope.summary = r;
+      });
     }
 
     $scope.stream = function(info, status){
@@ -34,18 +36,37 @@
 
 
   app.controller('analyzeController', function($scope, $http, $interval){
-    $http.get('/api/analyze/topretweet/'+ $('#keyword').html())
-    .success(function(data){
+    $scope.showTopRetweets = function(data){
       $scope.tweets = data;
-      $scope.showtopretweet = true;
-      $scope.showtweets = true;
-    });
+      $scope.hasretweets = true;
+    };
   });
 
 
   app.filter('encodeURIComponent', function() {
     return window.encodeURIComponent;
   });
+
+/*  app.animation('.slide', [function() {
+    return {
+      // make note that other events (like addClass/removeClass)
+      // have different function input parameters
+      enter: function(element, doneFn) {
+        jQuery(element).fadeIn(400, doneFn);
+
+        // remember to call doneFn so that angular
+        // knows that the animation has concluded
+      },
+
+      move: function(element, doneFn) {
+        jQuery(element).fadeIn(400, doneFn);
+      },
+
+      leave: function(element, doneFn) {
+        jQuery(element).fadeOut(400, doneFn);
+      }
+    }
+  }]);*/
 
 })();
 
