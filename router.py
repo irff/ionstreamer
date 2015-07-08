@@ -19,7 +19,6 @@ def analyze(keyword):
   return render_template('analyze.html', keyword = keyword, encoded_keyword = urllib.quote(keyword, safe='~()*!.\''))
 
 
-
 # API
 @app.route("/api/stream", methods=['POST'])
 def apistream():
@@ -39,17 +38,33 @@ def summary():
 def apianalyze(keyword):
   return json.dumps( tweeta.get_tweet_freq(keyword) )
 
-@app.route("/api/analyze/topmention/<keyword>", methods=['GET'])
-def topmention(keyword):
-  return json.dumps( tweeta.get_top_mention(keyword) )
+@app.route("/api/analyze/topmentions/<keyword>", methods=['GET'])
+def topmentions(keyword):
+  return json.dumps( tweeta.get_top_mentions(keyword) )
 
-@app.route("/api/analyze/topposting/<keyword>", methods=['GET'])
-def topposting(keyword):
-  return json.dumps( tweeta.get_top_posting(keyword) )
+@app.route("/api/analyze/toppostings/<keyword>", methods=['GET'])
+def toppostings(keyword):
+  return json.dumps( tweeta.get_top_postings(keyword) )
 
-@app.route("/api/analyze/topretweet/<keyword>", methods=['GET'])
-def topretweet(keyword):
-  return json.dumps( tweeta.get_top_retweet(keyword) )
+@app.route("/api/analyze/topretweets/<keyword>", methods=['GET'])
+def topretweets(keyword):
+  return json.dumps( tweeta.get_top_retweets(keyword) )
+
+@app.route("/api/analyze/randomtweets/<keyword>", methods=['GET'])
+def randomtweets(keyword):
+  return json.dumps( tweeta.get_random_tweets(keyword) )
+
+@app.route("/api/analyze/gettweetsat/<keyword>/<waktu>", methods=['GET'])
+def gettweetsat(keyword, waktu):
+  return json.dumps( tweeta.get_tweets_at(keyword, waktu) )
+
+@app.route("/api/analyze/getmentions/<keyword>/<username>", methods=['GET'])
+def getmentions(keyword, username):
+  return json.dumps( tweeta.get_mentions(keyword, username) )
+
+@app.route("/api/analyze/getpostings/<keyword>/<username>", methods=['GET'])
+def getpostings(keyword, username):
+  return json.dumps( tweeta.get_postings(keyword, username) )
 
 
 if __name__ == "__main__":

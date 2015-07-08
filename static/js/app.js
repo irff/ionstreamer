@@ -36,10 +36,50 @@
 
 
   app.controller('analyzeController', function($scope, $http, $interval){
-    $scope.showTopRetweets = function(data){
-      $scope.tweets = data;
-      $scope.hasretweets = true;
+    $scope.showTopRetweets = function(){
+      $scope.loadtopretweets = true;
+      $scope.hasretweets = false;
+      $http.get('/api/analyze/topretweets/' + encodeURIComponent($('#keyword').text()))
+      .success(function(data){
+        $scope.retweets = data;
+        $scope.hasretweets = true;
+      });
     };
+
+    $scope.showRandomTweets = function(){
+      $scope.loadrandomtweets = true;
+      $scope.hasrandomtweets = false;
+      $http.get('/api/analyze/randomtweets/' + encodeURIComponent($('#keyword').text()))
+      .success(function(data){
+        $scope.randomtweets = data;
+        $scope.hasrandomtweets = true;
+      });
+    };
+
+    $scope.fetchTweetsAt = function(keyword, time){
+      $scope.hastweets = false;
+      $http.get('/api/analyze/gettweetsat/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(time)).success(function(r){
+        $scope.tweets = r;
+        $scope.hastweets = true;
+      });
+    };
+
+    $scope.fetchTweetsTo = function(keyword, username){
+      $scope.hastweets = false;
+      $http.get('/api/analyze/getmentions/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username)).success(function(r){
+        $scope.tweets = r;
+        $scope.hastweets = true;
+      });
+    };
+
+    $scope.fetchTweetsFrom = function(keyword, username){
+      $scope.hastweets = false;
+      $http.get('/api/analyze/getpostings/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username)).success(function(r){
+        $scope.tweets = r;
+        $scope.hastweets = true;
+      });
+    };
+
   });
 
 

@@ -13,27 +13,40 @@ function drawFreq() {
   $.get('/api/analyze/freq/{{encoded_keyword}}', function(r){
     var wrapper = new google.visualization.ChartWrapper({
       chartType: 'LineChart',
-      dataTable: [['TIme', 'All Tweets', 'Positive Tweets', 'Negative Tweets']].concat(r.map(function(x){x[0] = new Date(x[0]); return x;})),
+      dataTable: [['TIme', 'All Tweets', 'Positive Tweets', 'Negative Tweets']].concat(r.map(function(x){x[0] = new Date(x[0]); x[0].setHours(x[0].getHours()-14); return x;})),
       options: options_freq,
       containerId: 'freq'
     });
     wrapper.draw();
 
+    function showTweetsAt() {
+      s = wrapper.getChart().getSelection()[0];
+      if (s !== undefined && s.row !== null && s.column !== null) {
+        t = wrapper.getDataTable().getValue(s.row, 0);
+        // console.log(s);console.log(t);
+        t.setHours(t.getHours()+14);
+        angular.element('#analyzeController').scope().fetchTweetsAt($('#keyword').text(), t.toISOString());
+        angular.element('#analyzeController').scope().$apply();
+        $('#tweets').foundation('reveal', 'open');
+      }
+    }
+    google.visualization.events.addListener(wrapper, 'select', showTweetsAt);
+
     var positive = r.reduce(function(acc, curr){return acc + curr[2];}, 0);
     var negative = r.reduce(function(acc, curr){return acc + curr[3];}, 0);
-    var wrapper = new google.visualization.ChartWrapper({
+    var wrapper2 = new google.visualization.ChartWrapper({
       chartType: 'PieChart',
       dataTable: [['Label', 'Number of Tweets'], ['Positive Tweets', positive], ['Negative Tweets', negative]],
       options: options_sentiment,
       containerId: 'sentiment'
     });
-    wrapper.draw();
+    wrapper2.draw();
   }, 'JSON');
 }
 
 
 function drawTopMention() {
-  $.get('/api/analyze/topmention/{{encoded_keyword}}', function(r){
+  $.get('/api/analyze/topmentions/{{encoded_keyword}}', function(r){
     var wrapper = new google.visualization.ChartWrapper({
       chartType: 'BarChart',
       dataTable: [['Username', 'Number of Mention']].concat(r),
@@ -42,17 +55,21 @@ function drawTopMention() {
     });
     wrapper.draw();
 
-    function showTweets() {
-      w = wrapper;
-      console.log("aye");
+    function showTweetsTo() {
+      s = wrapper.getChart().getSelection()[0];
+      if (s !== undefined && s.row !== null && s.column !== null) {
+        u = wrapper.getDataTable().getValue(s.row, 0);
+        angular.element('#analyzeController').scope().fetchTweetsTo($('#keyword').text(), u);
+        angular.element('#analyzeController').scope().$apply();
+        $('#tweets').foundation('reveal', 'open');
+      }
     }
-
-    google.visualization.events.addListener(wrapper, 'select', showTweets);
+    google.visualization.events.addListener(wrapper, 'select', showTweetsTo);
   }, 'JSON');
 }
 
 function drawTopPosting() {
-  $.get('/api/analyze/topposting/{{encoded_keyword}}', function(r){
+  $.get('/api/analyze/toppostings/{{encoded_keyword}}', function(r){
     var wrapper = new google.visualization.ChartWrapper({
       chartType: 'BarChart',
       dataTable: [['Username', 'Number of Post']].concat(r),
@@ -60,13 +77,17 @@ function drawTopPosting() {
       containerId: 'topposting'
     });
     wrapper.draw();
-  }, 'JSON');
-}
 
-function getTopRetweets() {
-  $.get('/api/analyze/topretweet/'+ $('#keyword').html(), function(r){
-    angular.element('#analyzeController').scope().showTopRetweets(r);
-    angular.element('#analyzeController').scope().$apply();
+    function showTweetsFrom() {
+      s = wrapper.getChart().getSelection()[0];
+      if (s !== undefined && s.row !== null && s.column !== null) {
+        u = wrapper.getDataTable().getValue(s.row, 0);
+        angular.element('#analyzeController').scope().fetchTweetsFrom($('#keyword').text(), u);
+        angular.element('#analyzeController').scope().$apply();
+        $('#tweets').foundation('reveal', 'open');
+      }
+    }
+    google.visualization.events.addListener(wrapper, 'select', showTweetsFrom);
   }, 'JSON');
 }
 
@@ -74,7 +95,6 @@ function drawCurves() {
   drawFreq();
   drawTopMention();
   drawTopPosting();
-  getTopRetweets();
 }
 </script>
 
@@ -107,15 +127,18 @@ function drawCurves() {
     </div>
   </div>
 
-  <div hidden id="keyword">{{encoded_keyword}}</div>
+  <div hidden id="keyword">{{keyword}}</div>
   {% raw %}
   <!-- <hr> -->
 
   <div class="row">
     <div class="columns small-12 large-6 topretweet">
-      <div class="alert-box info radius text-center">Top Retweet <i ng-hide="hasretweets" class="fa fa-lg fa-cog fa-spin"></i></div>
+      <div class="alert-box info radius text-center">
+        <button ng-hide="loadtopretweets" class="label secondary radius" ng-click="showTopRetweets()">Show Top Retweets</button>
+        <span ng-show="loadtopretweets">Top Retweet <i ng-hide="hasretweets" class="fa fa-lg fa-cog fa-spin"></i></span>
+      </div>
       <!-- TOP TWEET -->
-      <div class="row" ng-repeat="tweet in tweets">    
+      <div class="row" ng-repeat="tweet in retweets">
         <div class="columns small-2 th">
           <img ng-src="{{ tweet.retweeted_status.user.profile_image_url }}">
         </div>
@@ -126,7 +149,7 @@ function drawCurves() {
             <a target="_blank" ng-href="http://twitter.com/{{ tweet.retweeted_status.user.screen_name }}/status/{{ tweet.retweeted_status.id_str }}" class="count label secondary radius" ng-bind-html="tweet.retweeted_status.retweet_count+' retweets'"></a>
           </div>
           <div class="text">
-            <p ng-bind-html="tweet.text"></p>
+            <p ng-bind-html="tweet.retweeted_status.text"></p>
           </div>
         </div>
       </div>
@@ -134,27 +157,56 @@ function drawCurves() {
     </div>
 
     <div class="columns small-12 large-6 topretweet">
-      <div class="alert-box info radius" ng-show="hastweets">Tweets</div>
-      <!-- TOP TWEET -->
-      <div class="row" ng-repeat="tweet in []">
+      <div class="alert-box info radius text-center">
+        <button ng-hide="loadrandomtweets" class="label secondary radius" ng-click="showRandomTweets()">Show Random Retweets</button>
+        <span ng-show="loadrandomtweets">Random Tweets <i ng-hide="hasrandomtweets" class="fa fa-lg fa-cog fa-spin"></i></span>
+      </div>
+      <!-- JUST SOME RANDOM TWEETS -->
+      <div class="row" ng-repeat="tweet in randomtweets">
         <div class="columns small-2 th">
-          <img ng-src="{{ tweet.retweeted_status.user.profile_image_url }}">
+          <img ng-src="{{ tweet.user.profile_image_url }}">
         </div>
         <div class="columns small-10">
           <div class="user">
-            <span class="name" ng-bind-html="tweet.retweeted_status.user.name"></span>
-            <a target="_blank" ng-href="http://twitter.com/{{ tweet.retweeted_status.user.screen_name }}" class="username" ng-bind-html="'@'+tweet.retweeted_status.user.screen_name"></a>
-            <a target="_blank" ng-href="http://twitter.com/{{ tweet.retweeted_status.user.screen_name }}/status/{{ tweet.retweeted_status.id_str }}" class="count label secondary radius" ng-bind-html="tweet.retweeted_status.retweet_count+' retweets'"></a>
+            <span class="name" ng-bind-html="tweet.user.name"></span>
+            <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}" class="username" ng-bind-html="'@'+tweet.user.screen_name"></a>
+            <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id_str }}" class="count label secondary radius" ng-bind-html="tweet.retweet_count+' retweets'"></a>
           </div>
           <div class="text">
             <p ng-bind-html="tweet.text"></p>
           </div>
         </div>
       </div>
-      <!-- END OF TOP TWEET -->
+      <!-- END OF JUST SOME RANDOM TWEETS -->
     </div>
   </div>
 
+<!-- <div class="columns small-12 large-6 topretweet" id="tweets"> -->
+<div id="tweets" class="reveal-modal row" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+  <div class="column small-11 large-11">
+    <div class="row">
+      <div class="alert-box info radius">Tweets <i ng-hide="hastweets" class="fa fa-lg fa-cog fa-spin"></i></div>
+    </div>
+    <!-- TWEETS -->
+    <div class="row" ng-repeat="tweet in tweets">
+      <div class="columns small-3 large-1">
+        <div class="th"> <img ng-src="{{ tweet.user.profile_image_url }}"> </div>
+      </div>
+      <div class="columns small-9 large-11">
+        <div class="user row">
+          <span class="name" ng-bind-html="tweet.user.name"></span>
+          <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}" class="username" ng-bind-html="'@'+tweet.user.screen_name"></a>
+          <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id_str }}" class="count label secondary radius" ng-bind-html="tweet.retweet_count+' retweets'"></a>
+        </div>
+        <div class="text row">
+          <p ng-bind-html="tweet.text"></p>
+        </div>
+      </div>
+    </div>
+    <!-- END OF TWEETS -->
+  </div>
+  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>
 
   {% endraw %}
 

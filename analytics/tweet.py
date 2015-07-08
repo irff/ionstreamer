@@ -36,7 +36,7 @@ def get_tweet_freq(keyword):
   print "%s - top tweet freq: %lf" % (keyword, time.time() - st)
   return map(lambda b: (b.key,b.doc_count,randint(0,b.doc_count/2),randint(0,b.doc_count/2)), buckets)
 
-def get_top_mention(keyword):
+def get_top_mentions(keyword):
   st = time.time()
 
   s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
@@ -46,7 +46,7 @@ def get_top_mention(keyword):
   print "%s - top mention: %lf" % (keyword, time.time() - st)
   return map(lambda b: ('@'+b.key, b.doc_count), buckets)
 
-def get_top_posting(keyword):
+def get_top_postings(keyword):
   st = time.time()
 
   s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
@@ -57,7 +57,7 @@ def get_top_posting(keyword):
   return map(lambda b: ('@'+b.key, b.doc_count), buckets)
 
 
-def get_top_retweet(keyword):
+def get_top_retweets(keyword):
   st = time.time()
 
   s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
@@ -68,3 +68,37 @@ def get_top_retweet(keyword):
 
   print "%s - top retweet: %lf" % (keyword, time.time() - st)
   return counted[:10]
+
+def get_random_tweets(keyword):
+  st = time.time()
+
+  s = dbr.get_search_instance(keyword).params(size = 10).execute()
+
+  print "%s - top retweet: %lf" % (keyword, time.time() - st)
+  return map(lambda x: x.to_dict(), s.hits)
+
+def get_tweets_at(keyword, waktu):
+  st = time.time()
+
+  waktu1 = parse(waktu)
+  waktu2 = parse(waktu) + timedelta(hours = 1)
+  r = dbr.get_search_instance(keyword).params(size = 5).filter('range', created_at = {'from': waktu1, 'to': waktu2}).execute()
+
+  print "%s - %s - get tweets at: %lf" % (keyword, time, time.time() - st)
+  return map(lambda h: h.to_dict(), r.hits)
+
+def get_mentions(keyword, username):
+  st = time.time()
+
+  r = dbr.get_search_instance(keyword).params(size = 5).query('match', **{'entities.user_mentions.screen_name': username}).execute()
+
+  print "%s - %s - get mentions: %lf" % (keyword, username, time.time() - st)
+  return map(lambda h: h.to_dict(), r.hits)
+
+def get_postings(keyword, username):
+  st = time.time()
+
+  r = dbr.get_search_instance(keyword).params(size = 5).query('match', **{'user.screen_name': username}).execute()
+
+  print "%s - %s - get postings: %lf" % (keyword, username, time.time() - st)
+  return map(lambda h: h.to_dict(), r.hits)

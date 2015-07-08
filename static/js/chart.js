@@ -6,7 +6,7 @@ options_freq = {
     // 0: {curveType: 'function'},
   },
   legend: {position: 'top', },
-  animation: {startup: true, duration: 1500, easing: 'out', },
+  animation: {startup: true, duration: 1200, easing: 'out', },
   colors: ['#4099FF', '#00FF00', '#EE0000'],
   height: 275,
 };
@@ -25,7 +25,7 @@ options_sentiment = {
 options_topmention = {
   height: 275,
   legend: {position: 'top', },
-  animation: {startup: true, duration: 1500, easing: 'out', },
+  animation: {startup: true, duration: 1200, easing: 'out', },
   title: 'Top Mentions People',
   // chartArea: {width: '100%'},
   hAxis: {
@@ -41,7 +41,7 @@ options_topmention = {
 options_topposting = {
   height: 275,
   legend: {position: 'top', },
-  animation: {startup: true, duration: 1500, easing: 'out', },
+  animation: {startup: true, duration: 1200, easing: 'out', },
   title: 'Top Posting',
   // chartArea: {width: '100%'},
   hAxis: {
