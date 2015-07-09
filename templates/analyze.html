@@ -13,7 +13,7 @@ function drawFreq() {
   $.get('/api/analyze/freq/{{encoded_keyword}}', function(r){
     var wrapper = new google.visualization.ChartWrapper({
       chartType: 'LineChart',
-      dataTable: [['TIme', 'All Tweets', 'Positive Tweets', 'Negative Tweets']].concat(r.map(function(x){x[0] = new Date(x[0]); x[0].setHours(x[0].getHours()-14); return x;})),
+      dataTable: [['TIme', 'All Tweets', 'Positive Tweets', 'Negative Tweets']].concat(r.map(function(x){x[0] = new Date(x[0]); x[0].setHours(x[0].getHours()); return x;})),
       options: options_freq,
       containerId: 'freq'
     });
@@ -22,9 +22,8 @@ function drawFreq() {
     function showTweetsAt() {
       s = wrapper.getChart().getSelection()[0];
       if (s !== undefined && s.row !== null && s.column !== null) {
-        t = wrapper.getDataTable().getValue(s.row, 0);
-        // console.log(s);console.log(t);
-        t.setHours(t.getHours()+14);
+        t = new Date(wrapper.getDataTable().getValue(s.row, 0));
+        t.setHours(t.getHours());
         angular.element('#analyzeController').scope().fetchTweetsAt($('#keyword').text(), t.toISOString());
         angular.element('#analyzeController').scope().$apply();
         $('#tweets').foundation('reveal', 'open');
@@ -185,7 +184,13 @@ function drawCurves() {
 <div id="tweets" class="reveal-modal row" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
   <div class="column small-11 large-11">
     <div class="row">
-      <div class="alert-box info radius">Tweets <i ng-hide="hastweets" class="fa fa-lg fa-cog fa-spin"></i></div>
+      <div class="alert-box info radius">
+        <span>Tweets</span>
+        <i ng-hide="hastweets" class="fa fa-lg fa-cog fa-spin"></i>
+        <a class="label secondary radius right">
+          <i ng-show="hastweets" class="fa fa-lg fa-cloud-download"></i>
+        </a>
+      </div>
     </div>
     <!-- TWEETS -->
     <div class="row" ng-repeat="tweet in tweets">

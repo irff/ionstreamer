@@ -1,13 +1,9 @@
 (function(){
-  var app = angular.module("tweetstreamer", ['ngSanitize'/*, 'ngAnimate'*/]);
+  var app = angular.module("tweetstreamer", ['ngSanitize']);
 
   app.controller('summaryController', function($scope, $http, $interval){
 
-    function refresh() {
-      $http.get('/api/summary').success(function(r) {
-        $scope.summary = r;
-      });
-    }
+    function refresh() {$http.get('/api/summary').success(function(r) {$scope.summary = r; }); }
 
     $scope.stream = function(info, status){
       info.is_streaming = true;
@@ -15,8 +11,7 @@
       .success(refresh);
     }
 
-    $scope.summary = [];
-    $http.get('/api/summary').success(function(r){ $scope.summary = r; });
+    refresh();
     $interval(refresh, 4000);
 
     $scope.submit = function(){

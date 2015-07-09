@@ -1,4 +1,4 @@
-from os.path import abspath
+from os.path import abspath, isfile
 import sys
 sys.path.append(abspath(''))
 
@@ -85,8 +85,9 @@ def gather(row):
     dbk.set( {'keyword': row.keyword, 'processing': 0} )
 
 
-while True:
-  for k in [x for x in dbk.get() if x.status == 'active' and x.processing == 0]:
-    if k.keyword in {x.keyword for x in dbk.get() if x.status == 'active' and x.processing == 0}:
-      gather(k)
-  sleep(5)
+def run_streamer():
+  while not isfile('stop_please'):
+    for k in [x for x in dbk.get() if x.status == 'active' and x.processing == 0]:
+      if k.keyword in {x.keyword for x in dbk.get() if x.status == 'active' and x.processing == 0}:
+        gather(k)
+    sleep(5)

@@ -1,0 +1,61 @@
+127.0.0.1 - - [09/Jul/2015 10:49:39] "GET /api/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jul/2015 10:49:43] "GET /api/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jul/2015 10:49:47] "GET /api/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jul/2015 10:49:51] "GET /api/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jul/2015 10:49:55] "GET /api/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jul/2015 10:49:59] "GET /api/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jul/2015 10:50:03] "GET /api/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jul/2015 10:50:07] "GET /api/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jul/2015 10:50:08] "GET /addstreamer HTTP/1.1" 200 -
+/usr/local/lib/python2.7/dist-packages/simplemysql/simplemysql.py:173: Warning: Field 'name' doesn't have a default value
+  self.cur.execute(sql, params)
+/usr/local/lib/python2.7/dist-packages/simplemysql/simplemysql.py:173: Warning: Field 'usable' doesn't have a default value
+  self.cur.execute(sql, params)
+/usr/local/lib/python2.7/dist-packages/simplemysql/simplemysql.py:173: Warning: Field 'CONSUMER_SECRET' doesn't have a default value
+  self.cur.execute(sql, params)
+/usr/local/lib/python2.7/dist-packages/simplemysql/simplemysql.py:173: Warning: Field 'OAUTH_TOKEN' doesn't have a default value
+  self.cur.execute(sql, params)
+/usr/local/lib/python2.7/dist-packages/simplemysql/simplemysql.py:173: Warning: Field 'OAUTH_TOKEN_SECRET' doesn't have a default value
+  self.cur.execute(sql, params)
+127.0.0.1 - - [09/Jul/2015 10:50:11] "GET /api/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jul/2015 10:50:15] "GET /api/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jul/2015 10:50:19] "GET /api/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jul/2015 10:50:23] "GET /api/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jul/2015 10:50:27] "GET /api/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jul/2015 10:50:32] "GET /api/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jul/2015 10:50:36] "GET /api/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jul/2015 10:50:40] "GET /api/summary HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/home/alpancs/.local/lib/python2.7/site-packages/flask/app.py", line 1836, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/alpancs/.local/lib/python2.7/site-packages/flask/app.py", line 1820, in wsgi_app
+    response = self.make_response(self.handle_exception(e))
+  File "/home/alpancs/.local/lib/python2.7/site-packages/flask/app.py", line 1403, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/alpancs/.local/lib/python2.7/site-packages/flask/app.py", line 1817, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/alpancs/.local/lib/python2.7/site-packages/flask/app.py", line 1477, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/alpancs/.local/lib/python2.7/site-packages/flask/app.py", line 1381, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/alpancs/.local/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/alpancs/.local/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/media/alpancs/Ghatotkacha/dev/langgar/ionstreamer/router.py", line 36, in summary
+    keywords = [x for x in dbk.get() if x.status != 'removed']
+  File "/media/alpancs/Ghatotkacha/dev/langgar/ionstreamer/database/dbkeyword.py", line 9, in get
+    ret = db.getAll(table = KEYWORD)
+  File "/usr/local/lib/python2.7/dist-packages/simplemysql/simplemysql.py", line 85, in getAll
+    cur = self._select(table, fields, where, order, limit)
+  File "/usr/local/lib/python2.7/dist-packages/simplemysql/simplemysql.py", line 238, in _select
+    return self.query(sql, where[1] if where and len(where) > 1 else None)
+  File "/usr/local/lib/python2.7/dist-packages/simplemysql/simplemysql.py", line 173, in query
+    self.cur.execute(sql, params)
+  File "/usr/lib/python2.7/dist-packages/MySQLdb/cursors.py", line 174, in execute
+    self.errorhandler(self, exc, value)
+  File "/usr/lib/python2.7/dist-packages/MySQLdb/connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+OperationalError: (2013, 'Lost connection to MySQL server during query')
+127.0.0.1 - - [09/Jul/2015 10:50:44] "GET /api/summary HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jul/2015 10:50:48] "GET /api/summary HTTP/1.1" 200 -

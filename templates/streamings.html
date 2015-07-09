@@ -6,7 +6,7 @@
 
   <nav class="top-bar" data-topbar>
     <span class="name text-center">
-      <h1 class="title"><i class="fa fa-twitter fa-lg fa-spin"></i> Tweet Streamer</h1>
+      <h1 class="title"><i class="fa fa-twitter fa-lg"></i> Tweet Streamer</h1>
     </span>
   </nav>
 
@@ -14,10 +14,16 @@
 
   <div class="row">
     <div class="large-6 small-12 columns">
-      <div class="label secondary" id="message">Enter new keyword to stream.</div>
-      <form class="row collapse" ng-submit="submit()">
-        <div class="small-10 columns"><input ng-model="keyword" type="text" placeholder="joko widodo" required autofocus></div>
-        <div class="small-2 columns"><button ng-disabled="is_sending_kw" class="button postfix secondary"><i class="fa fa-lg" ng-class="{'fa-spinner fa-pulse fa-spin':is_sending_kw,'fa-plus':!is_sending_kw}"></i></button></div>
+      <!-- <div class="label secondary" id="message">Enter new keyword to stream.</div> -->
+      <form ng-submit="submit()" class="row collapse">
+        <div class="columns small-10">
+          <input tabindex="1" id="autocomplete" type="search" placeholder="Search and Insert Keywords: e.g. joko widodo" autocomplete="off" ng-model="keyword" required>
+        </div>
+        <div class="small-2 columns">
+          <button class="button secondary postfix">
+            <i class="fa" ng-class="{'fa-spinner fa-pulse fa-spinner':is_sending_kw,'fa-play':!is_sending_kw}"></i>
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -28,7 +34,7 @@
       <li ng-style="info.status=='inactive' && {'opacity': 0.6}" ng-repeat="info in summary | filter:keyword" class="slide">
         <ul class="pricing-table">
           {% raw %}
-          <a href="/analyze/{{ info.keyword | encodeURIComponent }}">
+          <a target="_blank" ng-href="/analyze/{{ info.keyword | encodeURIComponent }}">
             <li class="title keyword" ng-bind-html="info.keyword"></li>
           </a>
           <li class="price"><i ng-show="info.processing" class="fa fa-spinner fa-pulse fa-spin"></i><span ng-hide="info.processing" ng-bind-html="info.count"></span></li>
