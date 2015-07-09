@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 app = Flask(__name__)
 
-from config import HOST, PORT
+from config import DEBUG, HOST, PORT
 import database.dbkeyword as dbk
 import database.dbresult as dbr
 import analytics.tweet as tweeta
@@ -73,4 +73,4 @@ def reset():
   return json.dumps( ret )
 
 if __name__ == "__main__":
-    app.run(host=HOST, port=PORT, debug=True)
+    app.run(host=HOST, port=PORT, debug=DEBUG)
