@@ -9,14 +9,17 @@ import database.dbresult as dbr
 from time import sleep
 from datetime import timedelta
 from dateutil.parser import parse
+from shlex import split
 
 from TwitterSearch import TwitterSearchOrder, TwitterSearch
 
 def get_tso(keyword):
     tso = TwitterSearchOrder()
-    for k in keyword.split():
+    for k in split(keyword, posix = False):
       if k[0] == '@':
         tso.add_keyword(['from:'+k[1:], 'to:'+k[1:]], or_operator = True)
+      elif k[0] == '"':
+        tso.add_keyword([k[1:-1]], or_operator = True)
       else:
         tso.add_keyword([k])
     # print tso.create_search_url()
