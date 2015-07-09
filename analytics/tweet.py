@@ -27,7 +27,7 @@ def get_tweet_freq(keyword):
   st = time.time()
 
   s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
-  s.aggs.bucket('freq', 'date_histogram', field='created_at', interval='hour')
+  s.aggs.bucket('freq', 'date_histogram', field='created_at', interval='4h')
   buckets = s.execute().aggregations.freq.buckets
 
   from random import randint
@@ -60,7 +60,7 @@ def get_top_retweets(keyword):
   st = time.time()
 
   s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
-  s.aggs.bucket('freq', 'terms', field='retweeted_status.id_str', size = 3000)
+  s.aggs.bucket('freq', 'terms', field='retweeted_status.id_str', size = 1000111000)
   buckets = s.execute().aggregations.freq.buckets
   counted = map(lambda b: dbr.get_search_instance(keyword).params(size = 1).query('match', **{'retweeted_status.id': b.key}).execute().hits[0].to_dict(), buckets)
   counted.sort(lambda x, y: cmp(y['retweet_count'], x['retweet_count']))
