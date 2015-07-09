@@ -35,7 +35,7 @@ def gather(row):
       tweets = result['content']['statuses']
       tweets.reverse()
     except Exception as e:
-      print "%s: %s" % (token.name, str(e))
+      print >> sys.stderr, "%s: %s" % (token.name, str(e))
       tweets = []
 
     if len(tweets) > 0:
@@ -50,7 +50,7 @@ def gather(row):
     print "%s: +%d" % (row.keyword, len(tweets))
 
   except Exception as e:
-    print e
+    print >> sys.stderr, e
 
 
 while True:

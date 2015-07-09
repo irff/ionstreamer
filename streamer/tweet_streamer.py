@@ -12,7 +12,6 @@ from dateutil.parser import parse
 
 from TwitterSearch import TwitterSearchOrder, TwitterSearch
 
-
 def get_tso(keyword):
     tso = TwitterSearchOrder()
     for k in keyword.split():
@@ -54,7 +53,7 @@ def gather(row):
       print "[UP] %s: +%d" % (row.keyword, len(tweets))
  
     except Exception as e:
-      print "%s: %s" % (token.name, str(e))
+      print >> sys.stderr, "%s: %s" % (token.name, str(e))
 
 
     if row.since_id > -1:
@@ -77,17 +76,19 @@ def gather(row):
         print "[DOWN] %s: +%d" % (row.keyword, len(tweets))
 
       except Exception as e:
-        print "%s: %s" % (token.name, str(e))
+        print >> sys.stderr, "%s: %s" % (token.name, str(e))
         tweets = []
   except Exception as e:
-    print e
+    print >> sys.stderr, "tweet_streamer error: "+ str(e)
   finally:
     dbk.set( {'keyword': row.keyword, 'processing': 0} )
 
 
 def run_streamer():
-  while not isfile('stop_please'):
+  while True:
     for k in [x for x in dbk.get() if x.status == 'active' and x.processing == 0]:
       if k.keyword in {x.keyword for x in dbk.get() if x.status == 'active' and x.processing == 0}:
         gather(k)
     sleep(5)
+
+run_streamer()

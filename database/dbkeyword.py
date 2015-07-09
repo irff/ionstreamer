@@ -2,7 +2,6 @@ from config import DATABASE, USER, PASSWORD
 from simplemysql import SimpleMysql
 
 db = SimpleMysql(host="localhost", db=DATABASE, user=USER, passwd=PASSWORD, keep_alive=True)
-
 KEYWORD = "keyword"
 
 def get():

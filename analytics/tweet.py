@@ -8,7 +8,6 @@ import database.dbresult as dbr
 import time
 from collections import defaultdict
 
-
 def getinfo(row):
   try:
     r = dbr.get_search_instance(row.keyword).params(size = 3, sort='id:desc').execute()
@@ -21,7 +20,7 @@ def getinfo(row):
       'tweets': ["@%s: %s"%(d.user.screen_name, d.text) for d in r.hits]
     }
   except Exception as e:
-    print str(e)[:123]
+    print >> sys.stderr, "twees analytics: " + str(e)[:123]
     return {'keyword': row.keyword, 'count': 'no results yet', 'status': row.status, 'processing': row.processing, 'tweets': []}
 
 def get_tweet_freq(keyword):

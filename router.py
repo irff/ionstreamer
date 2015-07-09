@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request
 app = Flask(__name__)
 
 from config import HOST, PORT
@@ -6,12 +6,7 @@ import database.dbkeyword as dbk
 import database.dbresult as dbr
 import analytics.tweet as tweeta
 
-import json, urllib, sys
-from streamer.tweet_streamer import run_streamer
-from thread import start_new_thread
-from os import remove as osremove
-from os.path import isfile
-
+import json, urllib
 
 @app.route("/")
 def home():
@@ -76,18 +71,6 @@ def reset():
   ret = dbk.db.update('keyword', {'processing': 0, 'since_id': 0, 'max_id': 0}, ('status = %s', ['active']) )
   dbk.db.commit()
   return json.dumps( ret )
-
-@app.route("/addstreamer")
-def addstreamer():
-  if isfile('stop_please'): osremove('stop_please')
-  return json.dumps( start_new_thread(run_streamer, ()) )
-
-@app.route("/cleanstreamer")
-def cleanstreamer():
-  return json.dumps( open('stop_please', 'w').close() )
-
-
-sys.stderr = open('errorlog', 'wa')
 
 if __name__ == "__main__":
     app.run(host=HOST, port=PORT, debug=True)

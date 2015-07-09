@@ -13,5 +13,5 @@ def gettoken(delta = 10):
         return tokens[0]
       sleep(.5)
   except Exception as e:
-    print e
+    print >> sys.stderr, "tokenmanager error: "+ str(e)
     return None
