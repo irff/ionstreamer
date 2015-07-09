@@ -1,7 +1,0 @@
-127.0.0.1 - - [09/Jul/2015 12:36:06] "GET /api/summary HTTP/1.1" 200 -
-127.0.0.1 - - [09/Jul/2015 12:36:10] "GET /api/summary HTTP/1.1" 200 -
-127.0.0.1 - - [09/Jul/2015 12:36:14] "GET /api/summary HTTP/1.1" 200 -
-127.0.0.1 - - [09/Jul/2015 12:36:18] "GET /api/summary HTTP/1.1" 200 -
-127.0.0.1 - - [09/Jul/2015 12:36:22] "GET /api/summary HTTP/1.1" 200 -
-127.0.0.1 - - [09/Jul/2015 12:36:26] "GET /api/summary HTTP/1.1" 200 -
-127.0.0.1 - - [09/Jul/2015 12:36:30] "GET /api/summary HTTP/1.1" 200 -
