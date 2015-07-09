@@ -1,6 +1,7 @@
+from config import DATABASE, USER, PASSWORD
 from simplemysql import SimpleMysql
 
-db = SimpleMysql(host="localhost", db="ionstreamer", user="root", passwd="", keep_alive=True)
+db = SimpleMysql(host="localhost", db=DATABASE, user=USER, passwd=PASSWORD, keep_alive=True)
 
 TOKEN = "token"
 
