@@ -81,7 +81,7 @@ def get_tweets_at(keyword, waktu):
   st = time.time()
 
   waktu1 = parse(waktu)
-  waktu2 = parse(waktu) + timedelta(hours = 1)
+  waktu2 = parse(waktu) + timedelta(hours = 4)
   r = dbr.get_search_instance(keyword).params(size = 5).filter('range', created_at = {'from': waktu1, 'to': waktu2}).execute()
 
   print "%s - %s - get tweets at: %lf" % (keyword, time, time.time() - st)
