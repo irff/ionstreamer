@@ -51,9 +51,9 @@
       });
     };
 
-    $scope.fetchTweetsAt = function(keyword, time){
+    $scope.fetchTweetsAt = function(keyword, time1, time2){
       $scope.hastweets = false;
-      $http.get('/api/analyze/gettweetsat/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(time)).success(function(r){
+      $http.get('/api/analyze/gettweetsat/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(time1) + '/' + encodeURIComponent(time2)).success(function(r){
         $scope.tweets = r;
         $scope.hastweets = true;
       });
