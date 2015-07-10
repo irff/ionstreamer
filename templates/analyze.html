@@ -20,12 +20,12 @@ function drawFreq() {
     wrapper.draw();
 
     function showTweetsAt() {
-      s = wrapper.getChart().getSelection()[0];
+      var s = wrapper.getChart().getSelection()[0];
       if (s !== undefined && s.row !== null && s.column !== null) {
-        t1 = new Date(wrapper.getDataTable().getValue(s.row, 0));
-        itv = wrapper.getDataTable().getValue(1, 0) - wrapper.getDataTable().getValue(0, 0);
-        t2 = new Date(t1.getTime() + itv);
-        t1.setHours(t.getHours());
+        var t1 = new Date(wrapper.getDataTable().getValue(s.row, 0));
+        var itv = wrapper.getDataTable().getValue(1, 0) - wrapper.getDataTable().getValue(0, 0);
+        var t2 = new Date(t1.getTime() + itv);
+        var t1.setHours(t1.getHours());
         angular.element('#analyzeController').scope().fetchTweetsAt($('#keyword').text(), t1.toISOString(), t2.toISOString());
         angular.element('#analyzeController').scope().$apply();
         $('#tweets').foundation('reveal', 'open');
