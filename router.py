@@ -52,9 +52,9 @@ def topretweets(keyword):
 def randomtweets(keyword):
   return json.dumps( tweeta.get_random_tweets(keyword) )
 
-@app.route("/api/analyze/gettweetsat/<keyword>/<waktu>", methods=['GET'])
-def gettweetsat(keyword, waktu):
-  return json.dumps( tweeta.get_tweets_at(keyword, waktu) )
+@app.route("/api/analyze/gettweetsat/<keyword>/<waktu1>/<waktu2>", methods=['GET'])
+def gettweetsat(keyword, waktu1, waktu2):
+  return json.dumps( tweeta.get_tweets_at(keyword, waktu1, waktu2) )
 
 @app.route("/api/analyze/getmentions/<keyword>/<username>", methods=['GET'])
 def getmentions(keyword, username):

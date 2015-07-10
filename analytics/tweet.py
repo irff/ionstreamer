@@ -26,8 +26,14 @@ def getinfo(row):
 def get_tweet_freq(keyword):
   st = time.time()
 
+  # slice bucket into 20 pieces
+  s = dbr.get_search_instance(keyword)
+  awal = parse(s.params(size = 1, sort = 'id:asc').execute().hits[0].created_at)
+  akhir = parse(s.params(size = 1, sort = 'id:desc').execute().hits[0].created_at)
+  interval = "%ds" % ( (akhir - awal)/20 ).seconds
+
   s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
-  s.aggs.bucket('histo', 'date_histogram', field='created_at', interval='4h')
+  s.aggs.bucket('histo', 'date_histogram', field='created_at', interval=interval)
   buckets = s.execute().aggregations.histo.buckets
 
   from random import randint
@@ -39,7 +45,7 @@ def get_top_mentions(keyword):
   st = time.time()
 
   s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
-  s.aggs.bucket('freq', 'terms', field='entities.user_mentions.screen_name', size = 5)
+  s.aggs.bucket('freq', 'terms', field='entities.user_mentions.screen_name', size = 10)
   buckets = s.execute().aggregations.freq.buckets
 
   print "%s - top mention: %lf" % (keyword, time.time() - st)
@@ -49,7 +55,7 @@ def get_top_postings(keyword):
   st = time.time()
 
   s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
-  s.aggs.bucket('freq', 'terms', field='user.screen_name', size = 5)
+  s.aggs.bucket('freq', 'terms', field='user.screen_name', size = 10)
   buckets = s.execute().aggregations.freq.buckets
 
   print "%s - top posting: %lf" % (keyword, time.time() - st)
@@ -78,11 +84,11 @@ def get_random_tweets(keyword):
   print "%s - top retweet: %lf" % (keyword, time.time() - st)
   return map(lambda x: x.to_dict(), r.hits)
 
-def get_tweets_at(keyword, waktu):
+def get_tweets_at(keyword, waktu1, waktu2):
   st = time.time()
 
-  waktu1 = parse(waktu)
-  waktu2 = parse(waktu) + timedelta(hours = 4)
+  waktu1 = parse(waktu1)
+  waktu2 = parse(waktu2)
   r = dbr.get_search_instance(keyword).params(size = 10).filter('range', created_at = {'from': waktu1, 'to': waktu2}).query('function_score', random_score={}).execute()
 
   print "%s - %s - get tweets at: %lf" % (keyword, time, time.time() - st)

@@ -8,7 +8,7 @@ options_freq = {
   legend: {position: 'top', },
   animation: {startup: true, duration: 1200, easing: 'out', },
   colors: ['#4099FF', '#00FF00', '#EE0000'],
-  height: 275,
+  height: 250,
 };
 
 options_sentiment = {
@@ -19,11 +19,11 @@ options_sentiment = {
   // pieHole: .2,
   // pieStartAngle: 180,
   colors: ['#00FF00', '#EE0000'],
-  height: 275,
+  height: 250,
 };
 
 options_topmention = {
-  height: 275,
+  height: 350,
   legend: {position: 'top', },
   animation: {startup: true, duration: 1200, easing: 'out', },
   title: 'Top Mentions People',
@@ -39,7 +39,7 @@ options_topmention = {
 };
 
 options_topposting = {
-  height: 275,
+  height: 350,
   legend: {position: 'top', },
   animation: {startup: true, duration: 1200, easing: 'out', },
   title: 'Top Posting',
