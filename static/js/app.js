@@ -82,27 +82,6 @@
     return window.encodeURIComponent;
   });
 
-/*  app.animation('.slide', [function() {
-    return {
-      // make note that other events (like addClass/removeClass)
-      // have different function input parameters
-      enter: function(element, doneFn) {
-        jQuery(element).fadeIn(400, doneFn);
-
-        // remember to call doneFn so that angular
-        // knows that the animation has concluded
-      },
-
-      move: function(element, doneFn) {
-        jQuery(element).fadeIn(400, doneFn);
-      },
-
-      leave: function(element, doneFn) {
-        jQuery(element).fadeOut(400, doneFn);
-      }
-    }
-  }]);*/
-
 })();
 
 /*  .controller('titleController', function(){

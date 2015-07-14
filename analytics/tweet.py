@@ -30,7 +30,7 @@ def get_tweet_freq(keyword):
   s = dbr.get_search_instance(keyword)
   awal = parse(s.params(size = 1, sort = 'id:asc').execute().hits[0].created_at)
   akhir = parse(s.params(size = 1, sort = 'id:desc').execute().hits[0].created_at)
-  interval = "%ds" % ( (akhir - awal)/20 ).seconds
+  interval = "%ds" % ( (akhir - awal)/40 ).seconds
 
   s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
   s.aggs.bucket('histo', 'date_histogram', field='created_at', interval=interval)

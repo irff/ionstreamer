@@ -16,6 +16,12 @@ def home():
 def analyze(keyword):
   return render_template('analyze.html', keyword = keyword, encoded_keyword = urllib.quote(keyword, safe='~()*!.\''))
 
+@app.route("/learn")
+def learn():
+  return render_template('learn.html')
+
+
+
 
 # API
 @app.route("/api/stream", methods=['POST'])
