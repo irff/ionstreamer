@@ -3,7 +3,7 @@
 
   app.controller('summaryController', function($scope, $http, $interval){
 
-    function refresh() {$http.get('/api/summary').success(function(r) {$scope.summary = r; }); }
+    function refresh() {$http.get('/api/summary').success(function(r) {$scope.summary = r; });}
 
     $scope.stream = function(info, status){
       info.is_streaming = true;
@@ -22,8 +22,11 @@
         '/api/stream' ,
         {keyword: $scope.keyword, status: 'active'}
       ).success(function(){
-        $scope.is_sending_kw = false;
-        refresh();
+        // $scope.summary = [];
+        $http.get('/api/summary').success(function(r) {
+          $scope.summary = r;
+          $scope.is_sending_kw = false;
+        });
       });
       $scope.keyword = '';
     };
