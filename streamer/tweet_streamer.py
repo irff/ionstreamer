@@ -16,10 +16,10 @@ from TwitterSearch import TwitterSearchOrder, TwitterSearch
 def get_tso(keyword):
     tso = TwitterSearchOrder()
     for k in split(keyword, posix = False):
+      if k[0] == '"' and k[-1] == '"':
+        k = k[1:-1]
       if k[0] == '@':
         tso.add_keyword(['from:'+k[1:], 'to:'+k[1:]], or_operator = True)
-      elif k[0] == '"':
-        tso.add_keyword([k[1:-1]], or_operator = True)
       else:
         tso.add_keyword([k])
     # print tso.create_search_url()

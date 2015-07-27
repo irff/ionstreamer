@@ -43,7 +43,7 @@
           <li class="cta-button">
             <button ng-disabled="info.is_streaming || info.processing" ng-click="stream(info, 'active')" ng-hide="info.status=='active'" class="button radius secondary tiny"><i class="fa fa-play"></i></button>
             <button ng-disabled="info.is_streaming || info.processing" ng-click="stream(info, 'inactive')" ng-hide="info.status=='inactive'"class="button radius secondary tiny"><i class="fa fa-pause"></i></button>
-            <button ng-disabled="info.is_streaming || info.processing" ng-click="stream(info, 'removed')" class="button radius secondary tiny"><i class="fa fa-trash"></i></button>
+            <button ng-disabled="info.is_streaming || info.processing" ng-click="stream(info, 'removed')" class="button radius secondary tiny"><i class="fa fa-eye-slash fa-lg"></i></button>
           </li>
           {% endraw %}
         </ul>

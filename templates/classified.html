@@ -3,7 +3,7 @@
 {% block content %}
 
 
-<div ng-controller="learnController">
+<div ng-controller="classifiedController">
 
   <nav class="top-bar" data-topbar>
     <span class="name text-center">
@@ -17,12 +17,14 @@
   <!-- <hr> -->
 
   <div class="row">
-    <div class="columns small-12 medium-12" infinite-scroll='loadrandomtweets()' infinite-scroll-distance='1' infinite-scroll-disabled="loadingrandomtweets">
+    <div class="columns small-12 medium-12" infinite-scroll='loadclassified()' infinite-scroll-distance='1' infinite-scroll-disabled="allout || loadingtweets">
       <div class="alert-box info text-center">
-        <span>Random Tweets</span>
+        {% endraw %}
+        <span>Classified Tweets ({{size}})</span>
+        {% raw %}
       </div>
-      <!-- JUST SOME RANDOM TWEETS -->
-      <div class="row" ng-repeat="tweet in randomtweets">
+      <!-- JUST SOME CLASSIFIED TWEETS -->
+      <div class="row" ng-repeat="tweet in tweets">
         <div class="columns hide-for-small-only medium-1 th">
           <img ng-src="{{ tweet.user.profile_image_url }}">
         </div>
@@ -30,7 +32,7 @@
           <div class="user">
             <span class="name" ng-bind-html="tweet.user.name"></span>
             <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}" class="username" ng-bind-html="'@'+tweet.user.screen_name"></a>
-            <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id_str }}" class="count label secondary radius" ng-bind-html="tweet.retweet_count+' retweets'"></a>
+            <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id_str }}" class="label secondary radius" ng-bind-html="tweet.retweet_count+' retweets'"></a>
           </div>
           <div class="text">
             <p ng-bind-html="tweet.text"></p>
@@ -44,7 +46,7 @@
         <hr>
       </div>
       <!-- END OF JUST SOME RANDOM TWEETS -->
-      <div class="label secondary tiny" ng-show="loadingrandomtweets">Loading Random Tweets <i class="fa fa-lg fa-cog fa-spin"></i></div>
+      <div class="label secondary tiny" ng-show="loadingtweets">Loading More Classified Tweets <i class="fa fa-lg fa-cog fa-spin"></i></div>
     </div>
   </div>
 

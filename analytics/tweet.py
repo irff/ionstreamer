@@ -81,7 +81,7 @@ def get_random_tweets(keyword):
   s = dbr.get_search_instance(keyword).params(size = 10)
   r = s.query('function_score', random_score={}).execute()
 
-  print "%s - top retweet: %lf" % (keyword, time.time() - st)
+  print "%s - random tweet: %lf" % (keyword, time.time() - st)
   return map(lambda x: x.to_dict(), r.hits)
 
 def get_tweets_at(keyword, waktu1, waktu2):

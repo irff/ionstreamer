@@ -6,19 +6,52 @@ import database.dbkeyword as dbk
 import database.dbresult as dbr
 import analytics.tweet as tweeta
 
-import json, urllib
+import json, sys
 
 @app.route("/")
-def home():
+def showhome():
     return render_template('streamings.html')
 
 @app.route("/analyze/<keyword>")
-def analyze(keyword):
-  return render_template('analyze.html', keyword = keyword, encoded_keyword = urllib.quote(keyword, safe='~()*!.\''))
+def showanalyze(keyword):
+  return render_template('analyze.html', keyword = keyword)
 
-@app.route("/learn")
-def learn():
+@app.route("/learn", methods=['GET'])
+def showlearn():
   return render_template('learn.html')
+
+@app.route("/learn/classified", methods=['GET'])
+def showlearned():
+  return render_template('classified.html', size = dbr.get_search_instance('LEARN', enc = False).params(search_type = 'count', size = 0).execute().hits.total)
+
+
+# LEARN
+@app.route("/learn", methods=['POST'])
+def learn():
+  try:
+    dbr.set('LEARN', request.json, enc = False)
+    return "%s classified to %s" % (request.json['id_str'], request.json['class'])
+  except Exception as e:
+    print >> sys.stderr, "error: " + str(e)
+
+@app.route("/learn/randomtweets", methods=['GET'])
+def getrandomtweets(count = 10):
+  s = dbr.get_search_instance().params(size = count)
+  r = s.query('function_score', random_score={}).execute()
+  def check_from_LEARN(tweet):
+    try:
+      t = dbr.get('LEARN', tweet.id_str, enc = False)
+      return t['_source']
+    except Exception as e:
+      tweet['class'] = ''
+      return tweet.to_dict()
+  return json.dumps(map(check_from_LEARN, r.hits))
+
+@app.route("/learn/classifiedtweets/<size>/<offset>", methods=['GET'])
+def getclassifiedtweets(size = 10, offset = 0):
+  s = dbr.get_search_instance('LEARN', enc = False).params(size = size, from_ = offset)
+  r = s.execute()
+  return json.dumps(map(lambda x: x.to_dict(), r.hits))
 
 
 
@@ -77,6 +110,8 @@ def reset():
   ret = dbk.db.update('keyword', {'processing': 0, 'since_id': 0, 'max_id': 0}, ('status = %s', ['active']) )
   dbk.db.commit()
   return json.dumps( ret )
+
+
 
 if __name__ == "__main__":
     app.run(host=HOST, port=PORT, debug=DEBUG)

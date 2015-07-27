@@ -12,17 +12,21 @@
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/animate.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
-
+  <!-- 
   <script src="{{ url_for('static', filename='js/vendor/modernizr.js') }}"></script>
+  -->
   <script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
 </head>
 <body>
   {% block content %}{% endblock %}
+  <!-- 
   <script src="{{ url_for('static', filename='js/vendor/fastclick.js') }}"></script>
+   -->
   <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
 
   <script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/angular-sanitize.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/ng-infinite-scroll.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
   <script>

@@ -4,12 +4,18 @@ from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 es = Elasticsearch()
 
-def set(keyword, data):
+def set(keyword, data, enc = True):
   id = data['id_str']
-  return es.index(index = INDEX, doc_type = b64encode(keyword), id = id, body=data)
+  return es.index(index = INDEX, doc_type = b64encode(keyword) if enc else keyword, id = id, body=data)
 
-def delete(keyword, id):
-  return es.index(index = INDEX, doc_type = b64encode(keyword), id = id, ignore=404)
+def get(keyword, id, enc = True):
+  return es.get(index = INDEX, doc_type = b64encode(keyword) if enc else keyword, id = id)
 
-def get_search_instance(keyword):
-  return Search(using = es, index = INDEX, doc_type = b64encode(keyword))
+def delete(keyword, id, enc = True):
+  return es.index(index = INDEX, doc_type = b64encode(keyword) if enc else keyword, id = id, ignore=404)
+
+def get_search_instance(keyword = None, enc = True):
+  if keyword == None:
+    return Search(using = es, index = INDEX)
+  else:
+    return Search(using = es, index = INDEX, doc_type = b64encode(keyword) if enc else keyword)
