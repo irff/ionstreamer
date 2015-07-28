@@ -1,16 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Langgar Tweet Streamer{% endblock %}
+{% block titlenav %}Langgar Tweet Streamer{% endblock %}
+
 {% block content %}
 
 <div ng-controller="summaryController">
-
-  <nav class="top-bar" data-topbar>
-    <span class="name text-center">
-      <h1 class="title"><i class="fa fa-twitter fa-lg"></i> Tweet Streamer</h1>
-    </span>
-  </nav>
-
-  <hr>
 
   <div class="row">
     <div class="large-6 small-12 columns">
@@ -21,7 +14,7 @@
         </div>
         <div class="small-2 columns">
           <button class="button secondary postfix">
-            <i class="fa" ng-class="{'fa-spinner fa-pulse fa-spinner':is_sending_kw,'fa-play':!is_sending_kw}"></i>
+            <i class="fa" ng-class="{'fa-spinner fa-spin fa-spinner':is_sending_kw,'fa-play':!is_sending_kw}"></i>
           </button>
         </div>
       </form>
@@ -34,10 +27,10 @@
       <li ng-style="info.status=='inactive' && {'opacity': 0.6}" ng-repeat="info in summary | filter:keyword" class="slide">
         <ul class="pricing-table">
           {% raw %}
-          <a target="_blank" ng-href="/analyze/{{ info.keyword | encodeURIComponent }}">
+          <a ng-href="/analyze/{{ info.keyword | encodeURIComponent }}">
             <li class="title keyword" ng-bind-html="info.keyword"></li>
           </a>
-          <li class="price"><i ng-show="info.processing" class="fa fa-spinner fa-pulse fa-spin"></i><span ng-hide="info.processing" ng-bind-html="info.count"></span></li>
+          <li class="price"><i ng-show="info.processing" class="fa fa-spinner fa-spin fa-spin"></i><span ng-hide="info.processing" ng-bind-html="info.count + ' results'"></span></li>
           <!-- <li class="description"></li> -->
           <li class="bullet-item" ng-repeat="tweet in info.tweets" ng-bind-html="tweet"></li>
           <li class="cta-button">
@@ -52,39 +45,6 @@
     </div>
   </div>
 
-
-  <footer class="row">
-    <hr>
-    <div class="columns text-center">
-      <p>Copyright <i class="fa fa-copyright"></i> <a href="http://langgar.co">langgar.co</a>.</p>
-    </div>
-  </footer>
-
 </div>
 
 {% endblock %}
-
-
-
-<!-- SAMPAH -->
-
-  <!-- <div class="large-12 small-12 columns">
-    <div class="row" id="panel" data-equalizer></div>
-
-    <div class="row">
-      <div class="large-12 columns">
-        <div class="panel">
-          <div class="row">
-            <div class="large-2 small-6 columns" data-equalizer-watch>
-              <img src="http://placehold.it/300x300&text=Site Owner">
-            </div>
-            <div class="large-10 small-6 columns" data-equalizer-watch>
-              <strong>This Site Is Managed By<hr/></strong>
-              Risus ligula, aliquam nec fermentum vitae, sollicitudin eget urna. Donec dignissim nibh fermentum odio ornare sagittis
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div> -->

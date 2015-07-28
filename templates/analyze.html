@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block title %}Langgar Tweet Analyzer{% endblock %}
+{% block titlenav %}Tweet Analyzer of {{keyword}}{% endblock %}
+
 {% block content %}
 
 <!--Load the AJAX API-->
@@ -26,7 +27,7 @@ function drawFreq() {
         var itv = wrapper.getDataTable().getValue(1, 0) - wrapper.getDataTable().getValue(0, 0);
         var t2 = new Date(t1.getTime() + itv);
         t1.setHours(t1.getHours());
-        angular.element('#analyzeController').scope().fetchTweetsAt($('#keyword').text(), t1.toISOString(), t2.toISOString());
+        angular.element('#analyzeController').scope().fetchTweetsAt($('#keyword').text(), s.column, t1.toISOString(), t2.toISOString());
         angular.element('#analyzeController').scope().$apply();
         $('#tweets').foundation('reveal', 'open');
       }
@@ -102,14 +103,6 @@ function drawCurves() {
 
 <div id="analyzeController" ng-controller="analyzeController">
 
-  <nav class="top-bar" data-topbar>
-    <span class="name text-center">
-      <h1 class="title"><i class="fa fa-twitter fa-lg"></i> Tweet Analyzer of {{keyword}}</h1>
-    </span>
-  </nav>
-
-  <hr>
-
   <div class="row">
     <div class="small-12 medium-9 columns">
       <div id="freq" class="text-center"><h1><i class="fa fa-lg fa-line-chart fa-spin"></i></h1></div>
@@ -184,14 +177,16 @@ function drawCurves() {
 
 <!-- <div class="columns small-12 medium-6" id="tweets"> -->
 <div id="tweets" class="reveal-modal row" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
-  <div class="column small-11 medium-11">
+  <div class="column small-12 medium-12">
     <div class="row">
-      <div class="alert-box info radius">
-        <span>Tweets</span>
-        <i ng-hide="hastweets" class="fa fa-lg fa-cog fa-spin"></i>
-        <a class="label secondary radius right">
-          <i ng-show="hastweets" class="fa fa-lg fa-cloud-download"></i>
-        </a>
+      <div class="column small-11 medium-11">      
+        <div class="alert-box info radius">
+          <span ng-bind-html="modaltitle"></span>
+          <i ng-hide="hastweets" class="fa fa-lg fa-cog fa-spin"></i>
+          <a class="label secondary radius right" ng-href="{{downloadlink}}" target="_blank">
+            <i ng-show="hastweets" class="fa fa-lg fa-cloud-download"></i>
+          </a>
+        </div>
       </div>
     </div>
     <!-- TWEETS -->
@@ -216,14 +211,6 @@ function drawCurves() {
 </div>
 
   {% endraw %}
-
-  <hr>
-
-  <footer class="row">
-    <div class="columns text-center">
-      <p>Copyright <i class="fa fa-copyright"></i> <a href="http://langgar.co">langgar.co</a>.</p>
-    </div>
-  </footer>
 
 </div>
 

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 app = Flask(__name__)
 
 from config import DEBUG, HOST, PORT
@@ -91,9 +91,9 @@ def topretweets(keyword):
 def randomtweets(keyword):
   return json.dumps( tweeta.get_random_tweets(keyword) )
 
-@app.route("/api/analyze/gettweetsat/<keyword>/<waktu1>/<waktu2>", methods=['GET'])
-def gettweetsat(keyword, waktu1, waktu2):
-  return json.dumps( tweeta.get_tweets_at(keyword, waktu1, waktu2) )
+@app.route("/api/analyze/gettweetsat/<keyword>/<kelas>/<waktu1>/<waktu2>", methods=['GET'])
+def gettweetsat(keyword, kelas, waktu1, waktu2):
+  return json.dumps( tweeta.get_tweets_at(keyword, kelas, waktu1, waktu2) )
 
 @app.route("/api/analyze/getmentions/<keyword>/<username>", methods=['GET'])
 def getmentions(keyword, username):
@@ -102,6 +102,25 @@ def getmentions(keyword, username):
 @app.route("/api/analyze/getpostings/<keyword>/<username>", methods=['GET'])
 def getpostings(keyword, username):
   return json.dumps( tweeta.get_postings(keyword, username) )
+
+
+# DOWNLOAD
+@app.route("/download/tweetsat/<keyword>/<kelas>/<waktu1>/<waktu2>/<filename>", methods=['GET'])
+def downloadtweetsat(keyword, kelas, waktu1, waktu2, filename):
+  return Response(tweeta.download_tweets_at(keyword, kelas, waktu1, waktu2), mimetype='text/csv')
+
+@app.route("/download/mentions/<keyword>/<username>/<filename>", methods=['GET'])
+def downloadmentions(keyword, username, filename):
+  return Response(tweeta.download_mentions(keyword, username), mimetype='text/csv')
+
+@app.route("/download/postings/<keyword>/<username>/<filename>", methods=['GET'])
+def downloadpostings(keyword, username, filename):
+  return Response(tweeta.download_postings(keyword, username), mimetype='text/csv')
+
+@app.route("/download/all/<keyword>/<filename>", methods=['GET'])
+def downloadall(keyword, filename):
+  return Response(tweeta.download_all(keyword), mimetype='text/csv')
+
 
 
 # DUMMY

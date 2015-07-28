@@ -84,7 +84,10 @@ def gather(row):
   except Exception as e:
     print >> sys.stderr, "tweet_streamer error: "+ str(e)
   finally:
-    dbk.set( {'keyword': row.keyword, 'processing': 0} )
+    try:
+      dbk.set( {'keyword': row.keyword, 'processing': 0} )
+    except Exception as e:
+      print >> sys.stderr, "exception: %s" % (str(e))
 
 
 def run_streamer():

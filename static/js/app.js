@@ -1,6 +1,13 @@
 (function(){
   var app = angular.module("tweetstreamer", ['ngSanitize', 'infinite-scroll']);
 
+  app.controller('navbarController', function($scope, $http, $interval){
+    function refresh() {$http.get('/api/summary').success(function(r) {$scope.summary = r; });}
+    refresh();
+    $interval(refresh, 3500);
+  });
+
+
   app.controller('summaryController', function($scope, $http, $interval){
 
     function refresh() {$http.get('/api/summary').success(function(r) {$scope.summary = r; });}
@@ -22,7 +29,6 @@
         '/api/stream' ,
         {keyword: $scope.keyword, status: 'active'}
       ).success(function(){
-        // $scope.summary = [];
         $http.get('/api/summary').success(function(r) {
           $scope.summary = r;
           $scope.is_sending_kw = false;
@@ -54,16 +60,20 @@
       });
     };
 
-    $scope.fetchTweetsAt = function(keyword, time1, time2){
+    $scope.fetchTweetsAt = function(keyword, kelas, time1, time2){
+      $scope.modaltitle = kelas == 1 ? 'All' : kelas == 2 ? 'Positive' : 'Negative' + ' tweets of '+keyword;
+      $scope.downloadlink = '/download/tweetsat/' + encodeURIComponent(keyword) + '/' + kelas + '/' + encodeURIComponent(time1) + '/' + encodeURIComponent(time2) + '/tweets_at-' + keyword + '-' + (kelas == 1 ? 'all' : kelas == 2 ? 'positive' : 'negative') + '-' + (new Date(time1)).toString() + '-' + (new Date(time2)).toString() + '.csv';
       $scope.tweets = [];
       $scope.hastweets = false;
-      $http.get('/api/analyze/gettweetsat/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(time1) + '/' + encodeURIComponent(time2)).success(function(r){
+      $http.get('/api/analyze/gettweetsat/' + encodeURIComponent(keyword) + '/' + kelas + '/' + encodeURIComponent(time1) + '/' + encodeURIComponent(time2)).success(function(r){
         $scope.tweets = r;
         $scope.hastweets = true;
       });
     };
 
     $scope.fetchTweetsTo = function(keyword, username){
+      $scope.modaltitle = 'Tweets about ' + keyword + ' that Mentions to ' + username;
+      $scope.downloadlink = '/download/mentions/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username) + '/mentions-' + keyword + '-' + username + '.csv';
       $scope.tweets = [];
       $scope.hastweets = false;
       $http.get('/api/analyze/getmentions/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username)).success(function(r){
@@ -73,6 +83,8 @@
     };
 
     $scope.fetchTweetsFrom = function(keyword, username){
+      $scope.modaltitle = 'Tweets about ' + keyword + ' from ' + username;
+      $scope.downloadlink = '/download/postings/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username) + '/postings-' + keyword + '-' + username + '.csv';
       $scope.tweets = [];
       $scope.hastweets = false;
       $http.get('/api/analyze/getpostings/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username)).success(function(r){
@@ -99,8 +111,8 @@
     $scope.learn = function(tweet, kelas){
       tweet.class = kelas;
       $http.post('/learn', tweet)
-      .success(function(r){
-        // console.log(r);
+      .error(function(r){
+        tweet.class = '';
       });
     };
   });

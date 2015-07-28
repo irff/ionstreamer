@@ -1,20 +1,12 @@
 {% extends "base.html" %}
-{% block title %}Langgar Tweet Learning{% endblock %}
+{% block titlenav %}Langgar Tweet Learning{% endblock %}
+
 {% block content %}
 
 
 <div ng-controller="learnController">
 
-  <nav class="top-bar" data-topbar>
-    <span class="name text-center">
-      <h1 class="title"><i class="fa fa-twitter fa-lg"></i> Tweet Learning</h1>
-    </span>
-  </nav>
-
-  <hr>
-
   {% raw %}
-  <!-- <hr> -->
 
   <div class="row">
     <div class="columns small-12 medium-12" infinite-scroll='loadrandomtweets()' infinite-scroll-distance='1' infinite-scroll-disabled="loadingrandomtweets">
@@ -49,14 +41,6 @@
   </div>
 
   {% endraw %}
-
-  <hr>
-
-  <footer class="row">
-    <div class="columns text-center">
-      <p>Copyright <i class="fa fa-copyright"></i> <a href="http://langgar.co">langgar.co</a>.</p>
-    </div>
-  </footer>
 
 </div>
 

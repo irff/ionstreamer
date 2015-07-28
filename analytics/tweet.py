@@ -14,14 +14,14 @@ def getinfo(row):
 
     return {
       'keyword': row.keyword,
-      'count': '%d results'%r.hits.total,
+      'count': r.hits.total,
       'status': row.status,
       'processing': row.processing,
       'tweets': ["@%s: %s"%(d.user.screen_name, d.text) for d in r.hits]
     }
   except Exception as e:
     print >> sys.stderr, "twees analytics: " + str(e)[:123]
-    return {'keyword': row.keyword, 'count': 'no results yet', 'status': row.status, 'processing': row.processing, 'tweets': []}
+    return {'keyword': row.keyword, 'count': 0, 'status': row.status, 'processing': row.processing, 'tweets': []}
 
 def get_tweet_freq(keyword):
   st = time.time()
@@ -45,7 +45,7 @@ def get_top_mentions(keyword):
   st = time.time()
 
   s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
-  s.aggs.bucket('freq', 'terms', field='entities.user_mentions.screen_name', size = 10)
+  s.aggs.bucket('freq', 'terms', field='entities.user_mentions.screen_name', size = 7)
   buckets = s.execute().aggregations.freq.buckets
 
   print "%s - top mention: %lf" % (keyword, time.time() - st)
@@ -55,7 +55,7 @@ def get_top_postings(keyword):
   st = time.time()
 
   s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
-  s.aggs.bucket('freq', 'terms', field='user.screen_name', size = 10)
+  s.aggs.bucket('freq', 'terms', field='user.screen_name', size = 7)
   buckets = s.execute().aggregations.freq.buckets
 
   print "%s - top posting: %lf" % (keyword, time.time() - st)
@@ -84,14 +84,14 @@ def get_random_tweets(keyword):
   print "%s - random tweet: %lf" % (keyword, time.time() - st)
   return map(lambda x: x.to_dict(), r.hits)
 
-def get_tweets_at(keyword, waktu1, waktu2):
+def get_tweets_at(keyword, kelas, waktu1, waktu2):
   st = time.time()
 
   waktu1 = parse(waktu1)
   waktu2 = parse(waktu2)
   r = dbr.get_search_instance(keyword).params(size = 10).filter('range', created_at = {'from': waktu1, 'to': waktu2}).query('function_score', random_score={}).execute()
 
-  print "%s - %s - get tweets at: %lf" % (keyword, time, time.time() - st)
+  print "%s %s %s %s - get tweets at: %lf" % (keyword, kelas, waktu1, waktu2, time.time() - st)
   return map(lambda h: h.to_dict(), r.hits)
 
 def get_mentions(keyword, username):
@@ -109,3 +109,70 @@ def get_postings(keyword, username):
 
   print "%s - %s - get postings: %lf" % (keyword, username, time.time() - st)
   return map(lambda h: h.to_dict(), r.hits)
+
+
+def download_tweets_at(keyword, kelas, waktu1, waktu2):
+  st = time.time()
+
+  waktu1 = parse(waktu1)
+  waktu2 = parse(waktu2)
+  r = dbr.get_search_instance(keyword).params(size = 1000111000).filter('range', created_at = {'from': waktu1, 'to': waktu2}).execute()
+
+  attributes = ['No.', 'Username', 'Name', 'Tweet', 'Created At', 'Retweet', 'Favorite']
+  nomor = 0
+
+  data = [attributes]
+  for t in r.hits:
+    nomor += 1
+    data.append([str(nomor), t.user.screen_name, '"' + t.user.name.replace('"', '""') + '"', '"' + t.text.replace('"', '""') + '"', t.created_at[:10]+' '+t.created_at[11:19], str(t.retweet_count), str(t.favorite_count)])
+
+  print "%s %s %s %s - download tweets at: %lf" % (keyword, kelas, waktu1, waktu2, time.time() - st)
+  return '\n'.join([';'.join(t) for t in data])
+
+def download_mentions(keyword, username):
+  st = time.time()
+
+  r = dbr.get_search_instance(keyword).params(size = 1000111000).query('match', **{'entities.user_mentions.screen_name': username}).execute()
+
+  attributes = ['No.', 'Username', 'Name', 'Tweet', 'Created At', 'Retweet', 'Favorite']
+  nomor = 0
+
+  data = [attributes]
+  for t in r.hits:
+    nomor += 1
+    data.append([str(nomor), t.user.screen_name, '"' + t.user.name.replace('"', '""') + '"', '"' + t.text.replace('"', '""') + '"', t.created_at[:10]+' '+t.created_at[11:19], str(t.retweet_count), str(t.favorite_count)])
+
+  print "%s %s - download mentions: %lf" % (keyword, username, time.time() - st)
+  return '\n'.join([';'.join(t) for t in data])
+
+def download_postings(keyword, username):
+  st = time.time()
+
+  r = dbr.get_search_instance(keyword).params(size = 1000111000, sort='id_str:desc').query('match', **{'user.screen_name': username}).execute()
+
+  attributes = ['No.', 'Username', 'Name', 'Tweet', 'Created At', 'Retweet', 'Favorite']
+  nomor = 0
+
+  data = [attributes]
+  for t in r.hits:
+    nomor += 1
+    data.append([str(nomor), '@' + t.user.screen_name, '"' + t.user.name.replace('"', '""') + '"', '"' + t.text.replace('"', '""') + '"', t.created_at[:10]+' '+t.created_at[11:19], str(t.retweet_count), str(t.favorite_count)])
+
+  print "%s %s - download postings: %lf" % (keyword, username, time.time() - st)
+  return '\n'.join([';'.join(t) for t in data])
+
+def download_all(keyword):
+  st = time.time()
+
+  r = dbr.get_search_instance(keyword).params(size = 1000111000, sort='id_str:desc', timeout = 100).execute()
+
+  attributes = ['No.', 'Username', 'Name', 'Tweet', 'Created At', 'Retweet', 'Favorite']
+  nomor = 0
+
+  data = [attributes]
+  for t in r.hits:
+    nomor += 1
+    data.append([str(nomor), '@' + t.user.screen_name, '"' + t.user.name.replace('"', '""') + '"', '"' + t.text.replace('"', '""') + '"', t.created_at[:10]+' '+t.created_at[11:19], str(t.retweet_count), str(t.favorite_count)])
+
+  print "%s - download all: %lf" % (keyword, time.time() - st)
+  return '\n'.join([';'.join(t) for t in data])
