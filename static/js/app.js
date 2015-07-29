@@ -65,7 +65,6 @@ var BASE_URL = '';
     };
 
     $scope.fetchTweetsAt = function(keyword, kelas, time1, time2){
-      $scope.modaltitle = (kelas == 1 ? 'Positive and Negative' : kelas == 2 ? 'Positive' : 'Negative') + ' Tweets';
       $scope.downloadlink = BASE_URL + '/download/tweetsat/' + encodeURIComponent(keyword) + '/' + kelas + '/' + encodeURIComponent(time1) + '/' + encodeURIComponent(time2) + '/tweets_at-' + keyword + '-' + (kelas == 1 ? 'positive-negative' : kelas == 2 ? 'positive' : 'negative') + '-' + (new Date(time1)).toString() + '-' + (new Date(time2)).toString() + '.csv';
       $scope.tweets = [];
       $scope.hastweets = false;
@@ -76,7 +75,6 @@ var BASE_URL = '';
     };
 
     $scope.fetchTweetsTo = function(keyword, username){
-      $scope.modaltitle = 'Tweets to ' + username;
       $scope.downloadlink = BASE_URL + '/download/mentions/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username) + '/mentions-' + keyword + '-' + username + '.csv';
       $scope.tweets = [];
       $scope.hastweets = false;
@@ -87,7 +85,6 @@ var BASE_URL = '';
     };
 
     $scope.fetchTweetsFrom = function(keyword, username){
-      $scope.modaltitle = 'Tweets from ' + username;
       $scope.downloadlink = BASE_URL + '/download/postings/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username) + '/postings-' + keyword + '-' + username + '.csv';
       $scope.tweets = [];
       $scope.hastweets = false;
