@@ -23,3 +23,11 @@ body {
 .username {
   font-style: italic;
 }
+
+.active {
+
+}
+
+.inactive {
+  opacity: .67;
+}

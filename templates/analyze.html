@@ -175,17 +175,34 @@ function drawCurves() {
     </div>
   </div>
 
+  <div class="row">
+    <div class="small-12 text-center">
+      <a ng-href="/download/all/{{keyword}}/all-tweets-{{keyword}}.csv" class="button radius">Download All Tweets</a>
+    </div>
+  </div>
+
 <!-- <div class="columns small-12 medium-6" id="tweets"> -->
 <div id="tweets" class="reveal-modal row" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
   <div class="column small-12 medium-12">
     <div class="row">
       <div class="column small-11 medium-11">      
         <div class="alert-box info radius">
-          <span ng-bind-html="modaltitle"></span>
-          <i ng-hide="hastweets" class="fa fa-lg fa-cog fa-spin"></i>
-          <a class="label secondary radius right" ng-href="{{downloadlink}}" target="_blank">
-            <i ng-show="hastweets" class="fa fa-lg fa-cloud-download"></i>
-          </a>
+
+          <div class="row">
+
+            <div class="column small-11">
+              <span ng-bind-html="modaltitle"></span>
+              <i ng-hide="hastweets" class="fa fa-lg fa-cog fa-spin"></i>
+            </div>
+
+            <div class="column small-1">
+              <a class="label secondary radius right" ng-href="{{ downloadlink }}">
+                <i ng-show="hastweets" class="fa fa-lg fa-cloud-download"></i>
+              </a>
+            </div>
+
+          </div>
+
         </div>
       </div>
     </div>
@@ -207,7 +224,7 @@ function drawCurves() {
     </div>
     <!-- END OF TWEETS -->
   </div>
-  <a class="close-reveal-modal" aria-label="Close"><i class="fa fa-times-circle"></i></a>
+  <a class="close-reveal-modal" style="font-size:20pt" aria-label="Close">&#215;</a>
 </div>
 
   {% endraw %}

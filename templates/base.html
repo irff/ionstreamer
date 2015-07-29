@@ -5,6 +5,7 @@
   <!-- If you delete this meta tag World War Z will become a reality -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Langgar Social Media Analyzer</title>
+  <link rel="icon" href="http://langgar.co/images/favicon.png">
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.css') }}">
@@ -29,20 +30,19 @@
       <li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
     </ul>
 
-    {% raw %}
     <section class="top-bar-section">
       <!-- Right Nav Section -->
       <ul class="right">
-        <li class=""><a href="/">Home</a></li>
-        <li class="has-dropdown">
+        <li class="{{'active' if nav == 'home'}}"><a href="/">Home</a></li>
+        <li class="has-dropdown {{'active' if nav == 'analyze'}}">
           <a href="">Analyze</a>
           <ul class="dropdown">
             <li ng-repeat="info in summary">
-              <a ng-href="/analyze/{{info.keyword | encodeURIComponent}}" ng-bind-html="info.keyword+' ('+info.count+')'"></a>
+              <a ng-class="info.status" ng-href="/analyze/{{ '{{info.keyword | encodeURIComponent}}' }}" ng-bind-html="info.keyword+' ('+info.count+')'"></a>
             </li>
           </ul>
         </li>
-        <li class="has-dropdown">
+        <li class="has-dropdown {{'active' if nav == 'learn'}}">
           <a href="">Train</a>
           <ul class="dropdown">
             <li><a href="/learn">Random</a></li>
@@ -56,7 +56,6 @@
         <li><a href="#">Left Nav Button</a></li>
       </ul> -->
     </section>
-    {% endraw %}
   </nav>
   <!-- END OF NAVBAR -->
 
