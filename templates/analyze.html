@@ -177,7 +177,7 @@ function drawCurves() {
 
   <div class="row">
     <div class="small-12 text-center">
-      <a ng-href="/download/all/{{keyword}}/all-tweets-{{keyword}}.csv" class="button small">Download All Tweets</a>
+      <a ng-href="/download/all/{{keyword}}/all-tweets-{{keyword}}.csv" class="button small" download>Download All Tweets</a>
     </div>
   </div>
 
@@ -189,7 +189,7 @@ function drawCurves() {
         <div class="alert-box info radius">
           <span ng-bind-html="modaltitle"></span>
           <i ng-hide="hastweets" class="fa fa-lg fa-cog fa-spin"></i>
-          <a class="label secondary radius right" ng-href="{{ downloadlink }}">
+          <a class="label secondary radius right" ng-href="{{ downloadlink }}" download>
             <i ng-show="hastweets" class="fa fa-lg fa-cloud-download"></i>
           </a>
         </div>
