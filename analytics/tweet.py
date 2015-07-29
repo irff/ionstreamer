@@ -124,7 +124,7 @@ def download_tweets_at(keyword, kelas, waktu1, waktu2):
   data = [attributes]
   for t in r.hits:
     nomor += 1
-    data.append([str(nomor), t.user.screen_name, '"' + t.user.name.replace('"', '""') + '"', '"' + t.text.replace('"', '""') + '"', t.created_at[:10]+' '+t.created_at[11:19], str(t.retweet_count), str(t.favorite_count)])
+    data.append([str(nomor), '@' + t.user.screen_name, '"' + t.user.name.replace('"', '""') + '"', '"' + t.text.replace('"', '""') + '"', t.created_at[:10]+' '+t.created_at[11:19], str(t.retweet_count), str(t.favorite_count)])
 
   print "%s %s %s %s - download tweets at: %lf" % (keyword, kelas, waktu1, waktu2, time.time() - st)
   return '\n'.join([';'.join(t) for t in data])
@@ -140,7 +140,7 @@ def download_mentions(keyword, username):
   data = [attributes]
   for t in r.hits:
     nomor += 1
-    data.append([str(nomor), t.user.screen_name, '"' + t.user.name.replace('"', '""') + '"', '"' + t.text.replace('"', '""') + '"', t.created_at[:10]+' '+t.created_at[11:19], str(t.retweet_count), str(t.favorite_count)])
+    data.append([str(nomor), '@' + t.user.screen_name, '"' + t.user.name.replace('"', '""') + '"', '"' + t.text.replace('"', '""') + '"', t.created_at[:10]+' '+t.created_at[11:19], str(t.retweet_count), str(t.favorite_count)])
 
   print "%s %s - download mentions: %lf" % (keyword, username, time.time() - st)
   return '\n'.join([';'.join(t) for t in data])

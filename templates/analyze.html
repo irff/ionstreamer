@@ -128,12 +128,12 @@ function drawCurves() {
   <div class="row">
     <div class="columns small-12 medium-6">
       <div class="alert-box info radius text-center">
-        <button ng-hide="loadtopretweets" class="label secondary radius" ng-click="showTopRetweets()">Show Top Retweets</button>
+        <button ng-hide="loadtopretweets" class="label secondary radius" ng-click="showTopRetweets()">Top Retweets</button>
         <span ng-show="loadtopretweets">Top Retweet <i ng-hide="hasretweets" class="fa fa-lg fa-cog fa-spin"></i></span>
       </div>
       <!-- TOP TWEET -->
       <div class="row" ng-repeat="tweet in retweets">
-        <div class="columns hide-for-small-only medium-2 th">
+        <div class="columns hide-for-small-only medium-2 th radius">
           <img ng-src="{{ tweet.user.profile_image_url }}">
         </div>
         <div class="columns small-12 medium-10">
@@ -152,12 +152,12 @@ function drawCurves() {
 
     <div class="columns small-12 medium-6">
       <div class="alert-box info radius text-center">
-        <button ng-hide="loadrandomtweets" class="label secondary radius" ng-click="showRandomTweets()">Show Random Retweets</button>
+        <button ng-hide="loadrandomtweets" class="label secondary radius" ng-click="showRandomTweets()">Random Retweets</button>
         <span ng-show="loadrandomtweets">Random Tweets <i ng-hide="hasrandomtweets" class="fa fa-lg fa-cog fa-spin"></i></span>
       </div>
       <!-- JUST SOME RANDOM TWEETS -->
       <div class="row" ng-repeat="tweet in randomtweets">
-        <div class="columns hide-for-small-only medium-2 th">
+        <div class="columns hide-for-small-only medium-2 th radius">
           <img ng-src="{{ tweet.user.profile_image_url }}">
         </div>
         <div class="columns small-12 medium-10">
@@ -187,29 +187,18 @@ function drawCurves() {
     <div class="row">
       <div class="column small-11 medium-11">      
         <div class="alert-box info radius">
-
-          <div class="row">
-
-            <div class="column small-11">
-              <span ng-bind-html="modaltitle"></span>
-              <i ng-hide="hastweets" class="fa fa-lg fa-cog fa-spin"></i>
-            </div>
-
-            <div class="column small-1">
-              <a class="label secondary radius right" ng-href="{{ downloadlink }}">
-                <i ng-show="hastweets" class="fa fa-lg fa-cloud-download"></i>
-              </a>
-            </div>
-
-          </div>
-
+          <span ng-bind-html="modaltitle"></span>
+          <i ng-hide="hastweets" class="fa fa-lg fa-cog fa-spin"></i>
+          <a class="label secondary radius right" ng-href="{{ downloadlink }}">
+            <i ng-show="hastweets" class="fa fa-lg fa-cloud-download"></i>
+          </a>
         </div>
       </div>
     </div>
     <!-- TWEETS -->
     <div class="row" ng-repeat="tweet in tweets">
       <div class="columns hide-for-small-only medium-1">
-        <div class="th"> <img ng-src="{{ tweet.user.profile_image_url }}"> </div>
+        <div class="th radius"> <img ng-src="{{ tweet.user.profile_image_url }}"> </div>
       </div>
       <div class="columns small-12 medium-11">
         <div class="user row">
