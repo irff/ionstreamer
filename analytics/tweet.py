@@ -164,7 +164,7 @@ def download_postings(keyword, username):
 def download_all(keyword):
   st = time.time()
 
-  r = dbr.get_search_instance(keyword).params(size = 1000111, fields='user.screen_name,user.name,text,created_at,retweet_count,favorite_count', sort='id_str:desc').execute()
+  r = dbr.get_search_instance(keyword).params(size = 1000111000, fields='user.screen_name,user.name,text,created_at,retweet_count,favorite_count', sort='id_str:desc').execute()
 
   attributes = ['No.', 'Username', 'Name', 'Tweet', 'Created At', 'Retweet', 'Favorite']
   nomor = 0
@@ -182,5 +182,6 @@ def download_all(keyword):
       str(t['favorite_count'][0])
     ])
 
+  ret = '\n'.join([';'.join(t) for t in data])
   print "%s - download all: %lf" % (keyword, time.time() - st)
-  return '\n'.join([';'.join(t) for t in data])
+  return ret
