@@ -7,6 +7,7 @@ from dateutil.parser import parse
 import database.dbresult as dbr
 import time
 from collections import defaultdict
+from random import randint, random
 
 def getinfo(row):
   try:
@@ -36,7 +37,6 @@ def get_tweet_freq(keyword):
   s.aggs.bucket('histo', 'date_histogram', field='created_at', interval=interval)
   buckets = s.execute().aggregations.histo.buckets
 
-  from random import randint
 
   print "%s - top tweet freq: %lf" % (keyword, time.time() - st)
   return map(lambda b: (b.key,b.doc_count,randint(1,b.doc_count/2+1),randint(1,b.doc_count/2+1)), buckets)
@@ -161,27 +161,26 @@ def download_postings(keyword, username):
   print "%s %s - download postings: %lf" % (keyword, username, time.time() - st)
   return '\n'.join([';'.join(t) for t in data])
 
+import csv
+
 def download_all(keyword):
   st = time.time()
 
-  r = dbr.get_search_instance(keyword).params(size = 1000111000, fields='user.screen_name,user.name,text,created_at,retweet_count,favorite_count', sort='id_str:desc').execute()
+  filename = '/tmp/' + str(random())
+  with open(filename, 'w') as csvfile:
+    fieldnames = ['No.', 'Username', 'Name', 'Tweet', 'Created At', 'Retweet', 'Favorite']
+    w = csv.writer(csvfile)
 
-  attributes = ['No.', 'Username', 'Name', 'Tweet', 'Created At', 'Retweet', 'Favorite']
-  nomor = 0
+    nomor = 0
+    w.writerow(fieldnames)
+    size = 10000
+    while True:
+      r = dbr.get_search_instance(keyword).params(size = size, from_ = nomor, fields='user.screen_name,user.name,text,created_at,retweet_count,favorite_count').execute()
+      for t in r.hits:
+        nomor += 1
+        w.writerow([ str(nomor), '@' + t['user.screen_name'][0], t['user.name'][0].encode('utf-8'), t['text'][0].encode('utf-8'), t['created_at'][0][:10]+' '+t['created_at'][0][11:19], str(t['retweet_count'][0]), str(t['favorite_count'][0]) ])
+      if len(r.hits) == 0: break
+  ret = open(filename).read()
 
-  data = [attributes]
-  for t in r.hits:
-    nomor += 1
-    data.append([
-      str(nomor),
-      '@' + t['user.screen_name'][0],
-      '"' + t['user.name'][0].replace('"', '""') + '"',
-      '"' + t['text'][0].replace('"', '""') + '"',
-      t['created_at'][0][:10]+' '+t['created_at'][0][11:19],
-      str(t['retweet_count'][0]),
-      str(t['favorite_count'][0])
-    ])
-
-  ret = '\n'.join([';'.join(t) for t in data])
   print "%s - download all: %lf" % (keyword, time.time() - st)
   return ret
