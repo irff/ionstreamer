@@ -169,7 +169,7 @@ def download_all(keyword):
   filename = '/tmp/' + str(random())
   with open(filename, 'w') as csvfile:
     fieldnames = ['No.', 'Username', 'Name', 'Tweet', 'Created At', 'Retweet', 'Favorite']
-    w = csv.writer(csvfile)
+    w = csv.writer(csvfile, delimeter = ';')
 
     nomor = 0
     w.writerow(fieldnames)
