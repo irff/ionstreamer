@@ -30,7 +30,7 @@ def get_tweet_freq(keyword):
   s = dbr.get_search_instance(keyword)
   awal = parse(s.params(size = 1, sort = 'id:asc').execute().hits[0].created_at)
   akhir = parse(s.params(size = 1, sort = 'id:desc').execute().hits[0].created_at)
-  interval = "%ds" % ( (akhir - awal)/40 ).seconds
+  interval = "%ds" % ( (akhir - awal)/60 ).seconds
 
   s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
   s.aggs.bucket('histo', 'date_histogram', field='created_at', interval=interval)
@@ -164,7 +164,7 @@ def download_postings(keyword, username):
 def download_all(keyword):
   st = time.time()
 
-  r = dbr.get_search_instance(keyword).params(size = 1000111000, sort='id_str:desc', timeout = 30).execute()
+  r = dbr.get_search_instance(keyword).params(size = 1000111, fields='user.screen_name,user.name,text,created_at,retweet_count,favorite_count', sort='id_str:desc').execute()
 
   attributes = ['No.', 'Username', 'Name', 'Tweet', 'Created At', 'Retweet', 'Favorite']
   nomor = 0
@@ -172,7 +172,15 @@ def download_all(keyword):
   data = [attributes]
   for t in r.hits:
     nomor += 1
-    data.append([str(nomor), '@' + t.user.screen_name, '"' + t.user.name.replace('"', '""') + '"', '"' + t.text.replace('"', '""') + '"', t.created_at[:10]+' '+t.created_at[11:19], str(t.retweet_count), str(t.favorite_count)])
+    data.append([
+      str(nomor),
+      '@' + t['user.screen_name'][0],
+      '"' + t['user.name'][0].replace('"', '""') + '"',
+      '"' + t['text'][0].replace('"', '""') + '"',
+      t['created_at'][0][:10]+' '+t['created_at'][0][11:19],
+      str(t['retweet_count'][0]),
+      str(t['favorite_count'][0])
+    ])
 
   print "%s - download all: %lf" % (keyword, time.time() - st)
   return '\n'.join([';'.join(t) for t in data])

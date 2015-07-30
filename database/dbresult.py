@@ -2,7 +2,7 @@ from config import INDEX
 from base64 import b64encode
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
-es = Elasticsearch()
+es = Elasticsearch(timeout = 60)
 
 def set(keyword, data, enc = True):
   id = data['id_str']
