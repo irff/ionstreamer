@@ -1,13 +1,13 @@
-from os.path import abspath
-import sys
-sys.path.append(abspath(''))
+import sys, time, csv
+import database.dbresult as dbr
 
+from os.path import abspath
 from datetime import datetime, timedelta
 from dateutil.parser import parse
-import database.dbresult as dbr
-import time
-from collections import defaultdict
 from random import randint, random
+from cStringIO import StringIO
+
+sys.path.append(abspath(''))
 
 def getinfo(row):
   try:
@@ -161,13 +161,12 @@ def download_postings(keyword, username):
   print "%s %s - download postings: %lf" % (keyword, username, time.time() - st)
   return '\n'.join([';'.join(t) for t in data])
 
-import csv
 
 def download_all(keyword):
   st = time.time()
 
-  filename = '/tmp/' + str(random())
-  with open(filename, 'w') as csvfile:
+  csvfile = StringIO()
+  try:
     fieldnames = ['No.', 'Username', 'Name', 'Tweet', 'Created At', 'Retweet', 'Favorite']
     w = csv.writer(csvfile, delimiter = ';')
 
@@ -180,7 +179,9 @@ def download_all(keyword):
         nomor += 1
         w.writerow([ str(nomor), '@' + t['user.screen_name'][0], t['user.name'][0].encode('utf-8'), t['text'][0].encode('utf-8'), t['created_at'][0][:10]+' '+t['created_at'][0][11:19], str(t['retweet_count'][0]), str(t['favorite_count'][0]) ])
       if len(r.hits) == 0: break
-  ret = open(filename).read()
-
-  print "%s - download all: %lf" % (keyword, time.time() - st)
-  return ret
+    
+    print "%s - download all: %lf" % (keyword, time.time() - st)
+    return csvfile.getvalue()
+  finally:
+    print "finally"
+    csvfile.close()
