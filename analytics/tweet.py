@@ -168,7 +168,7 @@ def download_all(keyword):
   csvfile = StringIO()
   try:
     fieldnames = ['No.', 'Username', 'Name', 'Tweet', 'Created At', 'Retweet', 'Favorite']
-    w = csv.writer(csvfile, delimiter = ';')
+    w = csv.writer(csvfile)
 
     nomor = 0
     w.writerow(fieldnames)
