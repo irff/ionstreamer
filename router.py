@@ -10,7 +10,7 @@ import json, sys
 
 @app.route(BASE_URL + "/")
 def showhome():
-    return render_template('streamings.html', nav = 'home')
+  return render_template('streamings.html', nav = 'home')
 
 @app.route(BASE_URL + "/analyze/<keyword>")
 def showanalyze(keyword):
@@ -42,7 +42,6 @@ def learn():
 @app.route(BASE_URL + "/learn/randomtweets", methods=['GET'])
 @app.route(BASE_URL + "/learn/randomtweets/<keyword>", methods=['GET'])
 def getrandomtweets(keyword = None, count = 10):
-  print "KEYWORD %s" % keyword
   if keyword:
     s = dbr.get_search_instance(keyword = keyword).params(size = count)
   else:
@@ -62,7 +61,6 @@ def getclassifiedtweets(size = 10, offset = 0):
   s = dbr.get_search_instance('LEARN', enc = False).params(size = size, from_ = offset)
   r = s.execute()
   return json.dumps(map(lambda x: x.to_dict(), r.hits))
-
 
 
 
@@ -141,6 +139,20 @@ def reset():
   return json.dumps( ret )
 
 
+# if __name__ == "__main__":
+#   app.run(host=HOST, port=PORT, debug=DEBUG)
+
+from tornado.wsgi import WSGIContainer
+from tornado.web import Application, FallbackHandler
+from tornado.ioloop import IOLoop
+from tornado import autoreload
 
 if __name__ == "__main__":
-    app.run(host=HOST, port=PORT, debug=DEBUG)
+    container = WSGIContainer(app)
+    server = Application([
+        (r'.*', FallbackHandler, dict(fallback=container))
+    ])
+    server.listen(PORT, address=HOST)
+    ioloop = IOLoop.instance()
+    autoreload.start(ioloop)
+    ioloop.start()
