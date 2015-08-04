@@ -183,5 +183,4 @@ def download_all(keyword):
     print "%s - download all: %lf" % (keyword, time.time() - st)
     return csvfile.getvalue()
   finally:
-    print "finally"
     csvfile.close()
