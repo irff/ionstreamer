@@ -20,6 +20,10 @@ def showanalyze(keyword):
 def showlearn():
   return render_template('learn.html', nav = 'learn')
 
+@app.route(BASE_URL + "/learn/<keyword>", methods=['GET'])
+def showlearn_keyword(keyword):
+  return render_template('learn.html', nav = 'learn', keyword = keyword)
+
 @app.route(BASE_URL + "/learn/classified", methods=['GET'])
 def showlearned():
   size = dbr.get_search_instance('LEARN', enc = False).params(search_type = 'count', size = 0).execute().hits.total
@@ -36,8 +40,13 @@ def learn():
     print >> sys.stderr, "error: " + str(e)
 
 @app.route(BASE_URL + "/learn/randomtweets", methods=['GET'])
-def getrandomtweets(count = 10):
-  s = dbr.get_search_instance().params(size = count)
+@app.route(BASE_URL + "/learn/randomtweets/<keyword>", methods=['GET'])
+def getrandomtweets(keyword = None, count = 10):
+  print "KEYWORD %s" % keyword
+  if keyword:
+    s = dbr.get_search_instance(keyword = keyword).params(size = count)
+  else:
+    s = dbr.get_search_instance().params(size = count)
   r = s.query('function_score', random_score={}).execute()
   def check_from_LEARN(tweet):
     try:

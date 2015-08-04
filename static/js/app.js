@@ -101,8 +101,9 @@ var BASE_URL = '';
     $scope.randomtweets = [];
 
     $scope.loadrandomtweets = function(){
+      keyword = encodeURIComponent($('#keyword').text());
       $scope.loadingrandomtweets = true;
-      $http.get(BASE_URL + '/learn/randomtweets')
+      $http.get(BASE_URL + '/learn/randomtweets' + (keyword ? ('/' + keyword) : '') )
       .success(function(data){
         $scope.randomtweets = $scope.randomtweets.concat(data);
         $scope.loadingrandomtweets = false;

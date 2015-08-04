@@ -47,6 +47,9 @@
           <ul class="dropdown">
             <li><a href="/learn">Random</a></li>
             <li><a href="/learn/classified">Classified</a></li>
+            <li ng-repeat="info in summary">
+              <a ng-class="info.status" ng-href="/learn/{{ '{{info.keyword | encodeURIComponent}}' }}" ng-bind-html="info.keyword"></a>
+            </li>
           </ul>
         </li>
       </ul>

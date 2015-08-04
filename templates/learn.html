@@ -5,16 +5,23 @@
 
 
 <div ng-controller="learnController">
-
+  <div hidden id="keyword">{{keyword}}</div>
   {% raw %}
-
   <div class="row">
-    <div class="columns small-12 medium-12" infinite-scroll='loadrandomtweets()' infinite-scroll-distance='1' infinite-scroll-disabled="loadingrandomtweets">
+    <div class="columns small-12 medium-12" infinite-scroll="loadrandomtweets()" infinite-scroll-distance="1" infinite-scroll-disabled="loadingrandomtweets">
       <div class="alert-box info text-center">
         <span>Random Tweets</span>
       </div>
+
+      <!-- <div class="label secondary" id="message">Enter new keyword to stream.</div> -->
+      <div class="row">
+        <div class="columns small-12">
+          <input type="search" placeholder="Type keyword to filter" autocomplete="off" ng-model="keyword">
+        </div>
+      </div>
+
       <!-- JUST SOME RANDOM TWEETS -->
-      <div class="row" ng-repeat="tweet in randomtweets">
+      <div class="row" ng-repeat="tweet in randomtweets | filter: keyword">
         <div class="columns hide-for-small-only medium-1 th radius">
           <img ng-src="{{ tweet.user.profile_image_url }}">
         </div>
