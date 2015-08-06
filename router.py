@@ -38,7 +38,6 @@ def postlogin():
     else:
       return showlogin(username = request.form.get('username'))
   except Exception as e:
-    return str(e)
     return abort(404)
 
 @app.route(BASE_URL + "/logout", methods = ['GET'])
@@ -208,6 +207,7 @@ from tornado import autoreload
 from tornado.httpserver import HTTPServer
 
 if __name__ == "__main__":
+    app.secret_key = 'hutlanggar17'
     container = WSGIContainer(app)
     app = Application([
         (r'.*', FallbackHandler, dict(fallback=container))
