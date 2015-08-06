@@ -38,6 +38,7 @@ def postlogin():
     else:
       return showlogin(username = request.form.get('username'))
   except Exception as e:
+    return str(e)
     return abort(404)
 
 @app.route(BASE_URL + "/logout", methods = ['GET'])
