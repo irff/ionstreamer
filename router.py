@@ -8,8 +8,10 @@ import analytics.tweet as tweeta
 
 import json, sys
 
+
 def islogin():
   return session.get('username') == 'langgar'
+
 
 
 @app.route(BASE_URL + "/")
@@ -42,6 +44,7 @@ def postlogin():
 def logout():
   session.pop('username', None)
   return redirect(BASE_URL + '/login')
+
 
 
 @app.route(BASE_URL + "/analyze/<keyword>")
@@ -193,25 +196,25 @@ def reset():
   return json.dumps( ret )
 
 
-if __name__ == "__main__":
-  app.secret_key = 'hutlanggar17'
-  app.run(host=HOST, port=PORT, debug=DEBUG)
-
-# from tornado.wsgi import WSGIContainer
-# from tornado.web import Application, FallbackHandler
-# from tornado.ioloop import IOLoop
-# from tornado import autoreload
-# from tornado.httpserver import HTTPServer
-
 # if __name__ == "__main__":
-#     container = WSGIContainer(app)
-#     app = Application([
-#         (r'.*', FallbackHandler, dict(fallback=container))
-#     ])
-#     server = HTTPServer(app)
-#     server.bind(PORT)
-#     server.start(0)
-#     IOLoop.current().start()
+#   app.secret_key = 'hutlanggar17'
+#   app.run(host=HOST, port=PORT, debug=DEBUG)
+
+from tornado.wsgi import WSGIContainer
+from tornado.web import Application, FallbackHandler
+from tornado.ioloop import IOLoop
+from tornado import autoreload
+from tornado.httpserver import HTTPServer
+
+if __name__ == "__main__":
+    container = WSGIContainer(app)
+    app = Application([
+        (r'.*', FallbackHandler, dict(fallback=container))
+    ])
+    server = HTTPServer(app)
+    server.bind(PORT)
+    server.start(0)
+    IOLoop.current().start()
     
     # server = Application([
     #     (r'.*', FallbackHandler, dict(fallback=container))
