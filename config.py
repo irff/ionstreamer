@@ -1,8 +1,8 @@
 DEBUG = True
 HOST = '0.0.0.0'
 PORT = 2015
-INDEX = 'ionstreamer2.1'
+INDEX = 'ionstreamer'
 DATABASE = 'ionstreamer'
 USER = 'root'
-PASSWORD = ''
+PASSWORD = ' '
 BASE_URL = ''

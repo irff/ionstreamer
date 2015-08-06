@@ -1,3 +1,13 @@
-flask
+python
+python-mysqldb
+
+pip:
+  flask
+  simplemysql
+  elasticsearch
+  elasticsearch_dsl
+  tornado
+  twittersearch
+
 elasticeearch
-twittersearch
+mysql-server

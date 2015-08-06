@@ -146,13 +146,21 @@ from tornado.wsgi import WSGIContainer
 from tornado.web import Application, FallbackHandler
 from tornado.ioloop import IOLoop
 from tornado import autoreload
+from tornado.httpserver import HTTPServer
 
 if __name__ == "__main__":
     container = WSGIContainer(app)
-    server = Application([
+    # server = Application([
+    #     (r'.*', FallbackHandler, dict(fallback=container))
+    # ])
+    # server.listen(PORT, address=HOST)
+    # ioloop = IOLoop.instance()
+    # autoreload.start(ioloop)
+    # ioloop.start()
+    app = Application([
         (r'.*', FallbackHandler, dict(fallback=container))
     ])
-    server.listen(PORT, address=HOST)
-    ioloop = IOLoop.instance()
-    autoreload.start(ioloop)
-    ioloop.start()
+    server = HTTPServer(app)
+    server.bind(PORT)
+    server.start(0)
+    IOLoop.current().start()

@@ -11,8 +11,7 @@ sys.path.append(abspath(''))
 
 def getinfo(row):
   try:
-    r = dbr.get_search_instance(row.keyword).params(size = 3, sort='id:desc').execute()
-
+    r = dbr.get_search_instance(row.keyword).params(size = 3, sort='id_str:desc').execute()
     return {
       'keyword': row.keyword,
       'count': r.hits.total,
@@ -21,22 +20,20 @@ def getinfo(row):
       'tweets': ["@%s: %s"%(d.user.screen_name, d.text) for d in r.hits]
     }
   except Exception as e:
-    print >> sys.stderr, "twees analytics: " + str(e)[:123]
+    print >> sys.stderr, "get info: " + str(e)[:123]
     return {'keyword': row.keyword, 'count': 0, 'status': row.status, 'processing': row.processing, 'tweets': []}
 
 def get_tweet_freq(keyword):
   st = time.time()
 
-  # slice bucket into 20 pieces
   s = dbr.get_search_instance(keyword)
-  awal = parse(s.params(size = 1, sort = 'id:asc').execute().hits[0].created_at)
-  akhir = parse(s.params(size = 1, sort = 'id:desc').execute().hits[0].created_at)
+  awal = parse(s.params(size = 1, sort = 'id_str:asc').execute().hits[0].created_at)
+  akhir = parse(s.params(size = 1, sort = 'id_str:desc').execute().hits[0].created_at)
   interval = "%ds" % ( (akhir - awal)/60 ).seconds
 
   s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
   s.aggs.bucket('histo', 'date_histogram', field='created_at', interval=interval)
   buckets = s.execute().aggregations.histo.buckets
-
 
   print "%s - top tweet freq: %lf" % (keyword, time.time() - st)
   return map(lambda b: (b.key,b.doc_count,randint(1,b.doc_count/2+1),randint(1,b.doc_count/2+1)), buckets)
@@ -105,7 +102,7 @@ def get_mentions(keyword, username):
 def get_postings(keyword, username):
   st = time.time()
 
-  r = dbr.get_search_instance(keyword).params(size = 10, sort='id:desc').query('match', **{'user.screen_name': username}).execute()
+  r = dbr.get_search_instance(keyword).params(size = 10, sort='id_str:desc').query('match', **{'user.screen_name': username}).execute()
 
   print "%s - %s - get postings: %lf" % (keyword, username, time.time() - st)
   return map(lambda h: h.to_dict(), r.hits)
