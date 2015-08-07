@@ -201,7 +201,7 @@ def reset():
   return json.dumps( ret )
 
 
-if sys.argv[1] == "dev":
+if len(sys.argv) > 1 and sys.argv[1] == "dev":
   if __name__ == "__main__":
     app.secret_key = 'hutlanggar17'
     app.run(host=HOST, port=PORT, debug=DEBUG)
