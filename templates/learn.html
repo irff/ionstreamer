@@ -36,10 +36,10 @@
           </div>
         </div>
         <div class="columns small-2 medium-3 button-group radius">
-          <a class="tiny button secondary" ng-class="{'success': tweet.class == 'positive'}" ng-click="learn(tweet, 'positive')"><i class="fa fa-lg fa-thumbs-o-up"></i></a>
-          <a class="tiny button secondary" ng-class="{'success': tweet.class == 'negative'}" ng-click="learn(tweet, 'negative')"><i class="fa fa-lg fa-thumbs-o-down"></i></a>
-          <a class="tiny button secondary" ng-class="{'success': tweet.class == 'neutral'}" ng-click="learn(tweet, 'neutral')"><i class="fa fa-lg fa-balance-scale"></i></a>
-          <a class="tiny button secondary" ng-class="{'success': tweet.class == 'dummy'}" ng-click="learn(tweet, 'dummy')"><i class="fa fa-lg fa-hand-lizard-o"></i></a>
+          <a title="positive" class="tiny button secondary" ng-class="{'success': tweet.class == 'positive'}" ng-click="learn(tweet, 'positive')"><i class="fa fa-lg fa-thumbs-o-up"></i></a>
+          <a title="negative" class="tiny button secondary" ng-class="{'success': tweet.class == 'negative'}" ng-click="learn(tweet, 'negative')"><i class="fa fa-lg fa-thumbs-o-down"></i></a>
+          <a title="neutral" class="tiny button secondary" ng-class="{'success': tweet.class == 'neutral'}" ng-click="learn(tweet, 'neutral')"><i class="fa fa-lg fa-balance-scale"></i></a>
+          <a title="dummy" class="tiny button secondary" ng-class="{'success': tweet.class == 'dummy'}" ng-click="learn(tweet, 'dummy')"><i class="fa fa-lg fa-hand-lizard-o"></i></a>
         </div>
         <hr>
       </div>
