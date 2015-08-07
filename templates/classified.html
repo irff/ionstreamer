@@ -15,8 +15,15 @@
         <span>Classified Tweets ({{size}})</span>
         {% raw %}
       </div>
+
+      <div class="row">
+        <div class="columns small-12">
+          <input type="search" placeholder="Type class name to filter (potitive, negative, neutral, or dummy)" autocomplete="off" ng-model="keyword">
+        </div>
+      </div>
+
       <!-- JUST SOME CLASSIFIED TWEETS -->
-      <div class="row" ng-repeat="tweet in tweets">
+      <div class="row" ng-repeat="tweet in tweets | filter:keyword">
         <div class="columns hide-for-small-only medium-1 th radius">
           <img ng-src="{{ tweet.user.profile_image_url }}">
         </div>

@@ -114,10 +114,11 @@ var BASE_URL = '';
     };
 
     $scope.learn = function(tweet, kelas){
+      var oldclass = tweet.class;
       tweet.class = kelas;
       $http.post(BASE_URL + '/learn', tweet)
       .error(function(r){
-        tweet.class = '';
+        tweet.class = oldclass;
       });
     };
   });
@@ -141,10 +142,11 @@ var BASE_URL = '';
     };
 
     $scope.learn = function(tweet, kelas){
+      var oldclass = tweet.class;
       tweet.class = kelas;
       $http.post(BASE_URL + '/learn', tweet)
       .error(function(r){
-        tweet.class = '';
+        tweet.class = oldclass;
       });
     };
   });
