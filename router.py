@@ -57,6 +57,7 @@ def showanalyze(keyword):
   if not islogin(): return redirect(BASE_URL + '/login')
   return render_template('analyze.html', keyword = keyword, nav = 'analyze')
 
+
 @app.route(BASE_URL + "/learn", methods=['GET'])
 def showlearn():
   if not islogin(): return redirect(BASE_URL + '/login')
@@ -190,6 +191,12 @@ def downloadall(keyword, filename):
   if not islogin(): return redirect(BASE_URL + '/login')
   return Response(tweeta.download_all(keyword), mimetype='text/csv')
 
+@app.route(BASE_URL + "/download/classified", methods=['GET'])
+def downloadclassified():
+  if not islogin(): return redirect(BASE_URL + '/login')
+  tweets = dbr.get_search_instance(keyword = 'LEARN', enc = False).params(size = 1000111000).execute().hits
+  return Response( json.dumps( [t.to_dict() for t in tweets] ) , mimetype='text/csv')
+
 
 
 # DUMMY
@@ -215,18 +222,19 @@ from tornado.httpserver import HTTPServer
 if __name__ == "__main__":
     app.secret_key = 'hutlanggar17'
     container = WSGIContainer(app)
-    app = Application([
-        (r'.*', FallbackHandler, dict(fallback=container))
-    ])
-    server = HTTPServer(app)
-    server.bind(PORT)
-    server.start(0)
-    IOLoop.current().start()
-    
-    # server = Application([
+
+    # app = Application([
     #     (r'.*', FallbackHandler, dict(fallback=container))
     # ])
-    # server.listen(PORT, address=HOST)
-    # ioloop = IOLoop.instance()
-    # autoreload.start(ioloop)
-    # ioloop.start()
+    # server = HTTPServer(app)
+    # server.bind(PORT)
+    # server.start(0)
+    # IOLoop.current().start()
+    
+    server = Application([
+        (r'.*', FallbackHandler, dict(fallback=container))
+    ])
+    server.listen(PORT, address=HOST)
+    ioloop = IOLoop.instance()
+    autoreload.start(ioloop)
+    ioloop.start()
