@@ -27,16 +27,19 @@ var BASE_URL = '';
       $scope.keyword = $scope.keyword.trim().toLowerCase();
       if($scope.keyword == "") return false;
       $scope.is_sending_kw = true;
-      $http.post(BASE_URL + 
-        '/api/stream' ,
-        {keyword: $scope.keyword, status: 'active'}
-      ).success(function(){
-        $http.get(BASE_URL + '/api/summary').success(function(r) {
+      $http.post(BASE_URL + '/api/stream' , {keyword: $scope.keyword, status: 'active'})
+      .success(function(){
+        $http.get(BASE_URL + '/api/summary')
+        .success(function(r){
           $scope.summary = r;
           $scope.is_sending_kw = false;
+          $scope.keyword = '';
+        })
+        .error(function(){
+          $scope.is_sending_kw = false;
+          $scope.keyword = '';
         });
       });
-      $scope.keyword = '';
     };
   });
 
