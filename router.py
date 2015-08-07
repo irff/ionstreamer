@@ -1,12 +1,14 @@
-from flask import Flask, render_template, request, Response, session, abort, redirect
-app = Flask(__name__)
-
+from flask import Flask, render_template, request, Response, session, abort, redirect, flash
 from config import DEBUG, HOST, PORT, BASE_URL
+from datetime import timedelta
 import database.dbkeyword as dbk
 import database.dbresult as dbr
 import analytics.tweet as tweeta
-
 import json, sys
+
+app = Flask(__name__)
+app.permanent_session_lifetime = timedelta(days=1001)
+
 
 
 def islogin():
@@ -32,13 +34,16 @@ def postlogin():
   try:
     username = request.form['username']
     password = request.form['password']
+    session.permanent = request.form.get('remember') == 'on'
+
     if username == 'langgar' and password == 'hutlanggar17':
       session['username'] = request.form['username']
       return redirect(BASE_URL + '/')
     else:
+      flash("username and password doesn't match")
       return showlogin(username = request.form.get('username'))
   except Exception as e:
-    return abort(404)
+    return abort(401)
 
 @app.route(BASE_URL + "/logout", methods = ['GET'])
 def logout():
@@ -109,7 +114,7 @@ def getclassifiedtweets(size = 10, offset = 0):
 # API
 @app.route(BASE_URL + "/api/stream", methods=['POST'])
 def apistream():
-  if not islogin(): return redirect(BASE_URL + '/login')
+  if not islogin(): return abort(401)
   keyword = request.json['keyword']
   status = request.json['status']
   if any([x.keyword == keyword and x.processing for x in dbk.get()]):
@@ -118,49 +123,49 @@ def apistream():
 
 @app.route(BASE_URL + "/api/summary", methods=['GET'])
 def summary():
-  if not islogin(): return redirect(BASE_URL + '/login')
+  if not islogin(): return abort(401)
   keywords = [x for x in dbk.get() if x.status != 'removed']
   keywords.sort(lambda x, y: cmp(x.status, y.status))
   return json.dumps( map(tweeta.getinfo, keywords) )
 
 @app.route(BASE_URL + "/api/analyze/freq/<keyword>", methods=['GET'])
 def apianalyze(keyword):
-  if not islogin(): return redirect(BASE_URL + '/login')
+  if not islogin(): return abort(401)
   return json.dumps( tweeta.get_tweet_freq(keyword) )
 
 @app.route(BASE_URL + "/api/analyze/topmentions/<keyword>", methods=['GET'])
 def topmentions(keyword):
-  if not islogin(): return redirect(BASE_URL + '/login')
+  if not islogin(): return abort(401)
   return json.dumps( tweeta.get_top_mentions(keyword) )
 
 @app.route(BASE_URL + "/api/analyze/toppostings/<keyword>", methods=['GET'])
 def toppostings(keyword):
-  if not islogin(): return redirect(BASE_URL + '/login')
+  if not islogin(): return abort(401)
   return json.dumps( tweeta.get_top_postings(keyword) )
 
 @app.route(BASE_URL + "/api/analyze/topretweets/<keyword>", methods=['GET'])
 def topretweets(keyword):
-  if not islogin(): return redirect(BASE_URL + '/login')
+  if not islogin(): return abort(401)
   return json.dumps( tweeta.get_top_retweets(keyword) )
 
 @app.route(BASE_URL + "/api/analyze/randomtweets/<keyword>", methods=['GET'])
 def randomtweets(keyword):
-  if not islogin(): return redirect(BASE_URL + '/login')
+  if not islogin(): return abort(401)
   return json.dumps( tweeta.get_random_tweets(keyword) )
 
 @app.route(BASE_URL + "/api/analyze/gettweetsat/<keyword>/<kelas>/<waktu1>/<waktu2>", methods=['GET'])
 def gettweetsat(keyword, kelas, waktu1, waktu2):
-  if not islogin(): return redirect(BASE_URL + '/login')
+  if not islogin(): return abort(401)
   return json.dumps( tweeta.get_tweets_at(keyword, kelas, waktu1, waktu2) )
 
 @app.route(BASE_URL + "/api/analyze/getmentions/<keyword>/<username>", methods=['GET'])
 def getmentions(keyword, username):
-  if not islogin(): return redirect(BASE_URL + '/login')
+  if not islogin(): return abort(401)
   return json.dumps( tweeta.get_mentions(keyword, username) )
 
 @app.route(BASE_URL + "/api/analyze/getpostings/<keyword>/<username>", methods=['GET'])
 def getpostings(keyword, username):
-  if not islogin(): return redirect(BASE_URL + '/login')
+  if not islogin(): return abort(401)
   return json.dumps( tweeta.get_postings(keyword, username) )
 
 
@@ -196,9 +201,10 @@ def reset():
   return json.dumps( ret )
 
 
-# if __name__ == "__main__":
-#   app.secret_key = 'hutlanggar17'
-#   app.run(host=HOST, port=PORT, debug=DEBUG)
+if sys.argv[1] == "dev":
+  if __name__ == "__main__":
+    app.secret_key = 'hutlanggar17'
+    app.run(host=HOST, port=PORT, debug=DEBUG)
 
 from tornado.wsgi import WSGIContainer
 from tornado.web import Application, FallbackHandler

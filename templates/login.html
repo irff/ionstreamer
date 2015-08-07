@@ -39,12 +39,18 @@
           <form action="" method="POST">
              <div class="row">
                <div class="medium-12 columns">
-                   <input type="text" name="username" placeholder="Username" value="{{username}}" autofocus />
+                  <label class="error">{{get_flashed_messages()[0]}}</label>
+                  <input type="text" name="username" placeholder="Username" value="{{username}}" autofocus />
                </div>
              </div>
             <div class="row">
                <div class="medium-12 columns">
                    <input type="password" name="password" placeholder="Password" />
+               </div>
+            </div>
+            <div class="row">
+               <div class="medium-12 columns">
+                   <input id="remember" type="checkbox" name="remember"><label for="remember">Remember Me</label>
                </div>
             </div>
             <div class="row">
