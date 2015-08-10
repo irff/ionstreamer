@@ -37,7 +37,9 @@
           <a href="">Analyze</a>
           <ul class="dropdown">
             <li ng-repeat="info in summary">
-              <a ng-class="info.status" ng-href="/analyze/{{ '{{info.keyword | encodeURIComponent}}' }}" ng-bind-html="info.keyword+' ('+info.count+')'"></a>
+            {% raw %}
+              <a ng-class="info.status" ng-href="/analyze/{{info.keyword | encodeURIComponent}}" ng-bind-html="info.keyword+' ('+ (info.count | number:0) +')'"></a>
+            {% endraw %}
             </li>
           </ul>
         </li>
