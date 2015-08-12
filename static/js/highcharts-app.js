@@ -4,7 +4,6 @@ $(function(){
   });
   var spin = '<h1><i class="fa fa-lg fa-spinner fa-spin"></i></h1>';
   function drawFreq() {
-    $("#freq").html(spin);
     $.get('/api/analyze/freq/'+encodeURIComponent($('#keyword').text()), function(r){
       var positive = r.reduce(function(acc, curr){return acc + curr[2];}, 0);
       var negative = r.reduce(function(acc, curr){return acc + curr[3];}, 0);
@@ -75,7 +74,6 @@ $(function(){
 
       });
 
-      $("#sentiment").html(spin);
       $('#sentiment').highcharts({
         credits: {enabled: false},
         legend: {enabled: true, shadow: true},
