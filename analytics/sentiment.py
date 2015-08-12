@@ -1,11 +1,18 @@
-from os.path import abspath, isfile
-import sys
-sys.path.append(abspath(''))
+import csv, collections, re, string
 
-import database.dbresult as dbr
+freq = collections.defaultdict(int)
 
-def getclassified(kelas= '', size = 10, offset = 0):
-  s = dbr.get_search_instance('LEARN', enc = False).params(size = size, from_ = offset)
-  return s.execute().hits
+with open("../../pilkada-bpjs.csv") as csvfile:
+  dt = csv.reader(csvfile)
+  for line in dt:
+    text = line[3]
+    text = re.sub(r"https?://t\.co/\w{10}", " ", text)
+    text = re.sub(r"&\w{1,5};", " ", text)
+    text = re.sub(r"[\.,|():?/;~\-\\\"*']+", " ", text)
+    for word in filter(lambda x: x in string.printable, text).lower().split():
+      freq[word] += 1
 
-print getclassified(kelas= 'haha')
+items = freq.items()
+items.sort(key = lambda (x, y): y, reverse = True)
+
+for i in items: print i

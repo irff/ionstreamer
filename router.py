@@ -55,7 +55,8 @@ def logout():
 @app.route(BASE_URL + "/analyze/<keyword>")
 def showanalyze(keyword):
   if not islogin(): return redirect(BASE_URL + '/login')
-  return render_template('analyze.html', keyword = keyword, nav = 'analyze')
+  size = dbr.get_search_instance(keyword).params(search_type = 'count', size = 0).execute().hits.total
+  return render_template('analyze-hc.html', keyword = keyword, nav = 'analyze', size = size)
 
 
 @app.route(BASE_URL + "/learn", methods=['GET'])
@@ -134,15 +135,15 @@ def apianalyze(keyword):
   if not islogin(): return abort(401)
   return json.dumps( tweeta.get_tweet_freq(keyword) )
 
-@app.route(BASE_URL + "/api/analyze/topmentions/<keyword>", methods=['GET'])
-def topmentions(keyword):
+@app.route(BASE_URL + "/api/analyze/topmention/<keyword>", methods=['GET'])
+def topmention(keyword):
   if not islogin(): return abort(401)
-  return json.dumps( tweeta.get_top_mentions(keyword) )
+  return json.dumps( tweeta.get_top_mention(keyword) )
 
-@app.route(BASE_URL + "/api/analyze/toppostings/<keyword>", methods=['GET'])
-def toppostings(keyword):
+@app.route(BASE_URL + "/api/analyze/topposting/<keyword>", methods=['GET'])
+def topposting(keyword):
   if not islogin(): return abort(401)
-  return json.dumps( tweeta.get_top_postings(keyword) )
+  return json.dumps( tweeta.get_top_posting(keyword) )
 
 @app.route(BASE_URL + "/api/analyze/topretweets/<keyword>", methods=['GET'])
 def topretweets(keyword):
@@ -159,15 +160,15 @@ def gettweetsat(keyword, kelas, waktu1, waktu2):
   if not islogin(): return abort(401)
   return json.dumps( tweeta.get_tweets_at(keyword, kelas, waktu1, waktu2) )
 
-@app.route(BASE_URL + "/api/analyze/getmentions/<keyword>/<username>", methods=['GET'])
-def getmentions(keyword, username):
+@app.route(BASE_URL + "/api/analyze/getmention/<keyword>/<username>", methods=['GET'])
+def getmention(keyword, username):
   if not islogin(): return abort(401)
-  return json.dumps( tweeta.get_mentions(keyword, username) )
+  return json.dumps( tweeta.get_mention(keyword, username) )
 
-@app.route(BASE_URL + "/api/analyze/getpostings/<keyword>/<username>", methods=['GET'])
-def getpostings(keyword, username):
+@app.route(BASE_URL + "/api/analyze/getposting/<keyword>/<username>", methods=['GET'])
+def getposting(keyword, username):
   if not islogin(): return abort(401)
-  return json.dumps( tweeta.get_postings(keyword, username) )
+  return json.dumps( tweeta.get_posting(keyword, username) )
 
 
 # DOWNLOAD
@@ -176,15 +177,15 @@ def downloadtweetsat(keyword, kelas, waktu1, waktu2, filename):
   if not islogin(): return redirect(BASE_URL + '/login')
   return Response(tweeta.download_tweets_at(keyword, kelas, waktu1, waktu2), mimetype='text/csv')
 
-@app.route(BASE_URL + "/download/mentions/<keyword>/<username>/<filename>", methods=['GET'])
-def downloadmentions(keyword, username, filename):
+@app.route(BASE_URL + "/download/mention/<keyword>/<username>/<filename>", methods=['GET'])
+def downloadmention(keyword, username, filename):
   if not islogin(): return redirect(BASE_URL + '/login')
-  return Response(tweeta.download_mentions(keyword, username), mimetype='text/csv')
+  return Response(tweeta.download_mention(keyword, username), mimetype='text/csv')
 
-@app.route(BASE_URL + "/download/postings/<keyword>/<username>/<filename>", methods=['GET'])
-def downloadpostings(keyword, username, filename):
+@app.route(BASE_URL + "/download/posting/<keyword>/<username>/<filename>", methods=['GET'])
+def downloadposting(keyword, username, filename):
   if not islogin(): return redirect(BASE_URL + '/login')
-  return Response(tweeta.download_postings(keyword, username), mimetype='text/csv')
+  return Response(tweeta.download_posting(keyword, username), mimetype='text/csv')
 
 @app.route(BASE_URL + "/download/all/<keyword>/<filename>", methods=['GET'])
 def downloadall(keyword, filename):

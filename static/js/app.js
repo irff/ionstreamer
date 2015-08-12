@@ -21,7 +21,7 @@ var BASE_URL = '';
     }
 
     refresh();
-    $interval(refresh, 3500);
+    $interval(refresh, 5000);
 
     $scope.submit = function(){
       $scope.keyword = $scope.keyword.trim().toLowerCase();

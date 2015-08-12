@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block titlenav %}Tweet Analyzer of {{keyword}}{% endblock %}
+
+{% block content %}
+
+<!--Load the AJAX API-->
+<script src="{{ url_for('static', filename='js/highcharts-custom.js') }}"></script>
+<script src="{{ url_for('static', filename='js/highcharts-app.js') }}"></script>
+
+
+<div id="analyzeController" ng-controller="analyzeController">
+
+  <div class="row">
+    <div class="small-12 medium-9 columns">
+      <div id="freq" class="text-center"></div>
+    </div>
+    <div class="small-12 medium-3 columns">
+      <div id="sentiment" class="text-center"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="small-12 medium-6 columns">
+      <div id="topmention" class="text-center"></div>
+    </div>
+    <div class="small-12 medium-6 columns">
+      <div id="topposting" class="text-center"></div>
+    </div>
+  </div>
+
+  <div hidden id="keyword">{{keyword}}</div>
+  {% raw %}
+  <!-- <hr> -->
+
+  <div class="row">
+    <div class="columns small-12 medium-6">
+      <div class="alert-box info radius text-center">
+        <button ng-hide="loadtopretweets" class="label secondary radius" ng-click="showTopRetweets()">Top Retweets</button>
+        <span ng-show="loadtopretweets">Top Retweet <i ng-hide="hasretweets" class="fa fa-lg fa-cog fa-spin"></i></span>
+      </div>
+      <!-- TOP TWEET -->
+      <div class="row" ng-repeat="tweet in retweets">
+        <div class="columns hide-for-small-only medium-2 th radius">
+          <img ng-src="{{ tweet.user.profile_image_url }}">
+        </div>
+        <div class="columns small-12 medium-10">
+          <div class="user">
+            <span class="name" ng-bind-html="tweet.user.name"></span>
+            <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}" class="username" ng-bind-html="'@'+tweet.user.screen_name"></a>
+            <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id_str }}" class="count label secondary radius" ng-bind-html="tweet.retweet_count+' retweets'"></a>
+          </div>
+          <div class="text">
+            <p ng-bind-html="tweet.text"></p>
+          </div>
+        </div>
+      </div>
+      <!-- END OF TOP TWEET -->
+    </div>
+
+    <div class="columns small-12 medium-6">
+      <div class="alert-box info radius text-center">
+        <button ng-hide="loadrandomtweets" class="label secondary radius" ng-click="showRandomTweets()">Random Retweets</button>
+        <span ng-show="loadrandomtweets">Random Tweets <i ng-hide="hasrandomtweets" class="fa fa-lg fa-cog fa-spin"></i></span>
+      </div>
+      <!-- JUST SOME RANDOM TWEETS -->
+      <div class="row" ng-repeat="tweet in randomtweets">
+        <div class="columns hide-for-small-only medium-2 th radius">
+          <img ng-src="{{ tweet.user.profile_image_url }}">
+        </div>
+        <div class="columns small-12 medium-10">
+          <div class="user">
+            <span class="name" ng-bind-html="tweet.user.name"></span>
+            <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}" class="username" ng-bind-html="'@'+tweet.user.screen_name"></a>
+            <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id_str }}" class="count label secondary radius" ng-bind-html="tweet.retweet_count+' retweets'"></a>
+          </div>
+          <div class="text">
+            <p ng-bind-html="tweet.text"></p>
+          </div>
+        </div>
+      </div>
+      <!-- END OF JUST SOME RANDOM TWEETS -->
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="small-12 text-center">
+      <a ng-href="/download/all/{{keyword}}/all-tweets-{{keyword}}.csv" class="button small" target="_blank">Download All Tweets</a>
+    </div>
+  </div>
+
+<!-- <div class="columns small-12 medium-6" id="tweets"> -->
+<div id="tweets" class="reveal-modal row" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+  <div class="column small-12 medium-12">
+    <div class="row">
+      <div class="column small-11 medium-11">      
+        <div class="alert-box info radius">
+          <span>Tweets</span>
+          <i ng-hide="hastweets" class="fa fa-lg fa-cog fa-spin"></i>
+          <a class="label secondary radius right" ng-href="{{ downloadlink }}" download>
+            <i ng-show="hastweets" class="fa fa-lg fa-cloud-download"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- TWEETS -->
+    <div class="row" ng-repeat="tweet in tweets">
+      <div class="columns hide-for-small-only medium-1">
+        <div class="th radius"> <img ng-src="{{ tweet.user.profile_image_url }}"> </div>
+      </div>
+      <div class="columns small-12 medium-11">
+        <div class="user row">
+          <span class="name" ng-bind-html="tweet.user.name"></span>
+          <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}" class="username" ng-bind-html="'@'+tweet.user.screen_name"></a>
+          <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id_str }}" class="count label secondary radius" ng-bind-html="tweet.retweet_count+' retweets'"></a>
+        </div>
+        <div class="text row">
+          <p ng-bind-html="tweet.text"></p>
+        </div>
+      </div>
+    </div>
+    <!-- END OF TWEETS -->
+  </div>
+  <a class="close-reveal-modal" style="font-size:20pt" aria-label="Close">&#215;</a>
+</div>
+
+  {% endraw %}
+
+</div>
+
+{% endblock %}

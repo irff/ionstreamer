@@ -29,7 +29,7 @@ def get_tweet_freq(keyword):
   s = dbr.get_search_instance(keyword)
   awal = parse(s.params(size = 1, sort = 'id_str:asc').execute().hits[0].created_at)
   akhir = parse(s.params(size = 1, sort = 'id_str:desc').execute().hits[0].created_at)
-  interval = "%ds" % ( (akhir - awal)/60 ).seconds
+  interval = "%ds" % ( (akhir - awal)/150 ).seconds
 
   s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
   s.aggs.bucket('histo', 'date_histogram', field='created_at', interval=interval)
@@ -38,21 +38,21 @@ def get_tweet_freq(keyword):
   print "%s - top tweet freq: %lf" % (keyword, time.time() - st)
   return map(lambda b: (b.key,b.doc_count,randint(1,b.doc_count/2+1),randint(1,b.doc_count/2+1)), buckets)
 
-def get_top_mentions(keyword):
+def get_top_mention(keyword):
   st = time.time()
 
   s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
-  s.aggs.bucket('freq', 'terms', field='entities.user_mentions.screen_name', size = 7)
+  s.aggs.bucket('freq', 'terms', field='entities.user_mentions.screen_name', size = 10)
   buckets = s.execute().aggregations.freq.buckets
 
   print "%s - top mention: %lf" % (keyword, time.time() - st)
   return map(lambda b: ('@'+b.key, b.doc_count), buckets)
 
-def get_top_postings(keyword):
+def get_top_posting(keyword):
   st = time.time()
 
   s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
-  s.aggs.bucket('freq', 'terms', field='user.screen_name', size = 7)
+  s.aggs.bucket('freq', 'terms', field='user.screen_name', size = 10)
   buckets = s.execute().aggregations.freq.buckets
 
   print "%s - top posting: %lf" % (keyword, time.time() - st)
@@ -91,20 +91,20 @@ def get_tweets_at(keyword, kelas, waktu1, waktu2):
   print "%s %s %s %s - get tweets at: %lf" % (keyword, kelas, waktu1, waktu2, time.time() - st)
   return map(lambda h: h.to_dict(), r.hits)
 
-def get_mentions(keyword, username):
+def get_mention(keyword, username):
   st = time.time()
 
   r = dbr.get_search_instance(keyword).params(size = 10).query('match', **{'entities.user_mentions.screen_name': username}).query('function_score', random_score={}).execute()
 
-  print "%s - %s - get mentions: %lf" % (keyword, username, time.time() - st)
+  print "%s - %s - get mention: %lf" % (keyword, username, time.time() - st)
   return map(lambda h: h.to_dict(), r.hits)
 
-def get_postings(keyword, username):
+def get_posting(keyword, username):
   st = time.time()
 
   r = dbr.get_search_instance(keyword).params(size = 10, sort='id_str:desc').query('match', **{'user.screen_name': username}).execute()
 
-  print "%s - %s - get postings: %lf" % (keyword, username, time.time() - st)
+  print "%s - %s - get posting: %lf" % (keyword, username, time.time() - st)
   return map(lambda h: h.to_dict(), r.hits)
 
 
@@ -126,7 +126,7 @@ def download_tweets_at(keyword, kelas, waktu1, waktu2):
   print "%s %s %s %s - download tweets at: %lf" % (keyword, kelas, waktu1, waktu2, time.time() - st)
   return '\n'.join([';'.join(t) for t in data])
 
-def download_mentions(keyword, username):
+def download_mention(keyword, username):
   st = time.time()
 
   r = dbr.get_search_instance(keyword).params(size = 1000111000).query('match', **{'entities.user_mentions.screen_name': username}).execute()
@@ -139,10 +139,10 @@ def download_mentions(keyword, username):
     nomor += 1
     data.append([str(nomor), '@' + t.user.screen_name, '"' + t.user.name.replace('"', '""') + '"', '"' + t.text.replace('"', '""') + '"', t.created_at[:10]+' '+t.created_at[11:19], str(t.retweet_count), str(t.favorite_count)])
 
-  print "%s %s - download mentions: %lf" % (keyword, username, time.time() - st)
+  print "%s %s - download mention: %lf" % (keyword, username, time.time() - st)
   return '\n'.join([';'.join(t) for t in data])
 
-def download_postings(keyword, username):
+def download_posting(keyword, username):
   st = time.time()
 
   r = dbr.get_search_instance(keyword).params(size = 1000111000, sort='id_str:desc').query('match', **{'user.screen_name': username}).execute()
@@ -155,7 +155,7 @@ def download_postings(keyword, username):
     nomor += 1
     data.append([str(nomor), '@' + t.user.screen_name, '"' + t.user.name.replace('"', '""') + '"', '"' + t.text.replace('"', '""') + '"', t.created_at[:10]+' '+t.created_at[11:19], str(t.retweet_count), str(t.favorite_count)])
 
-  print "%s %s - download postings: %lf" % (keyword, username, time.time() - st)
+  print "%s %s - download posting: %lf" % (keyword, username, time.time() - st)
   return '\n'.join([';'.join(t) for t in data])
 
 
