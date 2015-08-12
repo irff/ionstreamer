@@ -1,4 +1,7 @@
 $(function(){
+  Highcharts.setOptions({
+    global: {timezoneOffset: -420}
+  });
   var spin = '<h1><i class="fa fa-lg fa-spinner fa-spin"></i></h1>';
   function drawFreq() {
     $("#freq").html(spin);
@@ -51,6 +54,25 @@ $(function(){
           minPadding: 0.2,
         },
         tooltip: {borderColor: 'silver'},
+
+        plotOptions: {
+          series: {
+            cursor: 'pointer',
+            events: {
+              click: function (event) {
+                var keyword = $("#keyword").text();
+                var t1 = new Date(event.point.x);
+                var itv = this.points[1].x - this.points[0].x;
+                var t2 = new Date(event.point.x + itv);
+                kelas = 2 - event.point.series.index;
+                angular.element('#analyzeController').scope().fetchTweetsAt($('#keyword').text(), kelas, t1.toISOString(), t2.toISOString());
+                angular.element('#analyzeController').scope().$apply();
+                $('#tweets').foundation('reveal', 'open');
+              }
+            }
+          },
+        },
+
       });
 
       $("#sentiment").html(spin);
@@ -89,6 +111,9 @@ $(function(){
           },
         ],
       });
+
+      $("#topretweet").click();
+      $("#randomtweet").click();
     }, 'JSON');
   }
 
@@ -111,19 +136,35 @@ $(function(){
         tooltip:
         {
           formatter: function(){
-            return "<strong>" + this.y + "</strong> mentions to <strong>" + this.x + "</strong>"
+            return "<strong>" + this.y + "</strong> mentions to <strong>" + this.key + "</strong>"
           },
         },
         xAxis:
         {
           title: {text: "People"},
-          categories: r.map(function(x){return x[0]})
+          type: "category"
         },
         yAxis:
         {
           maxPadding: 0,
           title: {text: "Number of Mention"},
-        }
+        },
+
+        plotOptions: {
+          series: {
+            cursor: 'pointer',
+            events: {
+              click: function (event) {
+                var keyword = $("#keyword").text();
+                var username = event.point.name;
+                angular.element('#analyzeController').scope().fetchTweetsTo(keyword, username);
+                angular.element('#analyzeController').scope().$apply();
+                $('#tweets').foundation('reveal', 'open');
+              }
+            }
+          },
+        },
+
       });
       setTimeout(drawFreq, 1000);
     }, 'JSON');
@@ -148,19 +189,35 @@ $(function(){
         tooltip:
         {
           formatter: function(){
-            return "<strong>" + this.y + "</strong> tweets from <strong>" + this.x + "</strong>"
+            return "<strong>" + this.y + "</strong> tweets from <strong>" + this.key + "</strong>"
           },
         },
         xAxis:
         {
           title: {text: "People"},
-          categories: r.map(function(x){return x[0]})
+          type: "category"
         },
         yAxis:
         {
           maxPadding: 0,
           title: {text: "Number of Posting"},
-        }
+        },
+
+        plotOptions: {
+          series: {
+            cursor: 'pointer',
+            events: {
+              click: function (event) {
+                var keyword = $("#keyword").text();
+                var username = event.point.name;
+                angular.element('#analyzeController').scope().fetchTweetsFrom(keyword, username);
+                angular.element('#analyzeController').scope().$apply();
+                $('#tweets').foundation('reveal', 'open');
+              }
+            }
+          },
+        },
+
       });
       setTimeout(drawTopMention, 1000);
     }, 'JSON');

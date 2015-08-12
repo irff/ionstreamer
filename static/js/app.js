@@ -78,20 +78,20 @@ var BASE_URL = '';
     };
 
     $scope.fetchTweetsTo = function(keyword, username){
-      $scope.downloadlink = BASE_URL + '/download/mentions/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username) + '/mentions-' + keyword + '-' + username + '.csv';
+      $scope.downloadlink = BASE_URL + '/download/mention/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username) + '/mention-' + keyword + '-' + username + '.csv';
       $scope.tweets = [];
       $scope.hastweets = false;
-      $http.get(BASE_URL + '/api/analyze/getmentions/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username)).success(function(r){
+      $http.get(BASE_URL + '/api/analyze/getmention/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username)).success(function(r){
         $scope.tweets = r;
         $scope.hastweets = true;
       });
     };
 
     $scope.fetchTweetsFrom = function(keyword, username){
-      $scope.downloadlink = BASE_URL + '/download/postings/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username) + '/postings-' + keyword + '-' + username + '.csv';
+      $scope.downloadlink = BASE_URL + '/download/posting/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username) + '/posting-' + keyword + '-' + username + '.csv';
       $scope.tweets = [];
       $scope.hastweets = false;
-      $http.get(BASE_URL + '/api/analyze/getpostings/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username)).success(function(r){
+      $http.get(BASE_URL + '/api/analyze/getposting/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username)).success(function(r){
         $scope.tweets = r;
         $scope.hastweets = true;
       });

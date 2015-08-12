@@ -14,7 +14,7 @@ body {
 .keyword:hover {
   background: #008CBA;
   /*color: lightblue;*/
-  /*font-weight: bolder;*/
+  font-weight: bolder;
 }
 
 .user {

@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% block titlenav %}Tweet Analyzer of {{keyword}}{% endblock %}
+{% block titlenav %}Analyzing {{keyword}}{% endblock %}
 
 {% block content %}
 
 <!--Load the AJAX API-->
-<script src="{{ url_for('static', filename='js/highcharts-custom.js') }}"></script>
+<script src="{{ url_for('static', filename='js/highcharts-custom-nohtml.js') }}"></script>
 <script src="{{ url_for('static', filename='js/highcharts-app.js') }}"></script>
 
 
@@ -35,7 +35,7 @@
   <div class="row">
     <div class="columns small-12 medium-6">
       <div class="alert-box info radius text-center">
-        <button ng-hide="loadtopretweets" class="label secondary radius" ng-click="showTopRetweets()">Top Retweets</button>
+        <button id="topretweet" ng-hide="loadtopretweets" class="label secondary radius" ng-click="showTopRetweets()">Top Retweets</button>
         <span ng-show="loadtopretweets">Top Retweet <i ng-hide="hasretweets" class="fa fa-lg fa-cog fa-spin"></i></span>
       </div>
       <!-- TOP TWEET -->
@@ -59,7 +59,7 @@
 
     <div class="columns small-12 medium-6">
       <div class="alert-box info radius text-center">
-        <button ng-hide="loadrandomtweets" class="label secondary radius" ng-click="showRandomTweets()">Random Retweets</button>
+        <button id="randomtweet" ng-hide="loadrandomtweets" class="label secondary radius" ng-click="showRandomTweets()">Random Retweets</button>
         <span ng-show="loadrandomtweets">Random Tweets <i ng-hide="hasrandomtweets" class="fa fa-lg fa-cog fa-spin"></i></span>
       </div>
       <!-- JUST SOME RANDOM TWEETS -->
