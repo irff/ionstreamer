@@ -187,8 +187,9 @@ $(function(){
         tooltip:
         {
           formatter: function(){
-            return "<strong>" + this.y + "</strong> tweets from <strong>" + this.key + "</strong>"
+            return "<strong>" + this.y + "</strong> tweets from <strong>" + this.key + "</strong>";
           },
+          followPointer: true,
         },
         xAxis:
         {

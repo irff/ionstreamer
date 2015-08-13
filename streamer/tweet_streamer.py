@@ -92,9 +92,13 @@ def gather(row):
 
 def run_streamer():
   while True:
-    for k in [x for x in dbk.get() if x.status == 'active' and x.processing == 0]:
-      if k.keyword in {x.keyword for x in dbk.get() if x.status == 'active' and x.processing == 0}:
-        gather(k)
-    sleep(5)
+    try:
+      for k in [x for x in dbk.get() if x.status == 'active' and x.processing == 0]:
+        if k.keyword in {x.keyword for x in dbk.get() if x.status == 'active' and x.processing == 0}:
+          gather(k)
+      sleep(5)
+    except Exception as e:
+      print >> sys.stderr, "exception: %s" % (str(e))
+      
 
 run_streamer()
