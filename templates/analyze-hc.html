@@ -41,16 +41,21 @@
       <!-- TOP TWEET -->
       <div class="row" ng-repeat="tweet in retweets">
         <div class="columns hide-for-small-only medium-2">
-          <a class="th radius" target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}"><img ng-src="{{ tweet.user.profile_image_url }}"></a>
+          <a class="th radius" target="_blank" ng-href="http://twitter.com/{{ tweet.retweeted_status.user.screen_name }}"><img ng-src="{{ tweet.retweeted_status.user.profile_image_url }}"></a>
         </div>
         <div class="columns small-12 medium-10">
-          <div class="user">
-            <span class="name" ng-bind-html="tweet.user.name"></span>
+          <div class="label info tiny" ng-show="tweet.retweeted_status.id_str">
+            <i class='fa fa-retweet'></i>
             <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}" class="username" ng-bind-html="'@'+tweet.user.screen_name"></a>
-            <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id_str }}" class="count label secondary radius" ng-bind-html="tweet.retweet_count+' retweets <i class=\'fa fa-external-link\'></i>'"></a>
+            <span ng-bind-html="'retweeted:'"></span>
+          </div>
+          <div class="user">
+            <span class="name" ng-bind-html="tweet.retweeted_status.user.name"></span>
+            <a target="_blank" ng-href="http://twitter.com/{{ tweet.retweeted_status.user.screen_name }}" class="username" ng-bind-html="'@'+tweet.retweeted_status.user.screen_name"></a>
+            <a target="_blank" ng-href="http://twitter.com/{{ tweet.retweeted_status.user.screen_name }}/status/{{ tweet.retweeted_status.id_str }}" class="count label secondary radius" ng-bind-html="tweet.retweeted_status.retweet_count+' retweets <i class=\'fa fa-external-link\'></i>'"></a>
           </div>
           <div class="text">
-            <p ng-bind-html="tweet.text"></p>
+            <p ng-bind-html="tweet.retweeted_status.text"></p>
           </div>
         </div>
       </div>
@@ -65,16 +70,21 @@
       <!-- JUST SOME RANDOM TWEETS -->
       <div class="row" ng-repeat="tweet in randomtweets">
         <div class="columns hide-for-small-only medium-2">
-          <a class="th radius" target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}"><img ng-src="{{ tweet.user.profile_image_url }}"></a>
+          <a class="th radius" target="_blank" ng-href="http://twitter.com/{{ tweet.retweeted_status.user.screen_name || tweet.user.screen_name }}"><img ng-src="{{ tweet.retweeted_status.user.profile_image_url || tweet.user.profile_image_url }}"></a>
         </div>
         <div class="columns small-12 medium-10">
-          <div class="user">
-            <span class="name" ng-bind-html="tweet.user.name"></span>
+          <div class="label info tiny" ng-show="tweet.retweeted_status.id_str">
+            <i class='fa fa-retweet'></i>
             <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}" class="username" ng-bind-html="'@'+tweet.user.screen_name"></a>
-            <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id_str }}" class="count label secondary radius" ng-bind-html="tweet.retweet_count+' retweets <i class=\'fa fa-external-link\'></i>'"></a>
+            <span ng-bind-html="'retweeted:'"></span>
+          </div>
+          <div class="user">
+            <span class="name" ng-bind-html="tweet.retweeted_status.user.name || tweet.user.name"></span>
+            <a target="_blank" ng-href="http://twitter.com/{{ tweet.retweeted_status.user.screen_name || tweet.user.screen_name }}" class="username" ng-bind-html="'@'+(tweet.retweeted_status.user.screen_name || tweet.user.screen_name)"></a>
+            <a target="_blank" ng-href="http://twitter.com/{{ tweet.retweeted_status.user.screen_name || tweet.user.screen_name }}/status/{{ tweet.retweeted_status.id_str || tweet.id_str }}" class="count label secondary radius" ng-bind-html="(tweet.retweeted_status.retweet_count || tweet.retweet_count)+' retweets <i class=\'fa fa-external-link\'></i>'"></a>
           </div>
           <div class="text">
-            <p ng-bind-html="tweet.text"></p>
+            <p ng-bind-html="tweet.retweeted_status.text || tweet.text"></p>
           </div>
         </div>
       </div>
@@ -105,16 +115,21 @@
     <!-- TWEETS -->
     <div class="row" ng-repeat="tweet in tweets">
       <div class="columns hide-for-small-only medium-1">
-        <a class="th radius" target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}"> <img ng-src="{{ tweet.user.profile_image_url }}"> </a>
+        <a class="th radius" target="_blank" ng-href="http://twitter.com/{{ tweet.retweeted_status.user.screen_name || tweet.user.screen_name }}"><img ng-src="{{ tweet.retweeted_status.user.profile_image_url || tweet.user.profile_image_url }}"></a>
       </div>
       <div class="columns small-12 medium-11">
-        <div class="user row">
-          <span class="name" ng-bind-html="tweet.user.name"></span>
+        <div class="label info tiny" ng-show="tweet.retweeted_status.id_str">
+          <i class='fa fa-retweet'></i>
           <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}" class="username" ng-bind-html="'@'+tweet.user.screen_name"></a>
-          <a target="_blank" ng-href="http://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id_str }}" class="count label secondary radius" ng-bind-html="tweet.retweet_count+' retweets <i class=\'fa fa-external-link\'></i>'"></a>
+          <span ng-bind-html="'retweeted:'"></span>
         </div>
-        <div class="text row">
-          <p ng-bind-html="tweet.text"></p>
+        <div class="user">
+          <span class="name" ng-bind-html="tweet.retweeted_status.user.name || tweet.user.name"></span>
+          <a target="_blank" ng-href="http://twitter.com/{{ tweet.retweeted_status.user.screen_name || tweet.user.screen_name }}" class="username" ng-bind-html="'@'+(tweet.retweeted_status.user.screen_name || tweet.user.screen_name)"></a>
+          <a target="_blank" ng-href="http://twitter.com/{{ tweet.retweeted_status.user.screen_name || tweet.user.screen_name }}/status/{{ tweet.retweeted_status.id_str || tweet.id_str }}" class="count label secondary radius" ng-bind-html="(tweet.retweeted_status.retweet_count || tweet.retweet_count)+' retweets <i class=\'fa fa-external-link\'></i>'"></a>
+        </div>
+        <div class="text">
+          <p ng-bind-html="tweet.retweeted_status.text || tweet.text"></p>
         </div>
       </div>
     </div>
