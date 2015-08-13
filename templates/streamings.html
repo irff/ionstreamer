@@ -6,7 +6,7 @@
 <div ng-controller="summaryController">
 
   <div class="row">
-    <div class="large-6 small-12 columns">
+    <div class="medium-6 small-12 columns">
       <!-- <div class="label secondary" id="message">Enter new keyword to stream.</div> -->
       <form ng-submit="submit()" class="row collapse">
         <div class="columns small-10">
@@ -22,7 +22,7 @@
   </div>
 
   <div class="row">
-    <div class="small-block-grid-1 large-block-grid-3">
+    <div class="small-block-grid-1 medium-block-grid-3">
 
       <li ng-class="info.status" ng-repeat="info in summary | filter:keyword">
         <ul class="pricing-table">
