@@ -4,6 +4,7 @@ from datetime import timedelta
 import database.dbkeyword as dbk
 import database.dbresult as dbr
 import analytics.tweet as tweeta
+import analytics.download as download
 import json, sys
 
 app = Flask(__name__)
@@ -175,22 +176,22 @@ def getposting(keyword, username):
 @app.route(BASE_URL + "/download/tweetsat/<keyword>/<kelas>/<waktu1>/<waktu2>/<filename>", methods=['GET'])
 def downloadtweetsat(keyword, kelas, waktu1, waktu2, filename):
   if not islogin(): return redirect(BASE_URL + '/login')
-  return Response(tweeta.download_tweets_at(keyword, kelas, waktu1, waktu2), mimetype='text/csv')
+  return Response(download.download_tweets_at(keyword, kelas, waktu1, waktu2), mimetype='text/csv')
 
 @app.route(BASE_URL + "/download/mention/<keyword>/<username>/<filename>", methods=['GET'])
 def downloadmention(keyword, username, filename):
   if not islogin(): return redirect(BASE_URL + '/login')
-  return Response(tweeta.download_mention(keyword, username), mimetype='text/csv')
+  return Response(download.download_mention(keyword, username), mimetype='text/csv')
 
 @app.route(BASE_URL + "/download/posting/<keyword>/<username>/<filename>", methods=['GET'])
 def downloadposting(keyword, username, filename):
   if not islogin(): return redirect(BASE_URL + '/login')
-  return Response(tweeta.download_posting(keyword, username), mimetype='text/csv')
+  return Response(download.download_posting(keyword, username), mimetype='text/csv')
 
 @app.route(BASE_URL + "/download/all/<keyword>/<filename>", methods=['GET'])
 def downloadall(keyword, filename):
   if not islogin(): return redirect(BASE_URL + '/login')
-  return Response(tweeta.download_all(keyword), mimetype='text/csv')
+  return Response(download.download_all(keyword), mimetype='text/csv')
 
 @app.route(BASE_URL + "/download/classified", methods=['GET'])
 def downloadclassified():
