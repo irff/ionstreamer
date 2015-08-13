@@ -136,6 +136,7 @@ $(function(){
           formatter: function(){
             return "<strong>" + this.y + "</strong> mentions to <strong>" + this.key + "</strong>"
           },
+          followPointer: true,
         },
         xAxis:
         {
