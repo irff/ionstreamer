@@ -23,11 +23,11 @@
   <nav class="top-bar" data-topbar role="navigation" ng-controller="navbarController">
     <ul class="title-area">
       <li class="name">
-        <h1 class="title"><i class="fa fa-twitter fa-lg"></i> {% block titlenav %}{% endblock %}&nbsp;&nbsp;&nbsp;&nbsp;</h1>
+        <h1 class="title"><i class="fa fa-twitter fa-lg"></i> {% block titlenav %}{% endblock %}</h1>
       </li>
        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
       <li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
-    </ul>
+    
 
     <section class="top-bar-section">
       <!-- Right Nav Section -->
@@ -91,6 +91,7 @@
 
   <script>
     $(document).foundation();
+    $(document).foundation('reflow');
   </script>
 </body>
 </html>
