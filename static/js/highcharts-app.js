@@ -164,7 +164,7 @@ $(function(){
         },
 
       });
-      setTimeout(drawFreq, 1000);
+      setTimeout(drawFreq, 600);
     }, 'JSON');
   }
 
@@ -217,7 +217,7 @@ $(function(){
         },
 
       });
-      setTimeout(drawTopMention, 1000);
+      setTimeout(drawTopMention, 600);
     }, 'JSON');
   }
 
