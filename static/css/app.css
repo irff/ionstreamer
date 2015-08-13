@@ -11,9 +11,8 @@ body {
   font-weight: bolder;
 }
 
-.keyword:hover {
+.keyword:hover, .keyword:focus {
   background: #008CBA;
-  /*color: lightblue;*/
   font-weight: bolder;
 }
 
