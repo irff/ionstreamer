@@ -99,6 +99,6 @@ def run_streamer():
       sleep(5)
     except Exception as e:
       print >> sys.stderr, "exception: %s" % (str(e))
-      
+
 
 run_streamer()
