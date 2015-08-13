@@ -98,8 +98,11 @@ def run_streamer():
           gather(k)
       sleep(5)
     except Exception as e:
-      ret = dbk.db.update('keyword', {'processing': 0, 'since_id': 0, 'max_id': 0}, ('status = %s', ['active']) )
-      dbk.db.commit()
+      try:
+        ret = dbk.db.update('keyword', {'processing': 0, 'since_id': 0, 'max_id': 0}, ('status = %s', ['active']) )
+        dbk.db.commit()
+      except Exception as e:
+        print >> sys.stderr, "exception: %s" % (str(e))
       print >> sys.stderr, "exception: %s" % (str(e))
 
 
