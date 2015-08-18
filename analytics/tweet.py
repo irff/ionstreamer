@@ -72,19 +72,26 @@ def get_top_url(keyword):
   st = time.time()
 
   ret = defaultdict(int)
-  size = 50000
-  nomor = 0
-  while True:
-    r = dbr.get_search_instance(keyword).params(size = size, from_ = nomor, fields='entities.urls.display_url').execute()
-    for t in r.hits:
-      nomor += 1
-      if 'entities.urls.display_url' in t:
-        for u in t['entities.urls.display_url']:
-          ret[u] += 1
-    if len(r.hits) == 0: break
 
-  print "%s (%d) - top url: %lf" % (keyword, nomor, time.time() - st)
+  size = 30000
+  total = dbr.get_search_instance(keyword).params(search_type = 'count', size = 0).execute().hits.total
+  kompresi = float(size)/total
+
+  if total > size:
+    r = dbr.get_search_instance(keyword).params(size = size, fields='entities.urls.display_url').query('function_score', random_score={}).execute()
+  else:
+    r = dbr.get_search_instance(keyword).params(size = size, fields='entities.urls.display_url').execute()
+
+  for t in r.hits:
+    if 'entities.urls.display_url' in t:
+      for u in t['entities.urls.display_url']:
+        ret[u] += 1
+
   items = ret.items()
+  if total > size:
+    items = map(lambda (x,y): (x, int(y/kompresi)), items)
+
+  print "%s - top url: %lf" % (keyword, time.time() - st)
   items.sort(key = lambda (x, y): y, reverse = True)
   return items[:10]
 
