@@ -151,6 +151,16 @@ def topretweets(keyword):
   if not islogin(): return abort(401)
   return json.dumps( tweeta.get_top_retweets(keyword) )
 
+@app.route(BASE_URL + "/api/analyze/tophashtag/<keyword>", methods=['GET'])
+def tophashtag(keyword):
+  if not islogin(): return abort(401)
+  return json.dumps( tweeta.get_top_hashtag(keyword) )
+
+@app.route(BASE_URL + "/api/analyze/topurl/<keyword>", methods=['GET'])
+def topurl(keyword):
+  if not islogin(): return abort(401)
+  return json.dumps( tweeta.get_top_url(keyword) )
+
 @app.route(BASE_URL + "/api/analyze/randomtweets/<keyword>", methods=['GET'])
 def randomtweets(keyword):
   if not islogin(): return abort(401)

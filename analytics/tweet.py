@@ -4,6 +4,7 @@ import database.dbresult as dbr
 from os.path import abspath
 from dateutil.parser import parse
 from random import randint, random
+from collections import defaultdict
 
 sys.path.append(abspath(''))
 
@@ -34,7 +35,8 @@ def get_tweet_freq(keyword):
   buckets = s.execute().aggregations.histo.buckets
 
   print "%s - top tweet freq: %lf" % (keyword, time.time() - st)
-  return map(lambda b: (b.key,b.doc_count,randint(1,b.doc_count/2+1),randint(1,b.doc_count/2+1)), buckets)
+  # all tweets, positive, negative, neutral, dummy
+  return map(lambda b: (b.key,b.doc_count,randint(0,b.doc_count/2),randint(0,b.doc_count/2),randint(0,b.doc_count/2),randint(0,b.doc_count/2)), buckets)
 
 def get_top_mention(keyword):
   st = time.time()
@@ -56,6 +58,35 @@ def get_top_posting(keyword):
   print "%s - top posting: %lf" % (keyword, time.time() - st)
   return map(lambda b: ('@'+b.key, b.doc_count), buckets)
 
+def get_top_hashtag(keyword):
+  st = time.time()
+
+  s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
+  s.aggs.bucket('freq', 'terms', field='entities.hashtags.text', size = 10)
+  buckets = s.execute().aggregations.freq.buckets
+
+  print "%s - top hashtag: %lf" % (keyword, time.time() - st)
+  return map(lambda b: ('#'+b.key, b.doc_count), buckets)
+
+def get_top_url(keyword):
+  st = time.time()
+
+  ret = defaultdict(int)
+  size = 50000
+  nomor = 0
+  while True:
+    r = dbr.get_search_instance(keyword).params(size = size, from_ = nomor, fields='entities.urls.display_url').execute()
+    for t in r.hits:
+      nomor += 1
+      if 'entities.urls.display_url' in t:
+        for u in t['entities.urls.display_url']:
+          ret[u] += 1
+    if len(r.hits) == 0: break
+
+  print "%s (%d) - top url: %lf" % (keyword, nomor, time.time() - st)
+  items = ret.items()
+  items.sort(key = lambda (x, y): y, reverse = True)
+  return items[:10]
 
 def get_top_retweets(keyword):
   st = time.time()

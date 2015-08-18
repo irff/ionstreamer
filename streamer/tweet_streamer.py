@@ -56,8 +56,7 @@ def gather(row):
       print "[UP] %s: +%d" % (row.keyword, len(tweets))
  
     except Exception as e:
-      print >> sys.stderr, "%s: %s" % (token.name, str(e))
-
+      print >> sys.stderr, str(e)
 
     if row.since_id > -1:
       #searching down
@@ -79,31 +78,27 @@ def gather(row):
         print "[DOWN] %s: +%d" % (row.keyword, len(tweets))
 
       except Exception as e:
-        print >> sys.stderr, "%s: %s" % (token.name, str(e))
-        tweets = []
+        print >> sys.stderr, str(e)
+
   except Exception as e:
-    print >> sys.stderr, "tweet_streamer error: "+ str(e)
+    print >> sys.stderr, "tweet_streamer error: %s" % str(e)
+  
   finally:
-    try:
-      dbk.set( {'keyword': row.keyword, 'processing': 0} )
-    except Exception as e:
-      print >> sys.stderr, "exception: %s" % (str(e))
+    while True:
+      try:
+        dbk.set( {'keyword': row.keyword, 'processing': 0} )
+        break
+      except Exception as e:
+        print >> sys.stderr, "exception: %s" % str(e)
+        sleep(10)
 
 
 def run_streamer():
   while True:
-    try:
-      for k in [x for x in dbk.get() if x.status == 'active' and x.processing == 0]:
-        if k.keyword in {x.keyword for x in dbk.get() if x.status == 'active' and x.processing == 0}:
-          gather(k)
-      sleep(5)
-    except Exception as e:
-      try:
-        ret = dbk.db.update('keyword', {'processing': 0, 'since_id': 0, 'max_id': 0}, ('status = %s', ['active']) )
-        dbk.db.commit()
-      except Exception as e:
-        print >> sys.stderr, "exception: %s" % (str(e))
-      print >> sys.stderr, "exception: %s" % (str(e))
+    for k in [x for x in dbk.get() if x.status == 'active' and x.processing == 0]:
+      if k.keyword in {x.keyword for x in dbk.get() if x.status == 'active' and x.processing == 0}:
+        gather(k)
+    # sleep(5)
 
 
 run_streamer()
