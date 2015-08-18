@@ -73,7 +73,7 @@ def get_top_url(keyword):
 
   ret = defaultdict(int)
 
-  size = 30000
+  size = 10000
   total = dbr.get_search_instance(keyword).params(search_type = 'count', size = 0).execute().hits.total
   kompresi = float(size)/total
 
