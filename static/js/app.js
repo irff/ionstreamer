@@ -46,7 +46,9 @@ var BASE_URL = '';
 
   app.controller('analyzeController', function($scope, $http, $interval){
     $scope.keyword = $('#keyword').text();
-    
+
+    $interval(function(){$http.get(BASE_URL + '/api/total/'+$scope.keyword).success(function(r) {$scope.total = r;});}, 5000);
+
     $scope.showTopRetweets = function(){
       $scope.loadtopretweets = true;
       $scope.hasretweets = false;

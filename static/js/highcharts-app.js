@@ -6,24 +6,38 @@ $(function(){
   function drawFreq() {
     $("#freq").html(spin);
     $.get('/api/analyze/freq/'+encodeURIComponent($('#keyword').text()), function(r){
-      var positive = r.reduce(function(acc, curr){return acc + curr[2];}, 0);
-      var negative = r.reduce(function(acc, curr){return acc + curr[3];}, 0);
       $('#freq').highcharts('StockChart', {
         credits: {enabled: false},
         legend: {enabled: true, shadow: true},
         title: {text: "Growth of Tweet"},
-        colors: ['#EE0000', '#00EE00', '#4099FF'],
+        colors: ['#A9A9A9', '#EEEE00', '#EE0000', '#00EE00', '#4099FF'],
         series: [
+          {
+            name: 'Uninformative Tweet',
+            // marker: { enabled: true, radius: 2 },
+            shadow: true,
+            visible: false,
+            data: r.map(function(x){return [x[0], x[5]]})
+          },
+          {
+            name: 'Neutral Tweet',
+            // marker: { enabled: true, radius: 2 },
+            shadow: true,
+            visible: false,
+            data: r.map(function(x){return [x[0], x[4]]})
+          },
           {
             name: 'Negative Tweet',
             // marker: { enabled: true, radius: 2 },
             shadow: true,
+            visible: false,
             data: r.map(function(x){return [x[0], x[3]]})
           },
           {
             name: 'Positive Tweet',
             // marker: { enabled: true, radius: 2 },
             shadow: true,
+            visible: false,
             data: r.map(function(x){return [x[0], x[2]]})
           },
           {
@@ -75,15 +89,20 @@ $(function(){
 
       });
 
+      var positive = r.reduce(function(acc, curr){return acc + curr[2];}, 0);
+      var negative = r.reduce(function(acc, curr){return acc + curr[3];}, 0);
+      var neutral = r.reduce(function(acc, curr){return acc + curr[4];}, 0);
+      var dummy = r.reduce(function(acc, curr){return acc + curr[5];}, 0);
+
       $('#sentiment').highcharts({
         credits: {enabled: false},
         legend: {enabled: true, shadow: true},
         title: {text: "Sentiment Analytics"},
-        colors: ['#EE0000', '#00EE00'],
+        colors: ['#A9A9A9', '#EEEE00', '#EE0000', '#00EE00'],
         tooltip:
         {
           formatter: function() {
-            return "<strong>" + this.y + "</strong> "+ this.point.name +" tweets"
+            return "<strong>" + this.y + "</strong> "+ this.point.name
           },
         },
         series: [
@@ -98,20 +117,19 @@ $(function(){
             showInLegend: true,
             shadow: true,
             data: [
-              {
-                name: "Negative Tweet",
-                y: negative
-              },
-              {
-                name: "Positive Tweet",
-                y: positive
-              },
+              {name: "Uninformative Tweet", y: dummy },
+              {name: "Neutral Tweet", y: neutral },
+              {name: "Negative Tweet", y: negative },
+              {name: "Positive Tweet", y: positive },
             ],
-            dataLabels: {format: '{point.percentage:.2f} %',},
+            dataLabels: {format: '{point.percentage:.2f}%',},
           },
         ],
       });
       drawTopMention();
+      drawTopPosting();
+      drawTopHashtag();
+      drawTopUrl();
     }, 'JSON');
   }
 
@@ -165,7 +183,6 @@ $(function(){
         },
 
       });
-      drawTopPosting()
     }, 'JSON');
   }
 
@@ -219,7 +236,6 @@ $(function(){
         },
 
       });
-      drawTopHashtag();
     }, 'JSON');
   }
 
@@ -248,7 +264,7 @@ $(function(){
         },
         xAxis:
         {
-          title: {text: "People"},
+          title: {text: "Hashtag"},
           type: "category"
         },
         yAxis:
@@ -273,7 +289,6 @@ $(function(){
         },
 
       });
-      drawTopUrl();
     }, 'JSON');
   }
 
@@ -302,7 +317,7 @@ $(function(){
         },
         xAxis:
         {
-          title: {text: "People"},
+          title: {text: "URL"},
           type: "category"
         },
         yAxis:

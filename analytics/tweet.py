@@ -8,6 +8,12 @@ from collections import defaultdict
 
 sys.path.append(abspath(''))
 
+def gettotal(keyword, enc = True):
+  try:
+    return dbr.get_search_instance(keyword, enc).params(search_type = 'count', size = 0).execute().hits.total
+  except:
+    return -1
+
 def getinfo(row):
   try:
     r = dbr.get_search_instance(row.keyword).params(size = 3, sort='id_str:desc').execute()
@@ -74,7 +80,7 @@ def get_top_url(keyword):
   ret = defaultdict(int)
 
   size = 10000
-  total = dbr.get_search_instance(keyword).params(search_type = 'count', size = 0).execute().hits.total
+  total = gettotal(keyword)
   kompresi = float(size)/total
 
   if total > size:

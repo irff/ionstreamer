@@ -56,7 +56,7 @@ def logout():
 @app.route(BASE_URL + "/analyze/<keyword>")
 def showanalyze(keyword):
   if not islogin(): return redirect(BASE_URL + '/login')
-  size = dbr.get_search_instance(keyword).params(search_type = 'count', size = 0).execute().hits.total
+  size = tweeta.gettotal(keyword)
   return render_template('analyze-hc.html', keyword = keyword, nav = 'analyze', size = size)
 
 
@@ -73,7 +73,7 @@ def showlearn_keyword(keyword):
 @app.route(BASE_URL + "/learn/classified", methods=['GET'])
 def showlearned():
   if not islogin(): return redirect(BASE_URL + '/login')
-  size = dbr.get_search_instance('LEARN', enc = False).params(search_type = 'count', size = 0).execute().hits.total
+  size = tweeta.gettotal(keyword)
   return render_template('classified.html', nav = 'learn', size = size)
 
 
@@ -130,6 +130,11 @@ def summary():
   keywords = [x for x in dbk.get() if x.status != 'removed']
   keywords.sort(lambda x, y: cmp(x.status, y.status))
   return json.dumps( map(tweeta.getinfo, keywords) )
+
+@app.route(BASE_URL + "/api/total/<keyword>", methods=['GET'])
+def total(keyword):
+  if not islogin(): return abort(401)
+  return json.dumps(tweeta.gettotal(keyword))
 
 @app.route(BASE_URL + "/api/analyze/freq/<keyword>", methods=['GET'])
 def apianalyze(keyword):
