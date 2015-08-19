@@ -99,6 +99,16 @@ var BASE_URL = '';
       });
     };
 
+    $scope.fetchTweetsHashtag = function(keyword, hashtag){
+      $scope.downloadlink = BASE_URL + '/download/hashtag/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(hashtag) + '/posting-' + keyword + '-' + hashtag + '.csv';
+      $scope.tweets = [];
+      $scope.hastweets = false;
+      $http.get(BASE_URL + '/api/analyze/gethashtag/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(hashtag)).success(function(r){
+        $scope.tweets = r;
+        $scope.hastweets = true;
+      });
+    };
+
   });
 
 

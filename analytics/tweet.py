@@ -83,23 +83,22 @@ def get_top_url(keyword):
   total = gettotal(keyword)
   kompresi = float(size)/total
 
+  field = 'entities.urls.url'
   if total > size:
-    r = dbr.get_search_instance(keyword).params(size = size, fields='entities.urls.display_url').query('function_score', random_score={}).execute()
+    r = dbr.get_search_instance(keyword).params(size = size, fields=field).query('function_score', random_score={}).execute()
   else:
-    r = dbr.get_search_instance(keyword).params(size = size, fields='entities.urls.display_url').execute()
+    r = dbr.get_search_instance(keyword).params(size = size, fields=field).execute()
 
   for t in r.hits:
-    if 'entities.urls.display_url' in t:
-      for u in t['entities.urls.display_url']:
+    if field in t:
+      for u in t[field]:
         ret[u] += 1
 
   items = ret.items()
-  if total > size:
-    items = map(lambda (x,y): (x, int(y/kompresi)), items)
 
   print "%s - top url: %lf" % (keyword, time.time() - st)
   items.sort(key = lambda (x, y): y, reverse = True)
-  return items[:10]
+  return map(lambda (x,y): (x, int(y/kompresi)), items[:10]) if total > size else items[:10]
 
 def get_top_retweets(keyword):
   st = time.time()
@@ -147,4 +146,12 @@ def get_posting(keyword, username):
   r = dbr.get_search_instance(keyword).params(size = 10, sort='id_str:desc').query('match', **{'user.screen_name': username}).execute()
 
   print "%s - %s - get posting: %lf" % (keyword, username, time.time() - st)
+  return map(lambda h: h.to_dict(), r.hits)
+
+def get_hashtag(keyword, hashtag):
+  st = time.time()
+
+  r = dbr.get_search_instance(keyword).params(size = 10).query('match', **{'entities.hashtags.text': hashtag[1:]}).query('function_score', random_score={}).execute()
+
+  print "%s - %s - get hashtag: %lf" % (keyword, hashtag, time.time() - st)
   return map(lambda h: h.to_dict(), r.hits)

@@ -12,42 +12,13 @@ $(function(){
         title: {text: "Growth of Tweet"},
         colors: ['#A9A9A9', '#EEEE00', '#EE0000', '#00EE00', '#4099FF'],
         series: [
-          {
-            name: 'Uninformative Tweet',
-            // marker: { enabled: true, radius: 2 },
-            shadow: true,
-            visible: false,
-            data: r.map(function(x){return [x[0], x[5]]})
-          },
-          {
-            name: 'Neutral Tweet',
-            // marker: { enabled: true, radius: 2 },
-            shadow: true,
-            visible: false,
-            data: r.map(function(x){return [x[0], x[4]]})
-          },
-          {
-            name: 'Negative Tweet',
-            // marker: { enabled: true, radius: 2 },
-            shadow: true,
-            visible: false,
-            data: r.map(function(x){return [x[0], x[3]]})
-          },
-          {
-            name: 'Positive Tweet',
-            // marker: { enabled: true, radius: 2 },
-            shadow: true,
-            visible: false,
-            data: r.map(function(x){return [x[0], x[2]]})
-          },
-          {
-            name: 'All Tweet',
-            // marker: { enabled: true, radius: 2 },
-            shadow: true,
-            data: r.map(function(x){return [x[0], x[1]]})
-          },
+          {name: 'Uninformative Tweet', shadow: true, visible: false, data: r.map(function(x){return [x[0], x[5]]}) },
+          {name: 'Neutral Tweet', shadow: true, visible: false, data: r.map(function(x){return [x[0], x[4]]}) },
+          {name: 'Negative Tweet', shadow: true, visible: false, data: r.map(function(x){return [x[0], x[3]]}) },
+          {name: 'Positive Tweet', shadow: true, visible: false, data: r.map(function(x){return [x[0], x[2]]}) },
+          {name: 'All Tweet', shadow: true, data: r.map(function(x){return [x[0], x[1]]}) },
         ],
-        navigator: {baseSeries: 2},
+        navigator: {baseSeries: 4},
         rangeSelector: {
           buttons: [
             {type: 'hour', count: 6, text: '6h'},
@@ -83,6 +54,11 @@ $(function(){
                 angular.element('#analyzeController').scope().$apply();
                 $('#tweets').foundation('reveal', 'open');
               }
+            },
+            dataGrouping: {
+              approximation: "sum",
+              enabled: true,
+              forced: true,
             }
           },
         },
@@ -279,8 +255,8 @@ $(function(){
             events: {
               click: function (event) {
                 var keyword = $("#keyword").text();
-                var username = event.point.name;
-                angular.element('#analyzeController').scope().fetchTweetsHashtag(keyword, username);
+                var hashtag = event.point.name;
+                angular.element('#analyzeController').scope().fetchTweetsHashtag(keyword, hashtag);
                 angular.element('#analyzeController').scope().$apply();
                 $('#tweets').foundation('reveal', 'open');
               }
@@ -328,16 +304,17 @@ $(function(){
 
         plotOptions: {
           series: {
-            /*cursor: 'pointer',
+            cursor: 'pointer',
             events: {
               click: function (event) {
-                var keyword = $("#keyword").text();
-                var username = event.point.name;
-                angular.element('#analyzeController').scope().fetchTweetsHashtag(keyword, username);
-                angular.element('#analyzeController').scope().$apply();
-                $('#tweets').foundation('reveal', 'open');
+                // var keyword = $("#keyword").text();
+                var url = event.point.name;
+                window.open(url,'_newtab');
+                // angular.element('#analyzeController').scope().fetchTweetsHashtag(keyword, username);
+                // angular.element('#analyzeController').scope().$apply();
+                // $('#tweets').foundation('reveal', 'open');
               }
-            }*/
+            }
           },
         },
 

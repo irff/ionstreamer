@@ -151,15 +151,15 @@ def topposting(keyword):
   if not islogin(): return abort(401)
   return json.dumps( tweeta.get_top_posting(keyword) )
 
-@app.route(BASE_URL + "/api/analyze/topretweets/<keyword>", methods=['GET'])
-def topretweets(keyword):
-  if not islogin(): return abort(401)
-  return json.dumps( tweeta.get_top_retweets(keyword) )
-
 @app.route(BASE_URL + "/api/analyze/tophashtag/<keyword>", methods=['GET'])
 def tophashtag(keyword):
   if not islogin(): return abort(401)
   return json.dumps( tweeta.get_top_hashtag(keyword) )
+
+@app.route(BASE_URL + "/api/analyze/topretweets/<keyword>", methods=['GET'])
+def topretweets(keyword):
+  if not islogin(): return abort(401)
+  return json.dumps( tweeta.get_top_retweets(keyword) )
 
 @app.route(BASE_URL + "/api/analyze/topurl/<keyword>", methods=['GET'])
 def topurl(keyword):
@@ -185,6 +185,11 @@ def getmention(keyword, username):
 def getposting(keyword, username):
   if not islogin(): return abort(401)
   return json.dumps( tweeta.get_posting(keyword, username) )
+
+@app.route(BASE_URL + "/api/analyze/gethashtag/<keyword>/<hashtag>", methods=['GET'])
+def gethashtag(keyword, hashtag):
+  if not islogin(): return abort(401)
+  return json.dumps( tweeta.get_hashtag(keyword, hashtag) )
 
 
 # DOWNLOAD
