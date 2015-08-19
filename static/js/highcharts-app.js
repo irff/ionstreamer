@@ -10,7 +10,7 @@ $(function(){
         credits: {enabled: false},
         legend: {enabled: true, shadow: true},
         title: {text: "Growth of Tweet"},
-        colors: ['#A9A9A9', '#EEEE00', '#EE0000', '#00EE00', '#4099FF'],
+        colors: ['#A9A9A9', '#DDDD00', '#DD0000', '#00DD00', '#4099FF'],
         series: [
           {name: 'Uninformative Tweet', shadow: true, visible: false, data: r.map(function(x){return [x[0], x[5]]}) },
           {name: 'Neutral Tweet', shadow: true, visible: false, data: r.map(function(x){return [x[0], x[4]]}) },
@@ -74,7 +74,7 @@ $(function(){
         credits: {enabled: false},
         legend: {enabled: true, shadow: true},
         title: {text: "Sentiment Analytics"},
-        colors: ['#A9A9A9', '#EEEE00', '#EE0000', '#00EE00'],
+        colors: ['#A9A9A9', '#DDDD00', '#DD0000', '#00DD00'],
         tooltip:
         {
           formatter: function() {
