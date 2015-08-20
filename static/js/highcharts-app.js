@@ -8,6 +8,7 @@ $(function(){
 
   var updateFreqChart = function(r) {
     $('#freq').highcharts('StockChart', {
+      chart: {animation: true},
       credits: {enabled: false},
       legend: {enabled: true, shadow: true},
       title: {text: "Growth of Tweet"},

@@ -8,6 +8,7 @@ pip:
   elasticsearch_dsl
   tornado
   twittersearch
+  flask-compress
 
 elasticeearch
 mysql-server
