@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, Response, session, abort, redirect, flash
+from flask.ext.compress import Compress
 from config import DEBUG, HOST, PORT, BASE_URL
 from datetime import timedelta
 import database.dbkeyword as dbk
@@ -8,6 +9,7 @@ import analytics.download as download
 import json, sys
 
 app = Flask(__name__)
+Compress(app)
 app.permanent_session_lifetime = timedelta(days=1001)
 
 

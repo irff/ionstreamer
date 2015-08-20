@@ -6,11 +6,10 @@
 <div ng-controller="summaryController">
 
   <div class="row">
-    <div class="medium-6 small-12 columns">
-      <!-- <div class="label secondary" id="message">Enter new keyword to stream.</div> -->
+    <div class="medium-7 small-12 columns">
       <form ng-submit="submit()" class="row collapse">
         <div class="columns small-10">
-          <input tabindex="1" id="autocomplete" type="search" placeholder="Search and Insert Keywords: e.g. joko widodo" autocomplete="off" ng-model="keyword" required>
+          <input tabindex="1" id="autocomplete" type="search" placeholder='search and insert keywords: e.g. @jokowidodo or "joko widodo" mpr' autocomplete="off" ng-model="keyword" required>
         </div>
         <div class="small-2 columns">
           <button class="button secondary postfix">
@@ -31,12 +30,17 @@
             <li class="title keyword" ng-bind-html="info.keyword"></li>
           </a>
           <li class="price"><i ng-show="info.processing" class="fa fa-spinner fa-spin fa-spin"></i><span ng-hide="info.processing" ng-bind-html="(info.count | number:0) + ' results'"></span></li>
-          <!-- <li class="description"></li> -->
           <li class="bullet-item" ng-repeat="tweet in info.tweets" ng-bind-html="tweet"></li>
           <li class="cta-button">
-            <button ng-disabled="info.is_streaming || info.processing" ng-click="stream(info, 'active')" ng-hide="info.status=='active'" class="button radius secondary tiny"><i class="fa fa-play"></i></button>
-            <button ng-disabled="info.is_streaming || info.processing" ng-click="stream(info, 'inactive')" ng-hide="info.status=='inactive'"class="button radius secondary tiny"><i class="fa fa-pause"></i></button>
-            <button ng-disabled="info.is_streaming || info.processing" ng-click="stream(info, 'removed')" class="button radius secondary tiny"><i class="fa fa-eye-slash fa-lg"></i></button>
+            <button ng-disabled="info.is_streaming || info.processing" ng-click="stream(info, 'active')" ng-hide="info.status=='active'" class="button radius tiny">
+              <i ng-class="{'fa fa-play':!info.playing, 'fa-spinner fa-spin fa-spinner':info.playing}"></i>
+            </button>
+            <button ng-disabled="info.is_streaming || info.processing" ng-click="stream(info, 'inactive')" ng-hide="info.status=='inactive'"class="button radius warning tiny">
+              <i ng-class="{'fa fa-pause':!info.pausing, 'fa-spinner fa-spin fa-spinner':info.pausing}"></i>
+            </button>
+            <button ng-disabled="info.is_streaming || info.processing" ng-click="stream(info, 'removed')" class="button radius alert tiny">
+              <i ng-class="{'fa fa-eye-slash fa-lg':!info.removing, 'fa-spinner fa-spin fa-spinner':info.removing}"></i>
+            </button>
           </li>
           {% endraw %}
         </ul>

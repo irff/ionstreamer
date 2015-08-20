@@ -4,24 +4,33 @@ var BASE_URL = '';
   var app = angular.module("tweetstreamer", ['ngSanitize', 'infinite-scroll']);
 
   app.controller('navbarController', function($scope, $http, $interval){
-    function refresh() {$http.get(BASE_URL + '/api/summary').success(function(r) {$scope.summary = r; });}
-    refresh();
-    $interval(refresh, 60000);
+    $scope.refresh = function() {$http.get(BASE_URL + '/api/summary').success(function(r) {$scope.summary = r; });}
+    $scope.refresh();
+    $interval($scope.refresh, 60000);
   });
 
 
   app.controller('summaryController', function($scope, $http, $interval){
 
-    function refresh() {$http.get(BASE_URL + '/api/summary').success(function(r) {$scope.summary = r; });}
+    $scope.refresh = function() {$http.get(BASE_URL + '/api/summary').success(function(r) {$scope.summary = r; });}
 
     $scope.stream = function(info, status){
       info.is_streaming = true;
+      if(status == "active") info.playing = true; else
+      if(status == "inactive") info.pausing = true; else
+      if(status == "removed") info.removing = true;
       $http.post(BASE_URL + '/api/stream', {keyword: info.keyword, status: status})
-      .success(refresh);
+      .success($scope.refresh)
+      .error(function(){
+        info.is_streaming = false;
+        if(status == "active") info.playing = false; else
+        if(status == "inactive") info.pausing = false; else
+        if(status == "removed") info.removing = false;
+      });
     }
 
-    refresh();
-    $interval(refresh, 5000);
+    $scope.refresh();
+    $interval($scope.refresh, 5000);
 
     $scope.submit = function(){
       $scope.keyword = $scope.keyword.trim().toLowerCase();
@@ -38,6 +47,7 @@ var BASE_URL = '';
         .error(function(){
           $scope.is_sending_kw = false;
           $scope.keyword = '';
+          $scope.refresh();
         });
       });
     };
@@ -56,6 +66,9 @@ var BASE_URL = '';
       .success(function(data){
         $scope.retweets = data;
         $scope.hasretweets = true;
+      })
+      .error(function(){
+        $scope.loadtopretweets = false;
       });
     };
 
@@ -66,6 +79,9 @@ var BASE_URL = '';
       .success(function(data){
         $scope.randomtweets = data;
         $scope.hasrandomtweets = true;
+      })
+      .error(function(){
+        $scope.loadtopretweets = false;
       });
     };
 

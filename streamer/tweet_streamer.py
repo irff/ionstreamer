@@ -98,7 +98,7 @@ def run_streamer():
     for k in [x for x in dbk.get() if x.status == 'active' and x.processing == 0]:
       if k.keyword in {x.keyword for x in dbk.get() if x.status == 'active' and x.processing == 0}:
         gather(k)
-    # sleep(5)
+    sleep(1)
 
 
 run_streamer()
