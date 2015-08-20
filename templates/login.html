@@ -2,25 +2,17 @@
 <html ng-app="tweetstreamer">
 <head>
   <meta charset="utf-8">
-  <!-- If you delete this meta tag World War Z will become a reality -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Langgar Social Media Analytics</title>
   <link rel="icon" href="http://langgar.co/images/favicon.png">
-
   <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/fa/css/font-awesome.min.css') }}">
-
   <link rel="stylesheet" href="{{ url_for('static', filename='css/animate.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
-  
-  <script src="{{ url_for('static', filename='js/vendor/modernizr.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
 </head>
 <body>
 
   <!-- NAVBAR -->
-  <nav class="top-bar" data-topbar role="navigation" ng-controller="navbarController">
+  <nav class="top-bar" data-topbar role="navigation">
     <div class="name">
         <h1 class="text-center" style="color:white">Login to Langgar Analytics</h1>
     </div>
@@ -31,7 +23,7 @@
 
 
   <!-- CONTENT -->
-  <div class="medium-4 medium-centered columns" style="margin-top:8em;margin-bottom:12em;">
+  <div class="medium-4 medium-centered columns animated zoomInDown" style="margin-top:8em;margin-bottom:12em;">
     <div class="login-box">
       <div class="row">
         <div class="medium-12 columns">
@@ -75,14 +67,8 @@
   </footer>
   <!-- END OF FOOTER -->
   
-  <script src="{{ url_for('static', filename='js/vendor/fastclick.js') }}"></script>
-  
+  <script src="{{ url_for('static', filename='js/vendor/fastclick.js') }}"></script>  
   <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
-
-  <script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/angular-sanitize.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/ng-infinite-scroll.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
   <script>
     $(document).foundation();

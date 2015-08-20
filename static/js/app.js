@@ -20,7 +20,10 @@ var BASE_URL = '';
       if(status == "inactive") info.pausing = true; else
       if(status == "removed") info.removing = true;
       $http.post(BASE_URL + '/api/stream', {keyword: info.keyword, status: status})
-      .success($scope.refresh)
+      .success(function(){
+        if(status == "removed") setTimeout(1000, $scope.refresh); else
+        $scope.refresh();
+      })
       .error(function(){
         info.is_streaming = false;
         if(status == "active") info.playing = false; else

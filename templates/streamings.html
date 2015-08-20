@@ -23,7 +23,7 @@
   <div class="row">
     <div class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
 
-      <li ng-class="info.status" ng-repeat="info in summary | filter:keyword">
+      <li ng-class="info.status + (info.removing ? ' animated hinge' : '')" ng-repeat="info in summary | filter:keyword">
         <ul class="pricing-table">
           {% raw %}
           <a ng-href="/analyze/{{ info.keyword }}">
@@ -33,13 +33,13 @@
           <li class="bullet-item" ng-repeat="tweet in info.tweets" ng-bind-html="tweet"></li>
           <li class="cta-button">
             <button ng-disabled="info.is_streaming || info.processing" ng-click="stream(info, 'active')" ng-hide="info.status=='active'" class="button radius tiny">
-              <i ng-class="{'fa fa-play':!info.playing, 'fa-spinner fa-spin fa-spinner':info.playing}"></i>
+              <i ng-class="{'fa fa-play':!info.playing, 'fa fa-spinner fa-spin fa-spinner':info.playing}"></i>
             </button>
             <button ng-disabled="info.is_streaming || info.processing" ng-click="stream(info, 'inactive')" ng-hide="info.status=='inactive'"class="button radius warning tiny">
-              <i ng-class="{'fa fa-pause':!info.pausing, 'fa-spinner fa-spin fa-spinner':info.pausing}"></i>
+              <i ng-class="{'fa fa-pause':!info.pausing, 'fa fa-spinner fa-spin fa-spinner':info.pausing}"></i>
             </button>
             <button ng-disabled="info.is_streaming || info.processing" ng-click="stream(info, 'removed')" class="button radius alert tiny">
-              <i ng-class="{'fa fa-eye-slash fa-lg':!info.removing, 'fa-spinner fa-spin fa-spinner':info.removing}"></i>
+              <i ng-class="{'fa fa-eye-slash fa-lg':!info.removing, 'fa fa-spinner fa-spin fa-spinner':info.removing}"></i>
             </button>
           </li>
           {% endraw %}
