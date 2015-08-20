@@ -8,7 +8,6 @@ $(function(){
 
   var updateFreqChart = function(r) {
     $('#freq').highcharts('StockChart', {
-      chart: {animation: true},
       credits: {enabled: false},
       legend: {enabled: true, shadow: true},
       title: {text: "Growth of Tweet"},
@@ -55,7 +54,7 @@ $(function(){
               $('#tweets').foundation('reveal', 'open');
             }
           },
-          dataGrouping: {approximation: "sum", enabled: true, forced: true, }
+          dataGrouping: {approximation: "sum", enabled: true, }
         },
       },
     });
