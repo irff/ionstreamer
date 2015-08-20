@@ -12,7 +12,30 @@ var BASE_URL = '';
 
   app.controller('summaryController', function($scope, $http, $interval){
 
-    $scope.refresh = function() {$http.get(BASE_URL + '/api/summary').success(function(r) {$scope.summary = r; });}
+    $scope.summary = [];
+    var block_refresh = false;
+
+    $scope.refresh = function() {
+      if(block_refresh) return;
+      block_refresh = true;
+      $http.get(BASE_URL + '/api/summary').success(function (r) {
+        var current_keywords = $scope.summary.map(function(info){return info.keyword});
+        var next_keywords = r.map(function(info){return info.keyword});
+        if(current_keywords.join('|') == next_keywords.join('|'))
+        {
+          for (var i = 0; i < r.length; ++i) {
+            if($scope.summary[i].count < r[i].count)
+              $scope.summary[i] = r[i];
+            else
+              $scope.summary[i].processing = r[i].processing;
+          };
+        } else
+        {
+          $scope.summary = r;
+        }
+      });
+      block_refresh = false;
+    };
 
     $scope.stream = function(info, status){
       info.is_streaming = true;
@@ -21,8 +44,10 @@ var BASE_URL = '';
       if(status == "removed") info.removing = true;
       $http.post(BASE_URL + '/api/stream', {keyword: info.keyword, status: status})
       .success(function(){
-        if(status == "removed") setTimeout(1000, $scope.refresh); else
-        $scope.refresh();
+        if(status == "removed"){
+          block_refresh = true;
+          setTimeout(function(){block_refresh = false; $scope.refresh();}, 1800);
+        } else $scope.refresh();
       })
       .error(function(){
         info.is_streaming = false;
@@ -30,10 +55,10 @@ var BASE_URL = '';
         if(status == "inactive") info.pausing = false; else
         if(status == "removed") info.removing = false;
       });
-    }
+    };
 
     $scope.refresh();
-    $interval($scope.refresh, 5000);
+    $interval($scope.refresh, 4000);
 
     $scope.submit = function(){
       $scope.keyword = $scope.keyword.trim().toLowerCase();
@@ -43,9 +68,9 @@ var BASE_URL = '';
       .success(function(){
         $http.get(BASE_URL + '/api/summary')
         .success(function(r){
-          $scope.summary = r;
           $scope.is_sending_kw = false;
           $scope.keyword = '';
+          $scope.refresh();
         })
         .error(function(){
           $scope.is_sending_kw = false;

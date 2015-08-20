@@ -23,8 +23,8 @@
   <div class="row">
     <div class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
 
-      <li ng-class="info.status + (info.removing ? ' animated hinge' : '')" ng-repeat="info in summary | filter:keyword">
-        <ul class="pricing-table">
+      <li ng-class="info.status" ng-repeat="info in summary | filter:keyword">
+        <ul ng-class="'pricing-table animated' + (info.removing ? ' hinge' : ' flipInY')">
           {% raw %}
           <a ng-href="/analyze/{{ info.keyword }}">
             <li class="title keyword" ng-bind-html="info.keyword"></li>

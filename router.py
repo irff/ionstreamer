@@ -75,7 +75,7 @@ def showlearn_keyword(keyword):
 @app.route(BASE_URL + "/learn/classified", methods=['GET'])
 def showlearned():
   if not islogin(): return redirect(BASE_URL + '/login')
-  size = tweeta.gettotal(keyword)
+  size = tweeta.gettotal('LEARN', enc = False)
   return render_template('classified.html', nav = 'learn', size = size)
 
 
@@ -130,7 +130,7 @@ def apistream():
 def summary():
   if not islogin(): return abort(401)
   keywords = [x for x in dbk.get() if x.status != 'removed']
-  keywords.sort(lambda x, y: cmp(x.status, y.status))
+  keywords.sort(key = lambda x: x.status)
   return json.dumps( map(tweeta.getinfo, keywords) )
 
 @app.route(BASE_URL + "/api/total/<keyword>", methods=['GET'])

@@ -8,7 +8,7 @@ from collections import defaultdict
 
 sys.path.append(abspath(''))
 
-def gettotal(keyword, enc = True):
+def gettotal(keyword = None, enc = True):
   try:
     return dbr.get_search_instance(keyword, enc).params(search_type = 'count', size = 0).execute().hits.total
   except:
