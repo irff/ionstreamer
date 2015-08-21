@@ -4,9 +4,21 @@ var BASE_URL = '';
   var app = angular.module("tweetstreamer", ['ngSanitize', 'infinite-scroll']);
 
   app.controller('navbarController', function($scope, $http, $interval){
-    $scope.refresh = function() {$http.get(BASE_URL + '/api/summary').success(function(r) {$scope.summary = r; });}
-    $scope.refresh();
-    $interval($scope.refresh, 60000);
+    $scope.summary = [];
+    var refresh = function() {
+      $http.get(BASE_URL + '/api/summary').success(function(r) {
+        var current_keywords = $scope.summary.map(function(info){return info.keyword});
+        var next_keywords = r.map(function(info){return info.keyword});
+        if(current_keywords.join('|') == next_keywords.join('|'))
+        {
+          for (var i = 0; i < r.length; ++i)
+            if($scope.summary[i].count < r[i].count)
+              $scope.summary[i].count = r[i].count;
+        } else $scope.summary = r;
+      });
+    };
+    refresh();
+    $interval(refresh, 60000);
   });
 
 
@@ -15,12 +27,13 @@ var BASE_URL = '';
     $scope.summary = [];
     var block_refresh = false;
 
-    $scope.refresh = function() {
+    var refresh = function() {
       if(block_refresh) return;
       block_refresh = true;
-      $http.get(BASE_URL + '/api/summary').success(function (r) {
-        var current_keywords = $scope.summary.map(function(info){return info.keyword});
-        var next_keywords = r.map(function(info){return info.keyword});
+      $http.get(BASE_URL + '/api/summary')
+      .success(function (r) {
+        var current_keywords = $scope.summary.map(function(info){return [info.keyword, info.status]});
+        var next_keywords = r.map(function(info){return [info.keyword, info.status]});
         if(current_keywords.join('|') == next_keywords.join('|'))
         {
           for (var i = 0; i < r.length; ++i) {
@@ -29,10 +42,7 @@ var BASE_URL = '';
             else
               $scope.summary[i].processing = r[i].processing;
           };
-        } else
-        {
-          $scope.summary = r;
-        }
+        } else $scope.summary = r;
       });
       block_refresh = false;
     };
@@ -42,40 +52,49 @@ var BASE_URL = '';
       if(status == "active") info.playing = true; else
       if(status == "inactive") info.pausing = true; else
       if(status == "removed") info.removing = true;
+      block_refresh = true;
+      setTimeout(function(){block_refresh = false;}, status == "removed" ? 2200 : 1400);
       $http.post(BASE_URL + '/api/stream', {keyword: info.keyword, status: status})
       .success(function(){
-        if(status == "removed"){
-          block_refresh = true;
-          setTimeout(function(){block_refresh = false; $scope.refresh();}, 1800);
-        } else $scope.refresh();
+        var tryRefresh = function(){
+          if(block_refresh) setTimeout(tryRefresh, 100);
+          else refresh();
+        };
+        tryRefresh();
       })
       .error(function(){
         info.is_streaming = false;
-        if(status == "active") info.playing = false; else
-        if(status == "inactive") info.pausing = false; else
-        if(status == "removed") info.removing = false;
+        var tryFail = function(){
+          if(block_refresh) setTimeout(tryFail, 100);
+          else {
+            info.failed = true;
+            if(status == "active") info.playing = false; else
+            if(status == "inactive") info.pausing = false; else
+            if(status == "removed") info.removing = false;
+          }
+        };
+        tryFail();
       });
     };
 
-    $scope.refresh();
-    $interval($scope.refresh, 4000);
+    refresh();
+    $interval(refresh, 4000);
 
     $scope.submit = function(){
-      $scope.keyword = $scope.keyword.trim().toLowerCase();
-      if($scope.keyword == "") return false;
+      kword = $scope.keyword.trim().toLowerCase();
+      if(kword == "") return false;
       $scope.is_sending_kw = true;
-      $http.post(BASE_URL + '/api/stream' , {keyword: $scope.keyword, status: 'active'})
+      $http.post(BASE_URL + '/api/stream' , {keyword: kword, status: 'active'})
       .success(function(){
         $http.get(BASE_URL + '/api/summary')
         .success(function(r){
           $scope.is_sending_kw = false;
           $scope.keyword = '';
-          $scope.refresh();
+          refresh();
         })
         .error(function(){
           $scope.is_sending_kw = false;
-          $scope.keyword = '';
-          $scope.refresh();
+          refresh();
         });
       });
     };
