@@ -96,10 +96,12 @@ $(function(){
       ],
     });
 
+    /*console.log(self);
+
     drawTopMention();
     drawTopPosting();
     drawTopHashtag();
-    drawTopURL();
+    drawTopURL();*/
 
   };
 
@@ -242,6 +244,7 @@ $(function(){
       error: function(){ showTryAgain("#freq", "drawFreq()"); },
       dataType: 'json',
     });
+    return self;
   };
 
   drawTopMention = function() {
@@ -252,6 +255,7 @@ $(function(){
       error: function(){ showTryAgain("#topmention", "drawTopMention()"); },
       dataType: 'json',
     });
+    return self;
   };
 
   drawTopPosting = function() {
@@ -262,6 +266,7 @@ $(function(){
       error: function(){ showTryAgain("#topposting", "drawTopPosting()"); },
       dataType: 'json',
     });
+    return self;
   };
 
   drawTopHashtag = function() {
@@ -272,6 +277,7 @@ $(function(){
       error: function(){ showTryAgain("#tophashtag", "drawTopHashtag()"); },
       dataType: 'json',
     });
+    return self;
   }
 
   drawTopURL = function() {
@@ -282,8 +288,9 @@ $(function(){
       error: function(){ showTryAgain("#topurl", "drawTopURL()"); },
       dataType: 'json',
     });
+    return self;
   }
 
-  drawFreq();
+  drawFreq().drawTopMention().drawTopPosting().drawTopHashtag().drawTopURL();
 
 });

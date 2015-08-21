@@ -104,7 +104,7 @@ def get_top_retweets(keyword):
   st = time.time()
 
   s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
-  s.aggs.bucket('freq', 'terms', field='retweeted_status.id_str', order = {"retweet": "desc"}, size = 10).bucket('retweet', 'min', field = 'retweet_count')
+  s.aggs.bucket('freq', 'terms', field='retweeted_status.id_str', order = {"retweet": "desc"}, size = 10).bucket('retweet', 'max', field = 'retweet_count')
   # s.aggs.bucket('freq', 'terms', field='retweeted_status.id_str', size = 1000111000)
   buckets = s.execute().aggregations.freq.buckets
   counted = map(lambda b: dbr.get_search_instance(keyword).params(size = 1).query('match', **{'retweeted_status.id': b.key}).execute().hits[0].to_dict(), buckets)
