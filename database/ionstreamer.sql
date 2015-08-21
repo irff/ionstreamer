@@ -5,19 +5,20 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
--- DROP DATABASE IF EXISTS `ionstreamer`;
--- CREATE DATABASE `ionstreamer` /*!40100 DEFAULT CHARACTER SET latin1 */;
--- USE `ionstreamer`;
+DROP DATABASE IF EXISTS `ionstreamer`;
+CREATE DATABASE `ionstreamer` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `ionstreamer`;
 
--- DROP TABLE IF EXISTS `keyword`;
--- CREATE TABLE `keyword` (
---   `keyword` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
---   `status` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'inactive',
---   `processing` tinyint(4) NOT NULL DEFAULT '0',
---   `since_id` bigint(20) NOT NULL DEFAULT '0',
---   `max_id` bigint(20) NOT NULL DEFAULT '0',
---   PRIMARY KEY (`keyword`)
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DROP TABLE IF EXISTS `keyword`;
+CREATE TABLE `keyword` (
+  `keyword` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
+  `status` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'inactive',
+  `processing` tinyint(4) NOT NULL DEFAULT '0',
+  `since_id` bigint(20) NOT NULL DEFAULT '0',
+  `max_id` bigint(20) NOT NULL DEFAULT '0',
+  `last_modified` timestamp NOT NULL,
+  PRIMARY KEY (`keyword`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 DROP TABLE IF EXISTS `token`;

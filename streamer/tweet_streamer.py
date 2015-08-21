@@ -7,7 +7,6 @@ import database.dbkeyword as dbk
 import database.dbresult as dbr
 
 from time import sleep
-from datetime import timedelta
 from dateutil.parser import parse
 from shlex import split
 
@@ -93,16 +92,26 @@ def gather(row):
         sleep(10)
 
 
+from config import INDEX
+from base64 import b64encode
+from datetime import datetime, timedelta
+
+def remove_periodically():
+  for k in [x for x in dbk.get() if x.status == 'removed' and datetime.now() - x.last_modified > timedelta(days = 7)]:
+    dbr.es.indices.delete_mapping(index=INDEX, doc_type = b64encode(k.keyword), ignore = [404])
+    dbk.delete(k.keyword)
+    print "removed permanently: %s" % k.keyword
+
 def run_streamer():
   while True:
     try:
       for k in [x for x in dbk.get() if x.status == 'active' and x.processing == 0]:
         if k.keyword in {x.keyword for x in dbk.get() if x.status == 'active' and x.processing == 0}:
           gather(k)
+      remove_periodically()
       sleep(1)
     except Exception as e:
       print >> sys.stderr, "exception: %s" % str(e)      
-
 
 
 run_streamer()
