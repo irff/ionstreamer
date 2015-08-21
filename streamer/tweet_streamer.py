@@ -108,7 +108,12 @@ def run_streamer():
       for k in [x for x in dbk.get() if x.status == 'active' and x.processing == 0]:
         if k.keyword in {x.keyword for x in dbk.get() if x.status == 'active' and x.processing == 0}:
           gather(k)
-      remove_periodically()
+      
+      try:
+        remove_periodically()
+      except Exception as e:
+        print >> sys.stderr, "exception: %s" % str(e)        
+      
       sleep(1)
     except Exception as e:
       print >> sys.stderr, "exception: %s" % str(e)      
