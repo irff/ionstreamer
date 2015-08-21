@@ -112,9 +112,18 @@ def get_top_retweets(keyword):
   s.aggs.bucket('freq', 'terms', field='id_str', order = {"retweet": "desc"}, size = 10).bucket('retweet', 'min', field = 'retweet_count')
   buckets = s.execute().aggregations.freq.buckets
   counted += map(lambda b: dbr.get_search_instance(keyword).params(size = 1).query('match', **{'id_str': b.key}).execute().hits[0].to_dict(), buckets)
+  counted.sort(key = lambda x: x['retweet_count'], reverse = True)
+
+  ret = []
+  ids = []
+  for x in counted:
+    id_str = x['retweeted_status']['id_str'] if 'retweeted_status' in x else x['id_str']
+    if id_str not in ids:
+      ret.append(x)
+      ids.append(id_str)
 
   print "%s - top retweet: %lf" % (keyword, time.time() - st)
-  return counted[:10]
+  return ret[:10]
 
 def get_random_tweets(keyword):
   st = time.time()
