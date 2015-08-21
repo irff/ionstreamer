@@ -214,7 +214,11 @@ $(function(){
         formatter: function(){return "<strong>" + this.y + "</strong> tweets contains <strong>" + this.key + "</strong>"; },
         followPointer: true,
       },
-      xAxis: {title: {text: "URL"}, type: "category"},
+      xAxis: {
+        title: {text: "URL"},
+        type: "category",
+        labels: {formatter: function() {return this.value.substr(this.value.indexOf('://')+3,16); }, },
+      },
       yAxis: {maxPadding: 0, title: {text: "Number of URL"}, },
       plotOptions: {
         series: {

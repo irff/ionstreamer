@@ -83,7 +83,7 @@ def get_top_url(keyword):
   total = gettotal(keyword)
   kompresi = float(size)/total
 
-  field = 'entities.urls.url'
+  field = 'entities.urls.expanded_url'
   if total > size:
     r = dbr.get_search_instance(keyword).params(size = size, fields=field).query('function_score', random_score={}).execute()
   else:
