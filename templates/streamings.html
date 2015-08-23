@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<div ng-controller="summaryController">
+<div ng-controller="streamingController">
 
   <div class="row">
     <div class="medium-7 small-12 columns">
@@ -24,12 +24,12 @@
     <div class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
 
       <li ng-class="info.status" ng-repeat="info in summary | filter:keyword">
-        <ul ng-class="'pricing-table animated' + (info.playing || info.pausing ? ' zoomOutUp' : info.removing ? ' hinge' : info.failed ? ' flipInY' : ' flipInY')">
+        <ul ng-class="'pricing-table animated' + (info.playing || info.pausing ? ' zoomOutUp' : info.removing ? ' hinge' : info.failed ? ' zoomInDown' : ' flipInY')">
           {% raw %}
-          <a ng-href="/analyze/{{ info.keyword }}">
+          <a ng-href="/analyze/{{ info.keyword }}" title="analyze {{info.keyword}}">
             <li class="title keyword" ng-bind-html="info.keyword"></li>
           </a>
-          <li class="price"><i ng-show="info.processing" class="fa fa-spinner fa-spin fa-spin"></i><span ng-hide="info.processing" ng-bind-html="(info.count | number:0) + ' results'"></span></li>
+          <li class="price"><i ng-show="info.processing" class="fa fa-spinner fa-spin"></i><span ng-hide="info.processing" ng-bind-html="(info.count | number:0) + ' results'"></span></li>
           <li class="bullet-item" ng-repeat="tweet in info.tweets" ng-bind-html="tweet"></li>
           <li class="cta-button">
             <button ng-disabled="info.is_streaming || info.processing" ng-click="stream(info, 'active')" ng-hide="info.status=='active'" class="button radius tiny">

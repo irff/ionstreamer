@@ -90,7 +90,7 @@
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
   <script>
-    $(document).foundation();
+    $(function(){ $(document).foundation(); });
     setTimeout(function(){$(document).foundation('reflow');}, 7500);
   </script>
 </body>

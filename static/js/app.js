@@ -11,9 +11,10 @@ var BASE_URL = '';
         var next_keywords = r.map(function(info){return info.keyword});
         if(current_keywords.join('|') == next_keywords.join('|'))
         {
-          for (var i = 0; i < r.length; ++i)
-            if($scope.summary[i].count < r[i].count)
-              $scope.summary[i].count = r[i].count;
+          for (var i = 0; i < r.length; ++i) {
+            $scope.summary[i].count = r[i].count;
+            $scope.summary[i].status = r[i].status;
+          }
         } else $scope.summary = r;
       });
     };
@@ -22,7 +23,7 @@ var BASE_URL = '';
   });
 
 
-  app.controller('summaryController', function($scope, $http, $interval){
+  app.controller('streamingController', function($scope, $http, $interval){
 
     $scope.summary = [];
     var block_refresh = false;
@@ -32,19 +33,25 @@ var BASE_URL = '';
       block_refresh = true;
       $http.get(BASE_URL + '/api/summary')
       .success(function (r) {
-        var current_keywords = $scope.summary.map(function(info){return [info.keyword, info.status]});
-        var next_keywords = r.map(function(info){return [info.keyword, info.status]});
-        if(current_keywords.join('|') == next_keywords.join('|'))
-        {
-          for (var i = 0; i < r.length; ++i) {
-            if($scope.summary[i].count < r[i].count)
-              $scope.summary[i] = r[i];
-            else
+        $scope.summary.splice(r.length);
+        var i = 0;
+        var changeSummary = function(){
+          if(i < r.length) {
+            if(i == $scope.summary.length) $scope.summary.push({});
+            if($scope.summary[i].keyword == r[i].keyword && $scope.summary[i].status == r[i].status) {
+              $scope.summary[i].count = r[i].count;
               $scope.summary[i].processing = r[i].processing;
-          };
-        } else $scope.summary = r;
+              $scope.summary[i].tweets = r[i].tweets;
+            } else
+              $scope.summary[i] = r[i];
+            $scope.$applyAsync();
+            skop = $scope;
+            ++i;
+            setTimeout(changeSummary, 400);
+          } else block_refresh = false;
+        };
+        changeSummary();
       });
-      block_refresh = false;
     };
 
     $scope.stream = function(info, status){
@@ -53,7 +60,7 @@ var BASE_URL = '';
       if(status == "inactive") info.pausing = true; else
       if(status == "removed") info.removing = true;
       block_refresh = true;
-      setTimeout(function(){block_refresh = false;}, status == "removed" ? 2200 : 1400);
+      setTimeout(function(){block_refresh = false;}, status == "removed" ? 2100 : 1400);
       $http.post(BASE_URL + '/api/stream', {keyword: info.keyword, status: status})
       .success(function(){
         var tryRefresh = function(){

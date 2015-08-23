@@ -50,7 +50,7 @@ $(function(){
               var t2 = new Date(event.point.x + itv);
               kelas = 2 - event.point.series.index;
               angular.element('#analyzeController').scope().fetchTweetsAt($('#keyword').text(), kelas, t1.toISOString(), t2.toISOString());
-              angular.element('#analyzeController').scope().$apply();
+              angular.element('#analyzeController').scope().$applyAsync();
               $('#tweets').foundation('reveal', 'open');
             }
           },
@@ -128,7 +128,7 @@ $(function(){
               var keyword = $("#keyword").text();
               var username = event.point.name;
               angular.element('#analyzeController').scope().fetchTweetsTo(keyword, username);
-              angular.element('#analyzeController').scope().$apply();
+              angular.element('#analyzeController').scope().$applyAsync();
               $('#tweets').foundation('reveal', 'open');
             }
           }
@@ -160,7 +160,7 @@ $(function(){
               var keyword = $("#keyword").text();
               var username = event.point.name;
               angular.element('#analyzeController').scope().fetchTweetsFrom(keyword, username);
-              angular.element('#analyzeController').scope().$apply();
+              angular.element('#analyzeController').scope().$applyAsync();
               $('#tweets').foundation('reveal', 'open');
             }
           }
@@ -192,7 +192,7 @@ $(function(){
               var keyword = $("#keyword").text();
               var hashtag = event.point.name;
               angular.element('#analyzeController').scope().fetchTweetsHashtag(keyword, hashtag);
-              angular.element('#analyzeController').scope().$apply();
+              angular.element('#analyzeController').scope().$applyAsync();
               $('#tweets').foundation('reveal', 'open');
             }
           }

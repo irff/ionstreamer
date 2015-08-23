@@ -130,7 +130,7 @@ def apistream():
 def summary():
   if not islogin(): return abort(401)
   keywords = [x for x in dbk.get() if x.status != 'removed']
-  keywords.sort(key = lambda x: x.status)
+  keywords.sort(key = lambda x: (x.status, x.keyword[1:] if x.keyword[0] in ['@', '#'] else x.keyword))
   return json.dumps( map(tweeta.getinfo, keywords) )
 
 @app.route(BASE_URL + "/api/total/<keyword>", methods=['GET'])
