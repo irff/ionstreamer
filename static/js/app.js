@@ -37,17 +37,19 @@ var BASE_URL = '';
         var i = 0;
         var changeSummary = function(){
           if(i < r.length) {
+            var to = 0;
             if(i == $scope.summary.length) $scope.summary.push({});
             if($scope.summary[i].keyword == r[i].keyword && $scope.summary[i].status == r[i].status) {
               $scope.summary[i].count = r[i].count;
               $scope.summary[i].processing = r[i].processing;
               $scope.summary[i].tweets = r[i].tweets;
-            } else
+            } else{
               $scope.summary[i] = r[i];
-            $scope.$applyAsync();
-            skop = $scope;
+              $scope.$applyAsync();
+              to = 400;
+            }
             ++i;
-            setTimeout(changeSummary, 400);
+            setTimeout(changeSummary, to);
           } else block_refresh = false;
         };
         changeSummary();
