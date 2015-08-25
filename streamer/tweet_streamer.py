@@ -2,7 +2,7 @@ from os.path import abspath, isfile
 import sys
 sys.path.append(abspath(''))
 
-from tokenmanager import gettoken
+from database.dbtoken import getOneToken
 import database.dbkeyword as dbk
 import database.dbresult as dbr
 
@@ -35,55 +35,51 @@ def get_tso_down(row):
   return tso
 
 def gather(row):
-  print "GATHER %s" % (row.keyword)
   dbk.set( {'keyword': row.keyword, 'processing': 1} )
-
-  delay = 5
-  # searching up
-  tsoup = get_tso_up(row)
-  token = gettoken(number = 2*int(sys.argv[1]))
   try:
-    ts = TwitterSearch(token['CONSUMER_KEY'], token['CONSUMER_SECRET'], token['OAUTH_TOKEN'], token['OAUTH_TOKEN_SECRET'], verify = False)
-    tweets = ts.search_tweets(tsoup)['content']['statuses']
-
-    for t in tweets:
-      t['created_at'] = parse( t['created_at'] )
-      dbr.set(row.keyword, t)
-
-    if len(tweets):
-      dbk.set( {'keyword': row.keyword, 'max_id': tweets[0]['id']} )
-
-    print "[UP %s] %s: +%d" % (sys.argv[1], row.keyword, len(tweets))
-
-  except Exception as e:
-    print >> sys.stderr, str(e)
-
-  if row.since_id > -1:
-    delay += 5
-    #searching down
-    tsodown = get_tso_down(row)
-    token = gettoken(number = 2*int(sys.argv[1])+1)
+    # searching up
+    tsoup = get_tso_up(row)
+    token = getOneToken()
     try:
-      ts = TwitterSearch(token['CONSUMER_KEY'], token['CONSUMER_SECRET'], token['OAUTH_TOKEN'], token['OAUTH_TOKEN_SECRET'], verify = False)
-      tweets = ts.search_tweets(tsodown)['content']['statuses']
+      ts = TwitterSearch(token.CONSUMER_KEY, token.CONSUMER_SECRET, token.OAUTH_TOKEN, token.OAUTH_TOKEN_SECRET, verify = False)
+      tweets = ts.search_tweets(tsoup)['content']['statuses']
 
       for t in tweets:
         t['created_at'] = parse( t['created_at'] )
         dbr.set(row.keyword, t)
 
       if len(tweets):
-        dbk.set( {'keyword': row.keyword, 'since_id': tweets[-1]['id']} )
-      else:
-        dbk.set( {'keyword': row.keyword, 'since_id': -1} )
+        dbk.set( {'keyword': row.keyword, 'max_id': tweets[0]['id']} )
 
-      print "[DOWN %s] %s: +%d" % (sys.argv[1], row.keyword, len(tweets))
+      print "[UP] %s: +%d" % (row.keyword, len(tweets))
 
     except Exception as e:
       print >> sys.stderr, str(e)
 
-  dbk.set( {'keyword': row.keyword, 'processing': 0} )
-  return delay
+    if row.since_id > -1:
+      #searching down
+      tsodown = get_tso_down(row)
+      token = getOneToken()
+      try:
+        ts = TwitterSearch(token.CONSUMER_KEY, token.CONSUMER_SECRET, token.OAUTH_TOKEN, token.OAUTH_TOKEN_SECRET, verify = False)
+        tweets = ts.search_tweets(tsodown)['content']['statuses']
 
+        for t in tweets:
+          t['created_at'] = parse( t['created_at'] )
+          dbr.set(row.keyword, t)
+
+        if len(tweets):
+          dbk.set( {'keyword': row.keyword, 'since_id': tweets[-1]['id']} )
+        else:
+          dbk.set( {'keyword': row.keyword, 'since_id': -1} )
+
+        print "[DOWN] %s: +%d" % (row.keyword, len(tweets))
+
+      except Exception as e:
+        print >> sys.stderr, str(e)
+
+  finally:
+    dbk.set( {'keyword': row.keyword, 'processing': 0} )
 
 
 from config import INDEX
@@ -99,16 +95,14 @@ def remove_periodically():
 def run_streamer():
   while True:
     try:
-      for k in [x for x in dbk.get() if x.status == 'active' and x.processing == 0]:
-        if k.keyword in [x.keyword for x in dbk.get() if x.status == 'active' and x.processing == 0]:
-          sleep_time = gather(k)+1
-          sleep(sleep_time)
+      row = dbk.getOneKeyword()
+      if row != None: gather(row)
       remove_periodically()
       sleep(1)
     except Exception as e:
       print >> sys.stderr, "exception: %s" % str(e)
-      with open('/tmp/tweet_streamer_log', 'a+') as fileerr:
-        print >> fileerr, "exception: %s" % str(e)
+      with open('/tmp/tweet_streamer_log', 'a+') as fileerr: print >> fileerr, "exception: %s" % str(e)
+
       while True:
         try:
           dbk.db.update('keyword', {'processing': 0, 'since_id': 0, 'max_id': 0}, ('status = %s', ['active']) )
@@ -117,5 +111,9 @@ def run_streamer():
         except Exception as e:
           print >> sys.stderr, str(e)
           sleep(10)
+
+
+dbk.db.update('keyword', {'processing': 0}, ('status = %s', ['active']))
+dbk.db.commit()
 
 run_streamer()
