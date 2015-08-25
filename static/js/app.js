@@ -93,7 +93,7 @@ var BASE_URL = '';
       kword = $scope.keyword.trim().toLowerCase();
       if(kword == "") return false;
       $scope.is_sending_kw = true;
-      $http.post(BASE_URL + '/api/stream' , {keyword: kword, status: 'active', last_modified: '0000-00-00 00:00:00'})
+      $http.post(BASE_URL + '/api/stream' , {keyword: kword, status: 'active', last_modified: '2000-01-01 00:00:00'})
       .success(function(){
         $http.get(BASE_URL + '/api/summary')
         .success(function(r){
