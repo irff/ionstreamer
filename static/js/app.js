@@ -87,7 +87,7 @@ var BASE_URL = '';
     };
 
     refresh();
-    $interval(refresh, 500);
+    $interval(refresh, 4000);
 
     $scope.submit = function(){
       kword = $scope.keyword.trim().toLowerCase();
