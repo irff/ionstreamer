@@ -35,61 +35,49 @@ def get_tso_down(row):
   return tso
 
 def gather(row):
-  try:
-    dbk.set( {'keyword': row.keyword, 'processing': 1} )
+  dbk.set( {'keyword': row.keyword, 'processing': 1} )
 
-    # searching up
-    tsoup = get_tso_up(row)
-    token = gettoken()
+  # searching up
+  tsoup = get_tso_up(row)
+  token = gettoken(number = 2*int(sys.argv[1]))
+  try:
+    ts = TwitterSearch(token['CONSUMER_KEY'], token['CONSUMER_SECRET'], token['OAUTH_TOKEN'], token['OAUTH_TOKEN_SECRET'], verify = False)
+    tweets = ts.search_tweets(tsoup)['content']['statuses']
+
+    for t in tweets:
+      t['created_at'] = parse( t['created_at'] )
+      dbr.set(row.keyword, t)
+
+    if len(tweets):
+      dbk.set( {'keyword': row.keyword, 'max_id': tweets[0]['id']} )
+
+    print "[UP] %s: +%d" % (row.keyword, len(tweets))
+
+  except Exception as e:
+    print >> sys.stderr, str(e)
+
+  if row.since_id > -1:
+    #searching down
+    tsodown = get_tso_down(row)
+    token = gettoken(number = 2*int(sys.argv[1])+1)
     try:
-      ts = TwitterSearch(token.CONSUMER_KEY, token.CONSUMER_SECRET, token.OAUTH_TOKEN, token.OAUTH_TOKEN_SECRET, verify = False)
-      tweets = ts.search_tweets(tsoup)['content']['statuses']
-      
+      ts = TwitterSearch(token['CONSUMER_KEY'], token['CONSUMER_SECRET'], token['OAUTH_TOKEN'], token['OAUTH_TOKEN_SECRET'], verify = False)
+      tweets = ts.search_tweets(tsodown)['content']['statuses']
+
       for t in tweets:
         t['created_at'] = parse( t['created_at'] )
         dbr.set(row.keyword, t)
-      
-      if len(tweets):
-        dbk.set( {'keyword': row.keyword, 'max_id': tweets[0]['id']} )
 
-      print "[UP] %s: +%d" % (row.keyword, len(tweets))
- 
+      if len(tweets):
+        dbk.set( {'keyword': row.keyword, 'since_id': tweets[-1]['id']} )
+      else:
+        dbk.set( {'keyword': row.keyword, 'since_id': -1} )
+
+      print "[DOWN] %s: +%d" % (row.keyword, len(tweets))
+
     except Exception as e:
       print >> sys.stderr, str(e)
 
-    if row.since_id > -1:
-      #searching down
-      tsodown = get_tso_down(row)
-      token = gettoken()
-      try:
-        ts = TwitterSearch(token.CONSUMER_KEY, token.CONSUMER_SECRET, token.OAUTH_TOKEN, token.OAUTH_TOKEN_SECRET, verify = False)
-        tweets = ts.search_tweets(tsodown)['content']['statuses']
-
-        for t in tweets:
-          t['created_at'] = parse( t['created_at'] )
-          dbr.set(row.keyword, t)
-
-        if len(tweets):
-          dbk.set( {'keyword': row.keyword, 'since_id': tweets[-1]['id']} )
-        else:
-          dbk.set( {'keyword': row.keyword, 'since_id': -1} )
-
-        print "[DOWN] %s: +%d" % (row.keyword, len(tweets))
-
-      except Exception as e:
-        print >> sys.stderr, str(e)
-
-  except Exception as e:
-    print >> sys.stderr, "tweet_streamer error: %s" % str(e)
-  
-  finally:
-    while True:
-      try:
-        dbk.set( {'keyword': row.keyword, 'processing': 0} )
-        break
-      except Exception as e:
-        print >> sys.stderr, "exception: %s" % str(e)
-        sleep(10)
 
 
 from config import INDEX
@@ -108,15 +96,16 @@ def run_streamer():
       for k in [x for x in dbk.get() if x.status == 'active' and x.processing == 0]:
         if k.keyword in {x.keyword for x in dbk.get() if x.status == 'active' and x.processing == 0}:
           gather(k)
-      
-      try:
-        remove_periodically()
-      except Exception as e:
-        print >> sys.stderr, "exception: %s" % str(e)        
-      
-      sleep(1)
+      remove_periodically()
+      sleep(6)
     except Exception as e:
-      print >> sys.stderr, "exception: %s" % str(e)      
-
+      with open('/tmp/tweet_streamer_log', 'a+') as fileerr:
+        print >> fileerr, "exception: %s" % str(e)
+      while True:
+        try:
+          dbk.set( {'keyword': row.keyword, 'processing': 0} )
+          break
+        except Exception as e:
+          sleep(10)
 
 run_streamer()
