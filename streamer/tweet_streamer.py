@@ -113,6 +113,7 @@ def run_streamer():
           dbk.set( {'keyword': row.keyword, 'processing': 0} )
           break
         except Exception as e:
+          print >> sys.stderr, str(e)
           sleep(10)
 
 run_streamer()
