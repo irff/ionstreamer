@@ -35,6 +35,7 @@ def get_tso_down(row):
   return tso
 
 def gather(row):
+  print "GATHER %s" % (row.keyword)
   dbk.set( {'keyword': row.keyword, 'processing': 1} )
 
   delay = 5
