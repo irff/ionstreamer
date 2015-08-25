@@ -110,7 +110,8 @@ def run_streamer():
         print >> fileerr, "exception: %s" % str(e)
       while True:
         try:
-          dbk.set( {'keyword': row.keyword, 'processing': 0} )
+          dbk.db.update('keyword', {'processing': 0, 'since_id': 0, 'max_id': 0}, ('status = %s', ['active']) )
+          dbk.db.commit()
           break
         except Exception as e:
           print >> sys.stderr, str(e)
