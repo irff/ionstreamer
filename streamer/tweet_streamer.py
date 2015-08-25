@@ -78,6 +78,8 @@ def gather(row):
     except Exception as e:
       print >> sys.stderr, str(e)
 
+  dbk.set( {'keyword': row.keyword, 'processing': 0} )
+
 
 
 from config import INDEX
