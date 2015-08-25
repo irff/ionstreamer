@@ -37,6 +37,7 @@ def get_tso_down(row):
 def gather(row):
   dbk.set( {'keyword': row.keyword, 'processing': 1} )
 
+  delay = 5
   # searching up
   tsoup = get_tso_up(row)
   token = gettoken(number = 2*int(sys.argv[1]))
@@ -57,6 +58,7 @@ def gather(row):
     print >> sys.stderr, str(e)
 
   if row.since_id > -1:
+    delay += 5
     #searching down
     tsodown = get_tso_down(row)
     token = gettoken(number = 2*int(sys.argv[1])+1)
@@ -79,6 +81,7 @@ def gather(row):
       print >> sys.stderr, str(e)
 
   dbk.set( {'keyword': row.keyword, 'processing': 0} )
+  return delay
 
 
 
@@ -97,8 +100,8 @@ def run_streamer():
     try:
       for k in [x for x in dbk.get() if x.status == 'active' and x.processing == 0]:
         if k.keyword in [x.keyword for x in dbk.get() if x.status == 'active' and x.processing == 0]:
-          gather(k)
-          sleep(6)
+          sleep_time = gather(k)+1
+          sleep(sleep_time)
       remove_periodically()
       sleep(1)
     except Exception as e:
