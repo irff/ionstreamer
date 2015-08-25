@@ -52,7 +52,7 @@ def gather(row):
     if len(tweets):
       dbk.set( {'keyword': row.keyword, 'max_id': tweets[0]['id']} )
 
-    print "[UP] %s: +%d" % (row.keyword, len(tweets))
+    print "[UP %s] %s: +%d" % (sys.argv[1], row.keyword, len(tweets))
 
   except Exception as e:
     print >> sys.stderr, str(e)
@@ -75,7 +75,7 @@ def gather(row):
       else:
         dbk.set( {'keyword': row.keyword, 'since_id': -1} )
 
-      print "[DOWN] %s: +%d" % (row.keyword, len(tweets))
+      print "[DOWN %s] %s: +%d" % (sys.argv[1], row.keyword, len(tweets))
 
     except Exception as e:
       print >> sys.stderr, str(e)
