@@ -94,10 +94,11 @@ def run_streamer():
   while True:
     try:
       for k in [x for x in dbk.get() if x.status == 'active' and x.processing == 0]:
-        if k.keyword in {x.keyword for x in dbk.get() if x.status == 'active' and x.processing == 0}:
+        if k.keyword in [x.keyword for x in dbk.get() if x.status == 'active' and x.processing == 0]:
           gather(k)
+          sleep(6)
       remove_periodically()
-      sleep(6)
+      sleep(1)
     except Exception as e:
       with open('/tmp/tweet_streamer_log', 'a+') as fileerr:
         print >> fileerr, "exception: %s" % str(e)
