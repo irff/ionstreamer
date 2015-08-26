@@ -33,6 +33,7 @@ var BASE_URL = '';
       block_refresh = true;
       $http.get(BASE_URL + '/api/summary')
       .success(function (r) {
+        $scope.is_sending_kw = false;
         $scope.summary.splice(r.length);
         var i = 0;
         var changeSummary = function(){
@@ -99,7 +100,6 @@ var BASE_URL = '';
       $scope.is_sending_kw = true;
       $http.post(BASE_URL + '/api/stream' , {keyword: kword, status: 'active', last_modified: '2000-01-01 00:00'})
       .success(function(){
-        $scope.is_sending_kw = false;
         $scope.keyword = '';
         refresh();
       })
