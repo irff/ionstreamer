@@ -16,7 +16,7 @@ def getOneKeyword():
   print "golek keyword.."
   try:
     while True:
-      keywords = [x for x in get() if x.status == 'active' and x.processing == 0]
+      keywords = [x for x in get() if x.status == 'active' and not x.processing]
       if len(keywords) > 0:
         keywords.sort(key = lambda k: k.last_modified)
         print "entuk keyword: %s" % (keywords[0].keyword)
