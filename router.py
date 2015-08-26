@@ -122,8 +122,8 @@ def apistream():
   if not islogin(): return abort(401)
   keyword = request.json['keyword']
   status = request.json['status']
-  if any([x.keyword == keyword and x.processing for x in dbk.get()]):
-    return abort(503)
+  # if any([x.keyword == keyword and x.processing for x in dbk.get()]):
+  #   return abort(503)
   return json.dumps( dbk.set(request.json) )
 
 @app.route(BASE_URL + "/api/summary", methods=['GET'])
