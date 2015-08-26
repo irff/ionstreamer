@@ -56,7 +56,7 @@ var BASE_URL = '';
       })
       .error(function(){
         block_refresh = false;
-        refresh();
+        setTimeout(refresh, 500);
       });
     };
 
