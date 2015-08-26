@@ -113,7 +113,7 @@ def run_streamer():
           sleep(10)
 
 
-dbk.db.update('keyword', {'processing': 0}, ('status = %s', ['active']))
-dbk.db.commit()
+# dbk.db.update('keyword', {'processing': 0}, ('status = %s', ['active']))
+# dbk.db.commit()
 
 run_streamer()
