@@ -1,4 +1,10 @@
 #!/bin/bash
-python router.py &
 python streamer/tweet_streamer.py &
+sleep 1
+python streamer/tweet_streamer.py &
+sleep 1
+python streamer/tweet_streamer.py &
+sleep 1
+python streamer/tweet_streamer.py &
+sleep 1
 python streamer/tweet_streamer.py &
