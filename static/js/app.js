@@ -40,10 +40,8 @@ var BASE_URL = '';
           if(i < r.length) {
             var to = 0;
             if(i == $scope.summary.length) $scope.summary.push({});
-            if($scope.summary[i].keyword == r[i].keyword && $scope.summary[i].status == r[i].status) {
-              $scope.summary[i].count = r[i].count;
+            if($scope.summary[i].keyword == r[i].keyword && $scope.summary[i].status == r[i].status && $scope.summary[i].count == r[i].count) {
               $scope.summary[i].processing = r[i].processing;
-              $scope.summary[i].tweets = r[i].tweets;
             } else{
               $scope.summary[i] = r[i];
               $scope.$applyAsync();
