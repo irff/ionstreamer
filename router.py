@@ -123,7 +123,7 @@ def apistream():
   keyword = request.json['keyword']
   status = request.json['status']
   if any([x.keyword == keyword and x.processing for x in dbk.get()]):
-    return "%s is processing" % keyword
+    return abort(503)
   return json.dumps( dbk.set(request.json) )
 
 @app.route(BASE_URL + "/api/summary", methods=['GET'])
