@@ -1,5 +1,5 @@
 # ionstreamer
-Streamer program for social media content (Facebook &amp; Twitter)
+Streamer program for social media content (Facebook (?) &amp; Twitter)
 
 # Running the Server
 python router.py
