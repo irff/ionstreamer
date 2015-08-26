@@ -53,6 +53,10 @@ var BASE_URL = '';
           } else block_refresh = false;
         };
         changeSummary();
+      })
+      .error(function(){
+        block_refresh = false;
+        refresh();
       });
     };
 
