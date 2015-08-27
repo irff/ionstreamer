@@ -231,11 +231,11 @@ def reset():
   dbk.db.commit()
   return json.dumps( ret )
 
-from os import popen
+from os import popen, system
 @app.route(BASE_URL + "/add_streamer")
 def add_streamer():
   if not islogin(): return redirect(BASE_URL + '/login')
-  return popen('python streamer/tweet_streamer.py &').read()
+  return system('python streamer/tweet_streamer.py &')
 
 @app.route(BASE_URL + "/streamer_status")
 def streamer_status():
