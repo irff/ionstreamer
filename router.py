@@ -243,7 +243,7 @@ def add_streamer():
 def streamer_status():
   if not islogin(): return redirect(BASE_URL + '/login')
   ret = ''
-  for l in popen('ps aux | grep python').readlines(): ret += l + '<br>'
+  for l in popen('ps aux | grep python').readlines(): ret += (l.strip() + '<br>')
   return json.dumps( ret )
 
 
