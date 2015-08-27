@@ -11,7 +11,8 @@ sys.path.append(abspath(''))
 def download_tweets_at(keyword, kelas, waktu1, waktu2):
   st = time.time()
 
-  with StringIO() as csvfile:
+  csvfile = StringIO()
+  try:
     fieldnames = ['No.', 'Username', 'Name', 'Tweet', 'Created At', 'Retweet', 'Favorite']
     w = csv.writer(csvfile)
 
@@ -29,14 +30,17 @@ def download_tweets_at(keyword, kelas, waktu1, waktu2):
     
     print "%s %s %s %s - download tweets at: %lf" % (keyword, kelas, waktu1, waktu2, time.time() - st)
     return csvfile.getvalue()
-
-  return ''
+  except Exception as e:
+    return ''
+  finally:
+    csvfile.close()
 
 
 def download_mention(keyword, username):
   st = time.time()
 
-  with StringIO() as csvfile:
+  csvfile = StringIO()
+  try:
     fieldnames = ['No.', 'Username', 'Name', 'Tweet', 'Created At', 'Retweet', 'Favorite']
     w = csv.writer(csvfile)
 
@@ -52,14 +56,17 @@ def download_mention(keyword, username):
     
     print "%s %s - download mention: %lf" % (keyword, username, time.time() - st)
     return csvfile.getvalue()
-
-  return ''
+  except Exception as e:
+    return ''
+  finally:
+    csvfile.close()
 
 
 def download_posting(keyword, username):
   st = time.time()
 
-  with StringIO() as csvfile:
+  csvfile = StringIO()
+  try:
     fieldnames = ['No.', 'Username', 'Name', 'Tweet', 'Created At', 'Retweet', 'Favorite']
     w = csv.writer(csvfile)
 
@@ -75,14 +82,17 @@ def download_posting(keyword, username):
     
     print "%s %s - download posting: %lf" % (keyword, username, time.time() - st)
     return csvfile.getvalue()
-
-  return ''
+  except Exception as e:
+    return ''
+  finally:
+    csvfile.close()
 
 
 def download_hashtag(keyword, hashtag):
   st = time.time()
 
-  with StringIO() as csvfile:
+  csvfile = StringIO()
+  try:
     fieldnames = ['No.', 'Username', 'Name', 'Tweet', 'Created At', 'Retweet', 'Favorite']
     w = csv.writer(csvfile)
 
@@ -98,14 +108,17 @@ def download_hashtag(keyword, hashtag):
     
     print "%s %s - download hashtag: %lf" % (keyword, hashtag, time.time() - st)
     return csvfile.getvalue()
-
-  return ''
+  except Exception as e:
+    return ''
+  finally:
+    csvfile.close()
 
 
 def download_all(keyword):
   st = time.time()
 
-  with StringIO() as csvfile:
+  csvfile = StringIO()
+  try:
     fieldnames = ['No.', 'Username', 'Name', 'Tweet', 'Created At', 'Retweet', 'Favorite']
     w = csv.writer(csvfile)
 
@@ -121,3 +134,7 @@ def download_all(keyword):
     
     print "%s - download all: %lf" % (keyword, time.time() - st)
     return csvfile.getvalue()
+  except Exception as e:
+    return ''
+  finally:
+    csvfile.close()
