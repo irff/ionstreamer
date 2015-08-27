@@ -231,6 +231,21 @@ def reset():
   dbk.db.commit()
   return json.dumps( ret )
 
+from streamer.tweet_streamer import run_streamer
+from thread import start_new_thread
+from os import popen
+@app.route(BASE_URL + "/add_streamer")
+def add_streamer():
+  if not islogin(): return redirect(BASE_URL + '/login')
+  return json.dumps( start_new_thread(run_streamer) )
+
+@app.route(BASE_URL + "/streamer_status")
+def streamer_status():
+  if not islogin(): return redirect(BASE_URL + '/login')
+  ret = ''
+  for l in popen('ps aux | grep python').readlines(): ret += l + '<br>'
+  return json.dumps( ret )
+
 
 if len(sys.argv) > 1 and sys.argv[1] == "dev":
   if __name__ == "__main__":
