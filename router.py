@@ -210,6 +210,11 @@ def downloadposting(keyword, username, filename):
   if not islogin(): return redirect(BASE_URL + '/login')
   return Response(download.download_posting(keyword, username), mimetype='text/csv')
 
+@app.route(BASE_URL + "/download/hashtag/<keyword>/<hashtag>/<filename>", methods=['GET'])
+def downloadhashtag(keyword, hashtag, filename):
+  if not islogin(): return redirect(BASE_URL + '/login')
+  return Response(download.download_hashtag(keyword, hashtag), mimetype='text/csv')
+
 @app.route(BASE_URL + "/download/all/<keyword>/<filename>", methods=['GET'])
 def downloadall(keyword, filename):
   if not islogin(): return redirect(BASE_URL + '/login')
