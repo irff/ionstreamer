@@ -237,7 +237,7 @@ from os import popen
 @app.route(BASE_URL + "/add_streamer")
 def add_streamer():
   if not islogin(): return redirect(BASE_URL + '/login')
-  return json.dumps( start_new_thread(run_streamer, (,)) )
+  return json.dumps( start_new_thread(run_streamer, ()) )
 
 @app.route(BASE_URL + "/streamer_status")
 def streamer_status():
