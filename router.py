@@ -244,7 +244,7 @@ def streamer_status():
   if not islogin(): return redirect(BASE_URL + '/login')
   ret = ''
   for l in popen('ps aux | grep python').readlines(): ret += (l.strip() + '<br>')
-  return json.dumps( ret )
+  return ret
 
 
 if len(sys.argv) > 1 and sys.argv[1] == "dev":
