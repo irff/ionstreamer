@@ -235,7 +235,7 @@ from os import popen, system
 @app.route(BASE_URL + "/add_streamer")
 def add_streamer():
   if not islogin(): return redirect(BASE_URL + '/login')
-  return system('python streamer/tweet_streamer.py &')
+  return json.dumps( system('python streamer/tweet_streamer.py &') )
 
 @app.route(BASE_URL + "/streamer_status")
 def streamer_status():
