@@ -252,7 +252,7 @@ def streamer_status():
 @app.route(BASE_URL + "/keep_streamer/<num>")
 def keep_streamer(num):
   if not islogin(): return redirect(BASE_URL + '/login')
-  active_count = len(popen('ps aux | grep "python streamer/tweet_streamer.py"').readlines())
+  active_count = len(popen('ps aux | grep "python streamer/tweet_streamer.py"').readlines())-2
   added = 0
   while active_count + added < int(num):
     add_streamer()
