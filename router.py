@@ -249,6 +249,16 @@ def streamer_status():
   for l in popen('ps aux | grep python').readlines(): ret += (l.strip() + '<br>')
   return ret
 
+@app.route(BASE_URL + "/keep_streamer/<num>")
+def keep_streamer(num):
+  if not islogin(): return redirect(BASE_URL + '/login')
+  active_count = len(popen('ps aux | grep "python streamer/tweet_streamer.py"').readlines())
+  added = 0
+  while active_count + added < num:
+    add_streamer()
+    added += 1
+  return "%d streamer(s) added" % (added)
+
 
 if len(sys.argv) > 1 and sys.argv[1] == "dev":
   if __name__ == "__main__":
