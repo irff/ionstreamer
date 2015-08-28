@@ -26,7 +26,7 @@
       <li ng-class="info.status" ng-repeat="info in summary | filter:keyword">
         <ul ng-class="'pricing-table animated ' + (info.playing || info.pausing ? 'flipOutY' : info.removing ? 'hinge' : info.failed ? 'jello' : 'flipInY')">
           {% raw %}
-          <a ng-href="/analyze/{{ info.keyword }}" title="analyze {{info.keyword}}">
+          <a ng-href="/analyze/{{ info.keyword | encodeURIComponent }}" title="analyze {{info.keyword}}">
             <li class="title keyword" ng-bind-html="info.keyword"></li>
           </a>
           <li class="price"><i ng-show="info.processing" class="fa fa-spinner fa-spin"></i><span ng-hide="info.processing" ng-bind-html="(info.count | number:0) + ' results'"></span></li>
