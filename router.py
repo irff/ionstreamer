@@ -84,7 +84,7 @@ def showlearned():
 def learn():
   if not islogin(): return redirect(BASE_URL + '/login')
   try:
-    dbr.set('LEARN', request.json, enc = False)
+    dbr.setData('LEARN', request.json, enc = False)
     return "%s classified to %s" % (request.json['id_str'], request.json['class'])
   except Exception as e:
     print >> sys.stderr, "error: " + str(e)
@@ -122,14 +122,14 @@ def apistream():
   if not islogin(): return abort(401)
   keyword = request.json['keyword']
   status = request.json['status']
-  # if any([x.keyword == keyword and x.processing for x in dbk.get()]):
+  # if any([x.keyword == keyword and x.processing for x in dbk.getAll()]):
   #   return abort(503)
-  return json.dumps( dbk.set(request.json) )
+  return json.dumps( dbk.setData(request.json) )
 
 @app.route(BASE_URL + "/api/summary", methods=['GET'])
 def summary():
   if not islogin(): return abort(401)
-  keywords = [x for x in dbk.get() if x.status != 'removed']
+  keywords = [x for x in dbk.getAll() if x.status != 'removed']
   keywords.sort(key = lambda x: (x.status, x.keyword[1:] if x.keyword[0] in ['@', '#'] else x.keyword))
   return json.dumps( map(tweeta.getinfo, keywords) )
 
@@ -232,8 +232,7 @@ def downloadclassified():
 @app.route(BASE_URL + "/reset")
 def reset():
   if not islogin(): return redirect(BASE_URL + '/login')
-  ret = dbk.db.update('keyword', {'processing': 0, 'since_id': 0, 'max_id': 0}, ('status = %s', ['active']) )
-  dbk.db.commit()
+  ret = dbk.reset()
   return json.dumps( ret )
 
 from os import popen, system

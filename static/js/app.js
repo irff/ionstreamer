@@ -90,13 +90,13 @@ var BASE_URL = '';
     };
 
     refresh();
-    $interval(refresh, 4000);
+    $interval(refresh, 3500);
 
     $scope.submit = function(){
       kword = $scope.keyword.trim().toLowerCase();
       if(kword == "") return false;
       $scope.is_sending_kw = true;
-      $http.post(BASE_URL + '/api/stream' , {keyword: kword, status: 'active', last_modified: '2000-01-01 00:00'})
+      $http.post(BASE_URL + '/api/stream' , {keyword: kword, status: 'active', last_used: 0.0})
       .success(function(){
         $scope.keyword = '';
         refresh();

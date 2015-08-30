@@ -1,9 +1,9 @@
 python
-python-mysqldb
+# python-mysqldb
 
 pip:
   flask
-  simplemysql
+#  simplemysql
   elasticsearch
   elasticsearch_dsl
   tornado
@@ -11,4 +11,4 @@ pip:
   flask-compress
 
 elasticeearch
-mysql-server
+# mysql-server

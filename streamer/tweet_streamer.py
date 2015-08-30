@@ -2,11 +2,11 @@ from os.path import abspath, isfile
 import sys
 sys.path.append(abspath(''))
 
-from database.dbtoken import getOneToken
+import database.dbtoken as dbt
 import database.dbkeyword as dbk
 import database.dbresult as dbr
 
-from time import sleep
+from time import sleep, time
 from dateutil.parser import parse
 from shlex import split
 
@@ -35,21 +35,21 @@ def get_tso_down(row):
   return tso
 
 def gather(row):
-  dbk.set( {'keyword': row.keyword, 'processing': 1} )
+  dbk.setData( {'keyword': row.keyword, 'processing': 1} )
   try:
     # searching up
     tsoup = get_tso_up(row)
-    token = getOneToken()
+    token = dbt.getOne()
     try:
       ts = TwitterSearch(token.CONSUMER_KEY, token.CONSUMER_SECRET, token.OAUTH_TOKEN, token.OAUTH_TOKEN_SECRET, verify = False)
       tweets = ts.search_tweets(tsoup)['content']['statuses']
 
       for t in tweets:
         t['created_at'] = parse( t['created_at'] )
-        dbr.set(row.keyword, t)
+        dbr.setData(row.keyword, t)
 
       if len(tweets):
-        dbk.set( {'keyword': row.keyword, 'max_id': tweets[0]['id']} )
+        dbk.setData( {'keyword': row.keyword, 'max_id': tweets[0]['id']} )
 
       print "[UP] %s: +%d" % (row.keyword, len(tweets))
 
@@ -59,19 +59,19 @@ def gather(row):
     if row.since_id > -1:
       #searching down
       tsodown = get_tso_down(row)
-      token = getOneToken()
+      token = dbt.getOne()
       try:
         ts = TwitterSearch(token.CONSUMER_KEY, token.CONSUMER_SECRET, token.OAUTH_TOKEN, token.OAUTH_TOKEN_SECRET, verify = False)
         tweets = ts.search_tweets(tsodown)['content']['statuses']
 
         for t in tweets:
           t['created_at'] = parse( t['created_at'] )
-          dbr.set(row.keyword, t)
+          dbr.setData(row.keyword, t)
 
         if len(tweets):
-          dbk.set( {'keyword': row.keyword, 'since_id': tweets[-1]['id']} )
+          dbk.setData( {'keyword': row.keyword, 'since_id': tweets[-1]['id']} )
         else:
-          dbk.set( {'keyword': row.keyword, 'since_id': -1} )
+          dbk.setData( {'keyword': row.keyword, 'since_id': -1} )
 
         print "[DOWN] %s: +%d" % (row.keyword, len(tweets))
 
@@ -79,23 +79,25 @@ def gather(row):
         print >> sys.stderr, str(e)
 
   finally:
-    dbk.set( {'keyword': row.keyword, 'processing': 0} )
+    dbk.setData( {'keyword': row.keyword, 'processing': 0} )
 
 
 from config import INDEX
 from base64 import b64encode
-from datetime import datetime, timedelta
-
 def remove_periodically():
-  for k in [x for x in dbk.get() if x.status == 'removed' and datetime.now() - x.last_modified > timedelta(days = 7)]:
-    dbr.es.indices.delete_mapping(index=INDEX, doc_type = b64encode(k.keyword), ignore = [404])
-    dbk.delete(k.keyword)
-    print "removed permanently: %s" % k.keyword
+  HARI = 24 * 60 * 60
+  for k in [x for x in dbk.getAll() if x.status == 'removed' and time() - x.last_used > 7*HARI]:
+    try:
+      dbr.es.indices.delete_mapping(index=INDEX, doc_type = b64encode(k.keyword), ignore = [404])
+      dbk.delete(k.keyword)
+      print "removed permanently: %s" % k.keyword
+    except Exception as e:
+      print >> sys.stderr, str(e)
 
 def run_streamer():
   while True:
     try:
-      row = dbk.getOneKeyword()
+      row = dbk.getOne()
       if row != None: gather(row)
       remove_periodically()
       sleep(1)
@@ -105,15 +107,11 @@ def run_streamer():
 
       while True:
         try:
-          dbk.db.update('keyword', {'processing': 0, 'since_id': 0, 'max_id': 0}, ('status = %s', ['active']) )
-          dbk.db.commit()
+          dbk.reset()
           break
         except Exception as e:
           print >> sys.stderr, str(e)
           sleep(10)
 
-
-# dbk.db.update('keyword', {'processing': 0}, ('status = %s', ['active']))
-# dbk.db.commit()
 
 run_streamer()
