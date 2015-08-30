@@ -35,7 +35,7 @@
 
 
 from sys import stderr
-from time import time
+from time import time, sleep
 from config import INDEX, ESHOST
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
