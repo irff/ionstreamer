@@ -38,10 +38,10 @@
 
 from sys import stderr
 from time import time
-from config import INDEX
+from config import INDEX, ESHOST
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
-es = Elasticsearch(timeout = 60)
+es = Elasticsearch(ESHOST, timeout = 60)
 KEYWORD = "KEYWORD"
 
 def getAll():

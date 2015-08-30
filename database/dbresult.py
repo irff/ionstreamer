@@ -1,8 +1,8 @@
-from config import INDEX
+from config import INDEX, ESHOST
 from base64 import b64encode
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
-es = Elasticsearch(timeout = 60)
+es = Elasticsearch(ESHOST, timeout = 60)
 
 def setData(keyword, data, enc = True):
   id = data['id_str']
