@@ -69,7 +69,7 @@ def getOne():
         keyword = min(keywords, key = lambda k: k.last_used)
         keyword.last_used = time()
         setData( keyword.to_dict() )
-        print "keyword: %s" % (keyword.keyword),
+        print "%s -" % (keyword.keyword),
         return keyword
       sleep(1)
   except Exception as e:

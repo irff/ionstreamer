@@ -67,7 +67,7 @@ def getOne():
         token = min(tokens, key = lambda k: k.last_used)
         token.last_used = time()
         setData( token.to_dict() )
-        print "token: %s" % (token.name),
+        print "%s" % (token.name)
         return token
       sleep(1)
   except Exception as e:
