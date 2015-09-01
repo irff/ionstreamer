@@ -62,7 +62,7 @@ def setData(data):
 def getOne():
   try:
     while True:
-      tokens = [x for x in getAll() if time() - x.last_used > 6.]
+      tokens = [x for x in getAll() if time() - x.last_used > 11.]
       if len(tokens) > 0:
         token = min(tokens, key = lambda k: k.last_used)
         token.last_used = time()
