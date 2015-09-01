@@ -12,6 +12,9 @@ from shlex import split
 
 from TwitterSearch import TwitterSearchOrder, TwitterSearch
 
+import urllib3
+urllib3.disable_warnings()
+
 def get_tso(keyword):
     tso = TwitterSearchOrder()
     for k in split(keyword, posix = False):
