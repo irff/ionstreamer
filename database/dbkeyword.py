@@ -62,7 +62,6 @@ def setData(data):
   return es.index(index = INDEX, doc_type = KEYWORD, id = data['keyword'], body=data)
 
 def getOne():
-  print "golek keyword.."
   try:
     while True:
       keywords = [x for x in getAll() if x.status == 'active' and not x.processing]
@@ -70,7 +69,7 @@ def getOne():
         keyword = min(keywords, key = lambda k: k.last_used)
         keyword.last_used = time()
         setData( keyword.to_dict() )
-        print "entuk keyword: %s" % (keyword.keyword)
+        print "keyword: %s" % (keyword.keyword),
         return keyword
       sleep(1)
   except Exception as e:

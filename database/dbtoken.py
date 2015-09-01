@@ -60,7 +60,6 @@ def setData(data):
   return es.index(index = INDEX, doc_type = TOKEN, id = data['CONSUMER_KEY'], body=data)
 
 def getOne():
-  print "golek token.."
   try:
     while True:
       tokens = [x for x in getAll() if time() - x.last_used > 6.]
@@ -68,7 +67,7 @@ def getOne():
         token = min(tokens, key = lambda k: k.last_used)
         token.last_used = time()
         setData( token.to_dict() )
-        print "entuk token: %s" % (token.name)
+        print "token: %s" % (token.name),
         return token
       sleep(1)
   except Exception as e:

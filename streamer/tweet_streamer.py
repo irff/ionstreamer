@@ -77,6 +77,7 @@ def gather(row):
           dbk.setData( {'keyword': row.keyword, 'since_id': -1} )
 
         print "[DOWN] %s: +%d" % (row.keyword, len(tweets))
+        print "==="*20
 
       except Exception as e:
         print >> sys.stderr, str(e)
