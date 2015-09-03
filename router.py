@@ -15,8 +15,7 @@ app.permanent_session_lifetime = timedelta(days=1001)
 
 
 def islogin():
-  print request.remote_addr
-  return session.get('username') == 'langgar'
+  return session.get('username') == 'langgar' or request.remote_addr == '127.0.0.1'
 
 
 
