@@ -58,7 +58,7 @@ var BASE_URL = '';
       })
       .error(function(){
         block_refresh = false;
-        setTimeout(refresh, 500);
+        setTimeout(refresh, 3500);
       });
     };
 
