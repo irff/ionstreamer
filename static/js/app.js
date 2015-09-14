@@ -37,9 +37,8 @@ var BASE_URL = '';
           $scope.keyword = '';
           $scope.is_sending_kw = false;
         }
-        $scope.summary.splice(r.length);
         var i = 0;
-        var changeSummary = function(){
+        function(){
           if(i < r.length) {
             var to = 0;
             if(i == $scope.summary.length) $scope.summary.push({});
@@ -51,10 +50,10 @@ var BASE_URL = '';
               to = 400;
             }
             ++i;
-            setTimeout(changeSummary, to);
+            setTimeout(self, to);
           } else block_refresh = false;
-        };
-        changeSummary();
+        }();
+        $scope.summary.splice(r.length);
       })
       .error(function(){
         block_refresh = false;
