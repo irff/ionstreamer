@@ -38,7 +38,7 @@ var BASE_URL = '';
           $scope.is_sending_kw = false;
         }
         var i = 0;
-        function(){
+        (function(){
           if(i < r.length) {
             var to = 0;
             if(i == $scope.summary.length) $scope.summary.push({});
@@ -52,7 +52,7 @@ var BASE_URL = '';
             ++i;
             setTimeout(self, to);
           } else block_refresh = false;
-        }();
+        })();
         $scope.summary.splice(r.length);
       })
       .error(function(){
