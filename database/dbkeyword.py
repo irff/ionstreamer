@@ -46,7 +46,7 @@ KEYWORD = "KEYWORD"
 
 def getAll():
   try:
-    return Search(using = es, index = INDEX, doc_type = KEYWORD).execute().hits
+    return Search(using = es, index = INDEX, doc_type = KEYWORD).params(size = 1000111000).execute().hits
   except Exception as e:
     print "Exception: " + str(e)
     return []
