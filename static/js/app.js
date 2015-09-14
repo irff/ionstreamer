@@ -51,10 +51,13 @@ var BASE_URL = '';
             }
             ++i;
             setTimeout(changeSummary, to);
-          } else block_refresh = false;
+          } else
+          {
+            block_refresh = false;
+            $scope.summary.splice(r.length);
+          }
         };
         changeSummary();
-        $scope.summary.splice(r.length);
       })
       .error(function(){
         block_refresh = false;
