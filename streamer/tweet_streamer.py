@@ -24,6 +24,7 @@ def get_tso(keyword):
         tso.add_keyword(['from:'+k[1:], 'to:'+k[1:]], or_operator = True)
       else:
         tso.add_keyword([k])
+    tso.set_language('id')
     # print tso.create_search_url()
     return tso
 
