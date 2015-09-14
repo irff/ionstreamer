@@ -99,7 +99,7 @@ var BASE_URL = '';
       kword = $scope.keyword.trim().toLowerCase();
       if(kword == "") return false;
       $scope.is_sending_kw = true;
-      $http.post(BASE_URL + '/api/stream' , {keyword: kword, status: 'active', last_used: 0.0})
+      $http.post(BASE_URL + '/api/stream' , {keyword: kword, status: 'active'})
       .success(function(){
         refresh();
       })

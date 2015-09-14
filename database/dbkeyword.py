@@ -59,7 +59,9 @@ def setData(data):
     if k not in data:
       data[k] = old[k]
   if 'last_used' not in data: data['last_used'] = time()
-  return es.index(index = INDEX, doc_type = KEYWORD, id = data['keyword'], body=data)
+  r_satu = es.index(index = INDEX, doc_type = KEYWORD, id = data['keyword'], body=data)
+  r_dua  = es.get(index = INDEX, doc_type = KEYWORD, id = data['keyword'])['_source']
+  return (r_satu, r_dua)
 
 def getOne():
   try:

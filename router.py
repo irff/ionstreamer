@@ -120,10 +120,6 @@ def getclassifiedtweets(size = 10, offset = 0):
 @app.route(BASE_URL + "/api/stream", methods=['POST'])
 def apistream():
   if not islogin(): return abort(401)
-  keyword = request.json['keyword']
-  status = request.json['status']
-  # if any([x.keyword == keyword and x.processing for x in dbk.getAll()]):
-  #   return abort(503)
   return json.dumps( dbk.setData(request.json) )
 
 @app.route(BASE_URL + "/api/summary", methods=['GET'])
