@@ -8,6 +8,7 @@ from elasticsearch_dsl import Search
 import database.dbtoken as dbt
 import database.dbkeyword as dbk
 import database.dbresult as dbr
+import database.dbresultnews as dbrn
 
 from time import sleep, time
 from dateutil.parser import parse
@@ -103,7 +104,7 @@ def gather(row):
 
     for news in r:
       try:
-        dbr.setData(row.keyword, news.to_dict())
+        dbrn.setData(row.keyword, news.to_dict())
       except Exception as e:
         print >> sys.stderr, "exception: %s" % str(e)
 
@@ -121,7 +122,7 @@ def gather(row):
 
     for news in r:
       try:
-        dbr.setData(row.keyword, news.to_dict())
+        dbrn.setData(row.keyword, news.to_dict())
       except Exception as e:
         print >> sys.stderr, "exception: %s" % str(e)
 
