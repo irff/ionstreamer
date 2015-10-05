@@ -7,7 +7,7 @@ from collections import defaultdict
 from random import randint, random
 from dateutil.parser import parse
 
-import database.dbresultnews as dbr
+import database.dbresultnews as dbrn
 
 def gettotal(keyword = None, enc = True):
   try:
@@ -17,7 +17,7 @@ def gettotal(keyword = None, enc = True):
 
 def getinfo(row):
   try:
-    r = dbr.get_search_instance(row.keyword).params(size = 3, sort='timeline:desc').execute()
+    r = dbrn.get_search_instance(row.keyword).params(size = 3, sort='timestamp:desc').execute()
     return {
       'keyword': row.keyword,
       'count': r.hits.total,
