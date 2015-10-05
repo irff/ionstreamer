@@ -83,6 +83,47 @@ def gather(row):
       except Exception as e:
         print >> sys.stderr, str(e)
 
+
+    # NEWS
+    min_time = row.min_time if 'min_time' in row else '9999'
+    max_time = row.max_time if 'max_time' in row else '0000'
+
+    r = []
+    # UP, gte max_time
+    try:
+      s = Search(using = Elasticsearch(ESHOST_NEWS, timeout = 60), index = 'langgar')
+      r = s.filter('range', timestamp={"gte": max_time}).query("multi_match", query=row.keyword, fields=['title', 'content']).params(size=300, sort="timestamp:desc").execute().hits
+    except Exception as e:
+      print >> sys.stderr, "exception: %s" % str(e)
+
+    row['max_time'] = r[0].timestamp if len(r) else max_time
+
+    for news in r:
+      try:
+        dbr.setData(row.keyword, news.to_dict())
+      except Exception as e:
+        print >> sys.stderr, "exception: %s" % str(e)
+
+    print "[NEWS UP] %s: +%d" % (row.keyword, len(r))
+
+    r = []
+    # DOWN, lte min_time
+    try:
+      s = Search(using = Elasticsearch(ESHOST_NEWS, timeout = 60), index = 'langgar')
+      r = s.filter('range', timestamp={"lte": min_time}).query("multi_match", query=row.keyword, fields=['title', 'content']).params(size=300, sort="timestamp:desc").execute().hits
+    except Exception as e:
+      print >> sys.stderr, "exception: %s" % str(e)
+
+    row['min_time'] = r[-1].timestamp if len(r) else min_time
+
+    for news in r:
+      try:
+        dbr.setData(row.keyword, news.to_dict())
+      except Exception as e:
+        print >> sys.stderr, "exception: %s" % str(e)
+
+    print "[NEWS DOWN] %s: +%d" % (row.keyword, len(r))
+
   finally:
     dbk.setData( {'keyword': row.keyword, 'processing': 0} )
 

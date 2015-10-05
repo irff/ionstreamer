@@ -33,8 +33,9 @@
       <!-- Right Nav Section -->
       <ul class="right">
         <li class="{{'active' if nav == 'home'}}"><a href="/">Home</a></li>
+        
         <li class="has-dropdown {{'active' if nav == 'analyze'}}">
-          <a href="">Analyze</a>
+          <a href="">Twitter <i ng-hide="summary.length" class="fa fa-spinner fa-spin"></i></a>
           <ul class="dropdown">
             <li ng-repeat="info in summary">
             {% raw %}
@@ -43,7 +44,8 @@
             </li>
           </ul>
         </li>
-        <li class="has-dropdown {{'active' if nav == 'learn'}}">
+        
+        <!-- <li class="has-dropdown {{'active' if nav == 'learn'}}">
           <a href="">Train</a>
           <ul class="dropdown">
             <li><a href="/learn">Random</a></li>
@@ -52,7 +54,19 @@
               <a ng-class="info.status" ng-href="/learn/{{ '{{info.keyword | encodeURIComponent}}' }}" ng-bind-html="info.keyword"></a>
             </li>
           </ul>
+        </li> -->
+        
+        <li class="has-dropdown {{'active' if nav == 'analyzenews'}}">
+          <a href="">News <i ng-hide="summary.length" class="fa fa-spinner fa-spin"></i></a>
+          <ul class="dropdown">
+            <li ng-repeat="info in summary">
+            {% raw %}
+              <a ng-class="info.status" ng-href="/analyzenews/{{info.keyword | encodeURIComponent}}" ng-bind-html="info.keyword+' ('+ (info.count | number:0) +')'"></a>
+            {% endraw %}
+            </li>
+          </ul>
         </li>
+
         <li class="{{'active' if nav == 'logout'}}"><a href="/logout">Logout</a></li>
       </ul>
 

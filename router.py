@@ -62,6 +62,13 @@ def showanalyze(keyword):
   return render_template('analyze-hc.html', keyword = keyword, nav = 'analyze', size = size)
 
 
+@app.route(BASE_URL + "/analyzenews/<keyword>")
+def showanalyzenews(keyword):
+  if not islogin(): return redirect(BASE_URL + '/login')
+  size = tweeta.gettotal(keyword)
+  return render_template('analyze-hc.html', keyword = keyword, nav = 'analyzenews', size = size)
+
+
 @app.route(BASE_URL + "/learn", methods=['GET'])
 def showlearn():
   if not islogin(): return redirect(BASE_URL + '/login')
@@ -126,7 +133,7 @@ def apistream():
 def summary():
   if not islogin(): return abort(401)
   keywords = [x for x in dbk.getAll() if x.status != 'removed']
-  keywords.sort(key = lambda x: (x.status, x.keyword[1:] if x.keyword[0] in ['@', '#'] else x.keyword))
+  keywords.sort(key = lambda x: (x.status, x.keyword[1:] if x.keyword[0] in ['@', '#', '"'] else x.keyword))
   return json.dumps( map(tweeta.getinfo, keywords) )
 
 @app.route(BASE_URL + "/api/total/<keyword>", methods=['GET'])
