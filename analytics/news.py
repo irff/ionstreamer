@@ -17,13 +17,13 @@ def gettotal(keyword = None, enc = True):
 
 def getinfo(row):
   try:
-    r = dbr.get_search_instance(row.keyword).params(size = 3, sort='id_str:desc').execute()
+    r = dbr.get_search_instance(row.keyword).params(size = 3, sort='timeline:desc').execute()
     return {
       'keyword': row.keyword,
       'count': r.hits.total,
       'status': row.status,
       'processing': row.processing,
-      'news': ["%s: %s..."%(d.provider, d.content[150]) for d in r.hits]
+      'news': ["%s: %s..."%(d.provider, d.content[:150]) for d in r.hits]
     }
   except Exception as e:
     print >> sys.stderr, "get info: " + str(e)[:123]
