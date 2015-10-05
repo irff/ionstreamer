@@ -4,7 +4,8 @@ from config import DEBUG, HOST, PORT, BASE_URL
 from datetime import timedelta
 import database.dbkeyword as dbk
 import database.dbresult as dbr
-import analytics.news as tweeta
+import analytics.tweet as tweeta
+import analytics.news as newsa
 import analytics.download as download
 import json, sys
 
@@ -65,8 +66,8 @@ def showanalyze(keyword):
 @app.route(BASE_URL + "/analyzenews/<keyword>")
 def showanalyzenews(keyword):
   if not islogin(): return redirect(BASE_URL + '/login')
-  size = tweeta.gettotal(keyword)
-  return render_template('analyze-hc.html', keyword = keyword, nav = 'analyzenews', size = size)
+  size = newsa.gettotal(keyword)
+  return render_template('analyzenews-hc.html', keyword = keyword, nav = 'analyzenews', size = size)
 
 
 @app.route(BASE_URL + "/learn", methods=['GET'])
@@ -136,10 +137,22 @@ def summary():
   keywords.sort(key = lambda x: (x.status, x.keyword[1:] if x.keyword[0] in ['@', '#', '"'] else x.keyword))
   return json.dumps( map(tweeta.getinfo, keywords) )
 
+@app.route(BASE_URL + "/api/summarynews", methods=['GET'])
+def summarynews():
+  if not islogin(): return abort(401)
+  keywords = [x for x in dbk.getAll() if x.status != 'removed']
+  keywords.sort(key = lambda x: (x.status, x.keyword[1:] if x.keyword[0] in ['@', '#', '"'] else x.keyword))
+  return json.dumps( map(newsa.getinfo, keywords) )
+
 @app.route(BASE_URL + "/api/total/<keyword>", methods=['GET'])
 def total(keyword):
   if not islogin(): return abort(401)
   return json.dumps(tweeta.gettotal(keyword))
+
+@app.route(BASE_URL + "/api/totalnews/<keyword>", methods=['GET'])
+def totalnews(keyword):
+  if not islogin(): return abort(401)
+  return json.dumps(newsa.gettotal(keyword))
 
 @app.route(BASE_URL + "/api/analyze/freq/<keyword>", methods=['GET'])
 def apianalyze(keyword):
@@ -195,6 +208,14 @@ def getposting(keyword, username):
 def gethashtag(keyword, hashtag):
   if not islogin(): return abort(401)
   return json.dumps( tweeta.get_hashtag(keyword, hashtag) )
+
+
+# API FOR NEWS
+@app.route(BASE_URL + "/api/analyzenews/freq/<keyword>", methods=['GET'])
+def apianalyzenews(keyword):
+  if not islogin(): return abort(401)
+  return json.dumps( newsa.get_tweet_freq(keyword) )
+
 
 
 # DOWNLOAD

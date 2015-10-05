@@ -11,7 +11,7 @@ import database.dbresultnews as dbrn
 
 def gettotal(keyword = None, enc = True):
   try:
-    return dbr.get_search_instance(keyword, enc).params(search_type = 'count', size = 0).execute().hits.total
+    return dbrn.get_search_instance(keyword, enc).params(search_type = 'count', size = 0).execute().hits.total
   except:
     return -1
 
@@ -23,7 +23,7 @@ def getinfo(row):
       'count': r.hits.total,
       'status': row.status,
       'processing': row.processing,
-      'news': ["%s: %s..."%(d.provider, d.content[:150]) for d in r.hits]
+      'tweets': ["%s: %s..."%(d.provider, d.content[:100]) for d in r.hits]
     }
   except Exception as e:
     print >> sys.stderr, "get info: " + str(e)[:123]
@@ -32,13 +32,13 @@ def getinfo(row):
 def get_tweet_freq(keyword):
   st = time()
 
-  s = dbr.get_search_instance(keyword)
-  awal = parse(s.params(size = 1, sort = 'id_str:asc').execute().hits[0].created_at)
-  akhir = parse(s.params(size = 1, sort = 'id_str:desc').execute().hits[0].created_at)
+  s = dbrn.get_search_instance(keyword)
+  awal = parse(s.params(size = 1, sort = 'timestamp:asc').execute().hits[0].timestamp)
+  akhir = parse(s.params(size = 1, sort = 'timestamp:desc').execute().hits[0].timestamp)
   interval = "%ds" % ( (akhir - awal)/150 ).seconds
 
-  s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
-  s.aggs.bucket('histo', 'date_histogram', field='created_at', interval=interval)
+  s = dbrn.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
+  s.aggs.bucket('histo', 'date_histogram', field='timestamp', interval=interval)
   buckets = s.execute().aggregations.histo.buckets
 
   print "%s - top tweet freq: %lf" % (keyword, time() - st)
@@ -48,7 +48,7 @@ def get_tweet_freq(keyword):
 def get_top_mention(keyword):
   st = time()
 
-  s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
+  s = dbrn.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
   s.aggs.bucket('freq', 'terms', field='entities.user_mentions.screen_name', size = 10)
   buckets = s.execute().aggregations.freq.buckets
 
@@ -58,7 +58,7 @@ def get_top_mention(keyword):
 def get_top_posting(keyword):
   st = time()
 
-  s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
+  s = dbrn.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
   s.aggs.bucket('freq', 'terms', field='user.screen_name', size = 10)
   buckets = s.execute().aggregations.freq.buckets
 
@@ -68,7 +68,7 @@ def get_top_posting(keyword):
 def get_top_hashtag(keyword):
   st = time()
 
-  s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
+  s = dbrn.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
   s.aggs.bucket('freq', 'terms', field='entities.hashtags.text', size = 10)
   buckets = s.execute().aggregations.freq.buckets
 
@@ -86,9 +86,9 @@ def get_top_url(keyword):
 
   field = 'entities.urls.expanded_url'
   if total > size:
-    r = dbr.get_search_instance(keyword).params(size = size, fields=field).query('function_score', random_score={}).execute()
+    r = dbrn.get_search_instance(keyword).params(size = size, fields=field).query('function_score', random_score={}).execute()
   else:
-    r = dbr.get_search_instance(keyword).params(size = size, fields=field).execute()
+    r = dbrn.get_search_instance(keyword).params(size = size, fields=field).execute()
 
   for t in r.hits:
     if field in t:
@@ -104,15 +104,15 @@ def get_top_url(keyword):
 def get_top_retweets(keyword):
   st = time()
 
-  s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
+  s = dbrn.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
   s.aggs.bucket('freq', 'terms', field='retweeted_status.id_str', order = {"retweet": "desc"}, size = 10).bucket('retweet', 'min', field = 'retweet_count')
   buckets = s.execute().aggregations.freq.buckets
-  counted = map(lambda b: dbr.get_search_instance(keyword).params(size = 1).query('match', **{'retweeted_status.id_str': b.key}).execute().hits[0].to_dict(), buckets)
+  counted = map(lambda b: dbrn.get_search_instance(keyword).params(size = 1).query('match', **{'retweeted_status.id_str': b.key}).execute().hits[0].to_dict(), buckets)
 
-  s = dbr.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
+  s = dbrn.get_search_instance(keyword).params(size = 1000111000, search_type = 'count')
   s.aggs.bucket('freq', 'terms', field='id_str', order = {"retweet": "desc"}, size = 10).bucket('retweet', 'min', field = 'retweet_count')
   buckets = s.execute().aggregations.freq.buckets
-  counted += map(lambda b: dbr.get_search_instance(keyword).params(size = 1).query('match', **{'id_str': b.key}).execute().hits[0].to_dict(), buckets)
+  counted += map(lambda b: dbrn.get_search_instance(keyword).params(size = 1).query('match', **{'id_str': b.key}).execute().hits[0].to_dict(), buckets)
   counted.sort(key = lambda x: x['retweet_count'], reverse = True)
 
   ret = []
@@ -129,7 +129,7 @@ def get_top_retweets(keyword):
 def get_random_tweets(keyword):
   st = time()
 
-  s = dbr.get_search_instance(keyword).params(size = 10)
+  s = dbrn.get_search_instance(keyword).params(size = 10)
   r = s.query('function_score', random_score={}).execute()
 
   print "%s - random tweet: %lf" % (keyword, time() - st)
@@ -140,7 +140,7 @@ def get_tweets_at(keyword, kelas, waktu1, waktu2):
 
   waktu1 = parse(waktu1)
   waktu2 = parse(waktu2)
-  r = dbr.get_search_instance(keyword).params(size = 10).filter('range', created_at = {'from': waktu1, 'to': waktu2}).query('function_score', random_score={}).execute()
+  r = dbrn.get_search_instance(keyword).params(size = 10).filter('range', created_at = {'from': waktu1, 'to': waktu2}).query('function_score', random_score={}).execute()
 
   print "%s %s %s %s - get tweets at: %lf" % (keyword, kelas, waktu1, waktu2, time() - st)
   return map(lambda h: h.to_dict(), r.hits)
@@ -148,7 +148,7 @@ def get_tweets_at(keyword, kelas, waktu1, waktu2):
 def get_mention(keyword, username):
   st = time()
 
-  r = dbr.get_search_instance(keyword).params(size = 10).query('match', **{'entities.user_mentions.screen_name': username}).query('function_score', random_score={}).execute()
+  r = dbrn.get_search_instance(keyword).params(size = 10).query('match', **{'entities.user_mentions.screen_name': username}).query('function_score', random_score={}).execute()
 
   print "%s - %s - get mention: %lf" % (keyword, username, time() - st)
   return map(lambda h: h.to_dict(), r.hits)
@@ -156,7 +156,7 @@ def get_mention(keyword, username):
 def get_posting(keyword, username):
   st = time()
 
-  r = dbr.get_search_instance(keyword).params(size = 10, sort='id_str:desc').query('match', **{'user.screen_name': username}).execute()
+  r = dbrn.get_search_instance(keyword).params(size = 10, sort='id_str:desc').query('match', **{'user.screen_name': username}).execute()
 
   print "%s - %s - get posting: %lf" % (keyword, username, time() - st)
   return map(lambda h: h.to_dict(), r.hits)
@@ -164,7 +164,7 @@ def get_posting(keyword, username):
 def get_hashtag(keyword, hashtag):
   st = time()
 
-  r = dbr.get_search_instance(keyword).params(size = 10).query('match', **{'entities.hashtags.text': hashtag[1:]}).query('function_score', random_score={}).execute()
+  r = dbrn.get_search_instance(keyword).params(size = 10).query('match', **{'entities.hashtags.text': hashtag[1:]}).query('function_score', random_score={}).execute()
 
   print "%s - %s - get hashtag: %lf" % (keyword, hashtag, time() - st)
   return map(lambda h: h.to_dict(), r.hits)

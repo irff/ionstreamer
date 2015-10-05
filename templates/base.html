@@ -57,9 +57,9 @@
         </li> -->
         
         <li class="has-dropdown {{'active' if nav == 'analyzenews'}}">
-          <a href="">News <i ng-hide="summary.length" class="fa fa-spinner fa-spin"></i></a>
+          <a href="">News <i ng-hide="summarynews.length" class="fa fa-spinner fa-spin"></i></a>
           <ul class="dropdown">
-            <li ng-repeat="info in summary">
+            <li ng-repeat="info in summarynews">
             {% raw %}
               <a ng-class="info.status" ng-href="/analyzenews/{{info.keyword | encodeURIComponent}}" ng-bind-html="info.keyword+' ('+ (info.count | number:0) +')'"></a>
             {% endraw %}

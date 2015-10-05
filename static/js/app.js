@@ -5,6 +5,7 @@ var BASE_URL = '';
 
   app.controller('navbarController', function($scope, $http, $interval){
     $scope.summary = [];
+    $scope.summarynews = [];
     var refresh = function() {
       $http.get(BASE_URL + '/api/summary').success(function(r) {
         var current_keywords = $scope.summary.map(function(info){return info.keyword});
@@ -16,6 +17,17 @@ var BASE_URL = '';
             $scope.summary[i].status = r[i].status;
           }
         } else $scope.summary = r;
+      });
+      $http.get(BASE_URL + '/api/summarynews').success(function(r) {
+        var current_keywords = $scope.summarynews.map(function(info){return info.keyword});
+        var next_keywords = r.map(function(info){return info.keyword});
+        if(current_keywords.join('|') == next_keywords.join('|'))
+        {
+          for (var i = 0; i < r.length; ++i) {
+            $scope.summarynews[i].count = r[i].count;
+            $scope.summarynews[i].status = r[i].status;
+          }
+        } else $scope.summarynews = r;
       });
     };
     refresh();
@@ -149,6 +161,79 @@ var BASE_URL = '';
       $scope.tweets = [];
       $scope.hastweets = false;
       $http.get(BASE_URL + '/api/analyze/gettweetsat/' + encodeURIComponent(keyword) + '/' + kelas + '/' + encodeURIComponent(time1) + '/' + encodeURIComponent(time2)).success(function(r){
+        $scope.tweets = r;
+        $scope.hastweets = true;
+      });
+    };
+
+    $scope.fetchTweetsTo = function(keyword, username){
+      $scope.downloadlink = BASE_URL + '/download/mention/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username) + '/mention-' + keyword + '-' + username + '.csv';
+      $scope.tweets = [];
+      $scope.hastweets = false;
+      $http.get(BASE_URL + '/api/analyze/getmention/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username)).success(function(r){
+        $scope.tweets = r;
+        $scope.hastweets = true;
+      });
+    };
+
+    $scope.fetchTweetsFrom = function(keyword, username){
+      $scope.downloadlink = BASE_URL + '/download/posting/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username) + '/posting-' + keyword + '-' + username + '.csv';
+      $scope.tweets = [];
+      $scope.hastweets = false;
+      $http.get(BASE_URL + '/api/analyze/getposting/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(username)).success(function(r){
+        $scope.tweets = r;
+        $scope.hastweets = true;
+      });
+    };
+
+    $scope.fetchTweetsHashtag = function(keyword, hashtag){
+      $scope.downloadlink = BASE_URL + '/download/hashtag/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(hashtag) + '/hashtag-' + keyword + '-' + hashtag + '.csv';
+      $scope.tweets = [];
+      $scope.hastweets = false;
+      $http.get(BASE_URL + '/api/analyze/gethashtag/' + encodeURIComponent(keyword) + '/' + encodeURIComponent(hashtag)).success(function(r){
+        $scope.tweets = r;
+        $scope.hastweets = true;
+      });
+    };
+
+  });
+
+  app.controller('analyzenewsController', function($scope, $http, $interval){
+    $scope.keyword = $('#keyword').text();
+
+    $interval(function(){$http.get(BASE_URL + '/api/totalnews/'+$scope.keyword).success(function(r) {$scope.total = r;});}, 5000);
+
+    $scope.showTopRetweets = function(){
+      $scope.loadtopretweets = true;
+      $scope.hasretweets = false;
+      $http.get(BASE_URL + '/api/analyze/topretweets/' + encodeURIComponent($scope.keyword))
+      .success(function(data){
+        $scope.retweets = data;
+        $scope.hasretweets = true;
+      })
+      .error(function(){
+        $scope.loadtopretweets = false;
+      });
+    };
+
+    $scope.showRandomTweets = function(){
+      $scope.loadrandomtweets = true;
+      $scope.hasrandomtweets = false;
+      $http.get(BASE_URL + '/api/analyze/randomtweets/' + encodeURIComponent($scope.keyword))
+      .success(function(data){
+        $scope.randomtweets = data;
+        $scope.hasrandomtweets = true;
+      })
+      .error(function(){
+        $scope.loadtopretweets = false;
+      });
+    };
+
+    $scope.fetchTweetsAt = function(keyword, kelas, time1, time2){
+      $scope.downloadlink = BASE_URL + '/download/tweetsat/' + encodeURIComponent(keyword) + '/' + kelas + '/' + encodeURIComponent(time1) + '/' + encodeURIComponent(time2) + '/tweets_at-' + keyword + '-' + (kelas == 1 ? 'positive-negative' : kelas == 2 ? 'positive' : 'negative') + '-' + (new Date(time1)).toString() + '-' + (new Date(time2)).toString() + '.csv';
+      $scope.tweets = [];
+      $scope.hastweets = false;
+      $http.get(BASE_URL + '/api/analyzenews/gettweetsat/' + encodeURIComponent(keyword) + '/' + kelas + '/' + encodeURIComponent(time1) + '/' + encodeURIComponent(time2)).success(function(r){
         $scope.tweets = r;
         $scope.hastweets = true;
       });
