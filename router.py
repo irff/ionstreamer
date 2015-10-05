@@ -4,7 +4,7 @@ from config import DEBUG, HOST, PORT, BASE_URL
 from datetime import timedelta
 import database.dbkeyword as dbk
 import database.dbresult as dbr
-import analytics.tweet as tweeta
+import analytics.news as tweeta
 import analytics.download as download
 import json, sys
 

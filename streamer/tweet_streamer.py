@@ -2,6 +2,9 @@ from os.path import abspath, isfile
 import sys
 sys.path.append(abspath(''))
 
+from config import ESHOST_NEWS
+from elasticsearch import Elasticsearch
+from elasticsearch_dsl import Search
 import database.dbtoken as dbt
 import database.dbkeyword as dbk
 import database.dbresult as dbr
