@@ -128,6 +128,8 @@ def gather(row):
 
     print "[NEWS DOWN] %s: +%d" % (row.keyword, len(r))
 
+    dbk.setData(row.to_dict())
+
   finally:
     dbk.setData( {'keyword': row.keyword, 'processing': 0} )
 
