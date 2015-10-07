@@ -145,17 +145,17 @@ def download_allnews(keyword):
 
   csvfile = StringIO()
   try:
-    fieldnames = ['No.', 'Username', 'Name', 'Tweet', 'Created At', 'Retweet', 'Favorite']
+    fieldnames = ['No.', 'Provider', 'URL', 'Content', 'Timestamp']
     w = csv.writer(csvfile)
 
     nomor = 0
     w.writerow(fieldnames)
     size = 10000
     while True:
-      r = dbrn.get_search_instance(keyword).params(size = size, from_ = nomor, fields='user.screen_name,user.name,text,created_at,retweet_count,favorite_count').execute()
+      r = dbrn.get_search_instance(keyword).params(size = size, from_ = nomor, fields='provider,url,content,timestamp').execute()
       for t in r.hits:
         nomor += 1
-        w.writerow([ str(nomor), '@' + t['user.screen_name'][0], t['user.name'][0].encode('utf-8'), t['text'][0].encode('utf-8'), t['created_at'][0][:10]+' '+t['created_at'][0][11:19], str(t['retweet_count'][0]), str(t['favorite_count'][0]) ])
+        w.writerow([ str(nomor), t['provider'][0], t['url'][0], t['content'][0].encode('utf-8'), t['timestamp'][0][:10]+' '+t['timestamp'][0][11:19] ])
       if len(r.hits) == 0: break
     
     print "%s - download all news: %lf" % (keyword, time.time() - st)
