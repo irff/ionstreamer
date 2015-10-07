@@ -244,6 +244,11 @@ def downloadall(keyword, filename):
   if not islogin(): return redirect(BASE_URL + '/login')
   return Response(download.download_all(keyword), mimetype='text/csv')
 
+@app.route(BASE_URL + "/download/allnews/<keyword>/<filename>", methods=['GET'])
+def downloadallnews(keyword, filename):
+  if not islogin(): return redirect(BASE_URL + '/login')
+  return Response(download.download_allnews(keyword), mimetype='text/csv')
+
 @app.route(BASE_URL + "/download/classified", methods=['GET'])
 def downloadclassified():
   if not islogin(): return redirect(BASE_URL + '/login')

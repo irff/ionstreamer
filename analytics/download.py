@@ -139,3 +139,28 @@ def download_all(keyword):
     return ''
   finally:
     csvfile.close()
+
+def download_allnews(keyword):
+  st = time.time()
+
+  csvfile = StringIO()
+  try:
+    fieldnames = ['No.', 'Username', 'Name', 'Tweet', 'Created At', 'Retweet', 'Favorite']
+    w = csv.writer(csvfile)
+
+    nomor = 0
+    w.writerow(fieldnames)
+    size = 10000
+    while True:
+      r = dbrn.get_search_instance(keyword).params(size = size, from_ = nomor, fields='user.screen_name,user.name,text,created_at,retweet_count,favorite_count').execute()
+      for t in r.hits:
+        nomor += 1
+        w.writerow([ str(nomor), '@' + t['user.screen_name'][0], t['user.name'][0].encode('utf-8'), t['text'][0].encode('utf-8'), t['created_at'][0][:10]+' '+t['created_at'][0][11:19], str(t['retweet_count'][0]), str(t['favorite_count'][0]) ])
+      if len(r.hits) == 0: break
+    
+    print "%s - download all news: %lf" % (keyword, time.time() - st)
+    return csvfile.getvalue()
+  except Exception as e:
+    return ''
+  finally:
+    csvfile.close()
