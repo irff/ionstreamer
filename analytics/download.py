@@ -1,5 +1,6 @@
 import sys, time, csv
 import database.dbresult as dbr
+import database.dbresultnews as dbrn
 
 from os.path import abspath
 from dateutil.parser import parse

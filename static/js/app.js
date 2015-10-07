@@ -8,6 +8,8 @@ var BASE_URL = '';
     $scope.summarynews = [];
     var refresh = function() {
       $http.get(BASE_URL + '/api/summary').success(function(r) {
+        rn = r.splice(r.length/2);
+
         var current_keywords = $scope.summary.map(function(info){return info.keyword});
         var next_keywords = r.map(function(info){return info.keyword});
         if(current_keywords.join('|') == next_keywords.join('|'))
@@ -17,8 +19,18 @@ var BASE_URL = '';
             $scope.summary[i].status = r[i].status;
           }
         } else $scope.summary = r;
+
+        var current_keywords = $scope.summarynews.map(function(info){return info.keyword});
+        var next_keywords = rn.map(function(info){return info.keyword});
+        if(current_keywords.join('|') == next_keywords.join('|'))
+        {
+          for (var i = 0; i < rn.length; ++i) {
+            $scope.summarynews[i].count = rn[i].count;
+            $scope.summarynews[i].status = rn[i].status;
+          }
+        } else $scope.summarynews = rn;
       });
-      $http.get(BASE_URL + '/api/summarynews').success(function(r) {
+      /*$http.get(BASE_URL + '/api/summarynews').success(function(r) {
         var current_keywords = $scope.summarynews.map(function(info){return info.keyword});
         var next_keywords = r.map(function(info){return info.keyword});
         if(current_keywords.join('|') == next_keywords.join('|'))
@@ -28,7 +40,7 @@ var BASE_URL = '';
             $scope.summarynews[i].status = r[i].status;
           }
         } else $scope.summarynews = r;
-      });
+      });*/
     };
     refresh();
     $interval(refresh, 60000);
@@ -45,6 +57,11 @@ var BASE_URL = '';
       block_refresh = true;
       $http.get(BASE_URL + '/api/summary')
       .success(function (r) {
+        rn = r.splice(r.length/2);
+        for (var i = 0; i < r.length; ++i) {
+          r[i].count += rn[i].count;
+          r[i].tweets = r[i].tweets.concat(rn[i].tweets);
+        };
         if($scope.is_sending_kw) {
           $scope.keyword = '';
           $scope.is_sending_kw = false;
@@ -73,7 +90,6 @@ var BASE_URL = '';
       })
       .error(function(){
         block_refresh = false;
-        setTimeout(refresh, 3500);
       });
     };
 
