@@ -24,7 +24,7 @@ def gather(row):
     # UP, gte max_time
     try:
       s = Search(using = Elasticsearch(ESHOST_NEWS, timeout = 60), index = 'langgar')
-      r = s.filter('range', timestamp={"gte": max_time}).query("multi_match", query=row.keyword, fields=['title', 'content']).params(size=300, sort="timestamp:desc").execute().hits
+      r = s.filter('range', timestamp={"gte": max_time}).query("multi_match", query=row.keyword, fields=['title', 'content']).params(size=1000, sort="timestamp:desc").execute().hits
     except Exception as e:
       print >> sys.stderr, "exception: %s" % str(e)
 
@@ -42,7 +42,7 @@ def gather(row):
     # DOWN, lte min_time
     try:
       s = Search(using = Elasticsearch(ESHOST_NEWS, timeout = 60), index = 'langgar')
-      r = s.filter('range', timestamp={"lte": min_time}).query("multi_match", query=row.keyword, fields=['title', 'content']).params(size=300, sort="timestamp:desc").execute().hits
+      r = s.filter('range', timestamp={"lte": min_time}).query("multi_match", query=row.keyword, fields=['title', 'content']).params(size=1000, sort="timestamp:desc").execute().hits
     except Exception as e:
       print >> sys.stderr, "exception: %s" % str(e)
 
