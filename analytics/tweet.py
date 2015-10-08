@@ -23,7 +23,7 @@ def getinfo(row):
       'count': r.hits.total,
       'status': row.status,
       'processing': row.processing,
-      'tweets': ["@%s: %s"%(d.user.screen_name, d.text) for d in r.hits]
+      'tweets': ["@%s: %s"%(d.user.screen_name, d.text[:100]) for d in r.hits]
     }
   except Exception as e:
     print >> sys.stderr, "get info: " + str(e)[:123]
