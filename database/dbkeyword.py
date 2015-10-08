@@ -81,6 +81,7 @@ def delete(keyword):
     return es.delete(index = INDEX, doc_type = KEYWORD, id = keyword)
   except Exception as e:
     # print >> stderr, "delete keyword error: %s" % str(e)
+    pass
 
 def reset():
   for d in getAll():
