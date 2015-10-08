@@ -161,7 +161,7 @@ def run_streamer():
       sleep(1)
     except Exception as e:
       # print >> sys.stderr, "exception: %s" % str(e)
-      with open('/tmp/tweet_streamer_log', 'a+') as fileerr: # print >> fileerr, "exception: %s" % str(e)
+      with open('/tmp/tweet_streamer_log', 'a+') as fileerr: print >> fileerr, "exception: %s" % str(e)
 
       while True:
         try:
