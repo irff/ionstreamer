@@ -95,7 +95,8 @@ def learn():
     dbr.setData('LEARN', request.json, enc = False)
     return "%s classified to %s" % (request.json['id_str'], request.json['class'])
   except Exception as e:
-    print >> sys.stderr, "error: " + str(e)
+    # print >> sys.stderr, "error: " + str(e)
+    pass
 
 @app.route(BASE_URL + "/learn/randomtweets", methods=['GET'])
 @app.route(BASE_URL + "/learn/randomtweets/<keyword>", methods=['GET'])

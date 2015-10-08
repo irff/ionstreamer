@@ -20,17 +20,17 @@
 #   return ret
 
 # def getOneToken():
-#   print "golek token.."
+#   # print "golek token.."
 #   try:
 #     while True:
 #       tokens = [x for x in get() if ( datetime.now() - x.last_used ) > timedelta(seconds = 6)]
 #       if len(tokens) > 0:
 #         setToken( {'CONSUMER_KEY': tokens[0].CONSUMER_KEY, 'last_used': datetime.fromtimestamp( ceil(time()) ).__str__()} )
-#         print "entuk token: %s" % (tokens[0].name)
+#         # print "entuk token: %s" % (tokens[0].name)
 #         return tokens[0]
 #       sleep(1)
 #   except Exception as e:
-#     print >> sys.stderr, "token manager error: %s" % str(e)
+#     # print >> sys.stderr, "token manager error: %s" % str(e)
 #     return None
 
 
@@ -46,7 +46,7 @@ def getAll():
   try:
     return Search(using = es, index = INDEX, doc_type = TOKEN).execute().hits
   except Exception as e:
-    print "Exception: " + str(e)
+    # print "Exception: " + str(e)
     return []
 
 def setData(data):
@@ -67,15 +67,16 @@ def getOne():
         token = min(tokens, key = lambda k: k.last_used)
         token.last_used = time()
         setData( token.to_dict() )
-        print "token: %s" % (token.name)
+        # print "token: %s" % (token.name)
         return token
       sleep(1)
   except Exception as e:
-    print >> stderr, "token manager error: %s" % str(e)
+    # print >> stderr, "token manager error: %s" % str(e)
     return None
 
 def delete(keyword):
   try:
     return es.delete(index = INDEX, doc_type = TOKEN, id = keyword)
   except Exception as e:
-    print >> stderr, "delete keyword error: %s" % str(e)
+    # print >> stderr, "delete keyword error: %s" % str(e)
+    pass

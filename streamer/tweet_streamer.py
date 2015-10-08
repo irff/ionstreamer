@@ -29,7 +29,7 @@ def get_tso(keyword):
       else:
         tso.add_keyword([k])
     tso.set_language('id')
-    # print tso.create_search_url()
+    # # print tso.create_search_url()
     return tso
 
 def get_tso_up(row):
@@ -59,10 +59,11 @@ def gather(row):
       if len(tweets):
         dbk.setData( {'keyword': row.keyword, 'max_id': tweets[0]['id']} )
 
-      print "[UP] %s: +%d" % (row.keyword, len(tweets))
+      # print "[UP] %s: +%d" % (row.keyword, len(tweets))
 
     except Exception as e:
-      print >> sys.stderr, str(e)
+      # print >> sys.stderr, str(e)
+      pass
 
     if row.since_id > -1:
       #searching down
@@ -81,10 +82,11 @@ def gather(row):
         else:
           dbk.setData( {'keyword': row.keyword, 'since_id': -1} )
 
-        print "[DOWN] %s: +%d" % (row.keyword, len(tweets))
+        # print "[DOWN] %s: +%d" % (row.keyword, len(tweets))
 
       except Exception as e:
-        print >> sys.stderr, str(e)
+        # print >> sys.stderr, str(e)
+        pass
 
 
     # NEWS
@@ -97,7 +99,8 @@ def gather(row):
       s = Search(using = Elasticsearch(ESHOST_NEWS, timeout = 60), index = 'langgar')
       r = s.filter('range', timestamp={"gte": max_time}).query("multi_match", query=row.keyword, fields=['title', 'content']).params(size=1000, sort="timestamp:desc").execute().hits
     except Exception as e:
-      print >> sys.stderr, "exception: %s" % str(e)
+      # print >> sys.stderr, "exception: %s" % str(e)
+      pass
 
     row['max_time'] = r[0].timestamp if len(r) else max_time
 
@@ -105,9 +108,10 @@ def gather(row):
       try:
         dbrn.setData(row.keyword, news.to_dict())
       except Exception as e:
-        print >> sys.stderr, "exception: %s" % str(e)
+        # print >> sys.stderr, "exception: %s" % str(e)
+        pass
 
-    print "[NEWS UP] %s: +%d" % (row.keyword, len(r))
+    # print "[NEWS UP] %s: +%d" % (row.keyword, len(r))
 
     r = []
     # DOWN, lte min_time
@@ -115,7 +119,8 @@ def gather(row):
       s = Search(using = Elasticsearch(ESHOST_NEWS, timeout = 60), index = 'langgar')
       r = s.filter('range', timestamp={"lte": min_time}).query("multi_match", query=row.keyword, fields=['title', 'content']).params(size=1000, sort="timestamp:desc").execute().hits
     except Exception as e:
-      print >> sys.stderr, "exception: %s" % str(e)
+      # print >> sys.stderr, "exception: %s" % str(e)
+      pass
 
     row['min_time'] = r[-1].timestamp if len(r) else min_time
 
@@ -123,9 +128,10 @@ def gather(row):
       try:
         dbrn.setData(row.keyword, news.to_dict())
       except Exception as e:
-        print >> sys.stderr, "exception: %s" % str(e)
+        # print >> sys.stderr, "exception: %s" % str(e)
+        pass
 
-    print "[NEWS DOWN] %s: +%d" % (row.keyword, len(r))
+    # print "[NEWS DOWN] %s: +%d" % (row.keyword, len(r))
 
     dbk.setData(row.to_dict())
 
@@ -141,9 +147,10 @@ def remove_periodically():
     try:
       dbr.es.indices.delete_mapping(index=INDEX, doc_type = b64encode(k.keyword), ignore = [404])
       dbk.delete(k.keyword)
-      print "removed permanently: %s" % k.keyword
+      # print "removed permanently: %s" % k.keyword
     except Exception as e:
-      print >> sys.stderr, str(e)
+      # print >> sys.stderr, str(e)
+      pass
 
 def run_streamer():
   while True:
@@ -153,15 +160,15 @@ def run_streamer():
       remove_periodically()
       sleep(1)
     except Exception as e:
-      print >> sys.stderr, "exception: %s" % str(e)
-      with open('/tmp/tweet_streamer_log', 'a+') as fileerr: print >> fileerr, "exception: %s" % str(e)
+      # print >> sys.stderr, "exception: %s" % str(e)
+      with open('/tmp/tweet_streamer_log', 'a+') as fileerr: # print >> fileerr, "exception: %s" % str(e)
 
       while True:
         try:
           dbk.reset()
           break
         except Exception as e:
-          print >> sys.stderr, str(e)
+          # print >> sys.stderr, str(e)
           sleep(10)
 
 

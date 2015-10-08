@@ -13,17 +13,17 @@
 #   return ret
 
 # def getOneKeyword():
-#   print "golek keyword.."
+#   # print "golek keyword.."
 #   try:
 #     while True:
 #       keywords = [x for x in get() if x.status == 'active' and not x.processing]
 #       if len(keywords) > 0:
 #         keywords.sort(key = lambda k: k.last_modified)
-#         print "entuk keyword: %s" % (keywords[0].keyword)
+#         # print "entuk keyword: %s" % (keywords[0].keyword)
 #         return keywords[0]
 #       sleep(1)
 #   except Exception as e:
-#     print >> sys.stderr, "keyword manager error: %s" % str(e)
+#     # print >> sys.stderr, "keyword manager error: %s" % str(e)
 #     return None
 
 # def set(data):
@@ -48,7 +48,7 @@ def getAll():
   try:
     return Search(using = es, index = INDEX, doc_type = KEYWORD).params(size = 1000111000).execute().hits
   except Exception as e:
-    print "Exception: " + str(e)
+    # print "Exception: " + str(e)
     return []
 
 def setData(data):
@@ -69,18 +69,18 @@ def getOne():
         keyword = min(keywords, key = lambda k: k.last_used)
         keyword.last_used = time()
         setData( keyword.to_dict() )
-        print "keyword: %s" % (keyword.keyword)
+        # print "keyword: %s" % (keyword.keyword)
         return keyword
       sleep(1)
   except Exception as e:
-    print >> stderr, "keyword manager error: %s" % str(e)
+    # print >> stderr, "keyword manager error: %s" % str(e)
     return None
 
 def delete(keyword):
   try:
     return es.delete(index = INDEX, doc_type = KEYWORD, id = keyword)
   except Exception as e:
-    print >> stderr, "delete keyword error: %s" % str(e)
+    # print >> stderr, "delete keyword error: %s" % str(e)
 
 def reset():
   for d in getAll():

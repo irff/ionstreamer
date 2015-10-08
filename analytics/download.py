@@ -29,7 +29,7 @@ def download_tweets_at(keyword, kelas, waktu1, waktu2):
         w.writerow([ str(nomor), '@' + t['user.screen_name'][0], t['user.name'][0].encode('utf-8'), t['text'][0].encode('utf-8'), t['created_at'][0][:10]+' '+t['created_at'][0][11:19], str(t['retweet_count'][0]), str(t['favorite_count'][0]) ])
       if len(r.hits) == 0: break
     
-    print "%s %s %s %s - download tweets at: %lf" % (keyword, kelas, waktu1, waktu2, time.time() - st)
+    # print "%s %s %s %s - download tweets at: %lf" % (keyword, kelas, waktu1, waktu2, time.time() - st)
     return csvfile.getvalue()
   except Exception as e:
     return ''
@@ -55,7 +55,7 @@ def download_mention(keyword, username):
         w.writerow([ str(nomor), '@' + t['user.screen_name'][0], t['user.name'][0].encode('utf-8'), t['text'][0].encode('utf-8'), t['created_at'][0][:10]+' '+t['created_at'][0][11:19], str(t['retweet_count'][0]), str(t['favorite_count'][0]) ])
       if len(r.hits) == 0: break
     
-    print "%s %s - download mention: %lf" % (keyword, username, time.time() - st)
+    # print "%s %s - download mention: %lf" % (keyword, username, time.time() - st)
     return csvfile.getvalue()
   except Exception as e:
     return ''
@@ -81,7 +81,7 @@ def download_posting(keyword, username):
         w.writerow([ str(nomor), '@' + t['user.screen_name'][0], t['user.name'][0].encode('utf-8'), t['text'][0].encode('utf-8'), t['created_at'][0][:10]+' '+t['created_at'][0][11:19], str(t['retweet_count'][0]), str(t['favorite_count'][0]) ])
       if len(r.hits) == 0: break
     
-    print "%s %s - download posting: %lf" % (keyword, username, time.time() - st)
+    # print "%s %s - download posting: %lf" % (keyword, username, time.time() - st)
     return csvfile.getvalue()
   except Exception as e:
     return ''
@@ -107,7 +107,7 @@ def download_hashtag(keyword, hashtag):
         w.writerow([ str(nomor), '@' + t['user.screen_name'][0], t['user.name'][0].encode('utf-8'), t['text'][0].encode('utf-8'), t['created_at'][0][:10]+' '+t['created_at'][0][11:19], str(t['retweet_count'][0]), str(t['favorite_count'][0]) ])
       if len(r.hits) == 0: break
     
-    print "%s %s - download hashtag: %lf" % (keyword, hashtag, time.time() - st)
+    # print "%s %s - download hashtag: %lf" % (keyword, hashtag, time.time() - st)
     return csvfile.getvalue()
   except Exception as e:
     return ''
@@ -133,7 +133,7 @@ def download_all(keyword):
         w.writerow([ str(nomor), '@' + t['user.screen_name'][0], t['user.name'][0].encode('utf-8'), t['text'][0].encode('utf-8'), t['created_at'][0][:10]+' '+t['created_at'][0][11:19], str(t['retweet_count'][0]), str(t['favorite_count'][0]) ])
       if len(r.hits) == 0: break
     
-    print "%s - download all: %lf" % (keyword, time.time() - st)
+    # print "%s - download all: %lf" % (keyword, time.time() - st)
     return csvfile.getvalue()
   except Exception as e:
     return ''
@@ -158,7 +158,7 @@ def download_allnews(keyword):
         w.writerow([ str(nomor), t['provider'][0], t['url'][0], t['content'][0].encode('utf-8'), t['timestamp'][0][:10]+' '+t['timestamp'][0][11:19] ])
       if len(r.hits) == 0: break
     
-    print "%s - download all news: %lf" % (keyword, time.time() - st)
+    # print "%s - download all news: %lf" % (keyword, time.time() - st)
     return csvfile.getvalue()
   except Exception as e:
     return ''
