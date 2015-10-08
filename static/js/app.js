@@ -124,7 +124,7 @@ var BASE_URL = '';
     };
 
     refresh();
-    $interval(refresh, 3500);
+    $interval(refresh, 9000);
 
     $scope.submit = function(){
       kword = $scope.keyword.trim().toLowerCase();
