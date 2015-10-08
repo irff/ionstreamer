@@ -24,7 +24,7 @@
   <div class="row">
     <div class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
 
-      <li ng-class="info.status" ng-repeat="info in summary | filter:keyword">
+      <li ng-class="info.status" ng-repeat="info in summary track by $index | filter:keyword">
         <ul ng-class="'pricing-table animated ' + (info.playing || info.pausing ? 'flipOutY' : info.removing ? 'hinge' : info.failed ? 'jello' : 'flipInY')">
           {% raw %}
           <a ng-href="/analyze/{{ info.keyword | encodeURIComponent }}" title="analyze {{info.keyword}}">
